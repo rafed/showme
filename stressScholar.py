@@ -29,6 +29,12 @@ def sleepRandom(limit):
     print 'Sleeping', x, 'seconds'
     time.sleep(x)
 
+def probability(prob):
+    rand = random.randint(0, 100)
+    if prob < rand:
+        return True
+    return False
+
 proxylist = (
     #'http':  'socks5://127.0.0.1:9050', # Tor
     #'https': 'socks5://127.0.0.1:9050',
@@ -67,13 +73,17 @@ keywords = ['sql', 'data cube', 'protein mutation', 'plastic consequences', 'chi
             'google patents', 'pen writing', 'handwriting', 'candle burning', 'carbon synthesis',
             'micro tubules', 'photosynthesis', 'linux distros', 'facebook obsession',
             'obesity in macdonalds', 'candlelight dinner', 'Manga effects on kids',
-            'slang usage in america', 'urbanization effects', 'daylight saving']
+            'slang usage in america', 'urbanization effects', 'daylight saving', 'mosquito bites',
+            'fish and chips', 'street lamp effects', 'cryogenic heater', 'samsung patents',
+            'torrent users', 'polymer carbonization', '15th century arhitectural designs']
 
 counter = 0
 
-newId()
-
 while(True):
+
+    if(counter == 0 or probability(30)):
+        print '[*] Randomly changing IP'
+        newId()
 
     toSearch = random.choice(keywords)
     query = google + '/scholar?q=' + toSearch + '&btnG=&hl=en&as_sdt=0%2C5&oq='
@@ -83,7 +93,7 @@ while(True):
     if(r.status_code != 200):
         print "[-] Error", r.status_code, r.reason
         newId()
-        sleepRandom(25)
+        sleepRandom(120)
         continue
 
     soup = BeautifulSoup(r.text, 'html.parser')
@@ -94,4 +104,4 @@ while(True):
     printLinks(soup)
     print 'of "' + toSearch + '"'
 
-    sleepRandom(10)
+    sleepRandom(25)
