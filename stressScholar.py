@@ -35,6 +35,9 @@ def probability(prob):
         return True
     return False
 
+def plusify(sentence):
+    return sentence.replace(' ', '+')
+
 proxylist = (
     #'http':  'socks5://127.0.0.1:9050', # Tor
     #'https': 'socks5://127.0.0.1:9050',
@@ -86,6 +89,7 @@ while(True):
         newId()
 
     toSearch = random.choice(keywords)
+    toSearch = plusify(toSearch)
     query = google + '/scholar?q=' + toSearch + '&btnG=&hl=en&as_sdt=0%2C5&oq='
 
     r = requests.get(query, header, timeout=12, proxies=proxy) # proxies=proxy
