@@ -1,5 +1,0 @@
-LIST OF SITES WE CAN PARSE
-
-link.springer.com
-dl.acm.org
-ieeexplore.ieee.org

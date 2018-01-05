@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+        
+            function searchScholar(){
+                var input = document.getElementById('searchBar').value;
+
+                var queryURL = 'http://localhost:9999/search/'
+                query = queryURL + input;
+
+                fetch(query)
+                .then(response => {
+                    return response.json()
+                })
+                .then(list => {
+                    var resultDiv = document.getElementById('searchResult')
+
+                    // First make the div empty
+                    while (resultDiv.hasChildNodes()) {
+                        resultDiv.removeChild(resultDiv.lastChild);
+                    }
+
+                    // a1.appendChild(document.createTextNode(list.files[i].name)); // + ' --- ' + list.files[i].mimeType
+					// a1.setAttribute('data-id', list.files[i].id);
+					// a1.setAttribute('data-name', list.files[i].name);
+					// a1.setAttribute('data-type', list.files[i].mimeType);
+
+                    for(var i=0; i<list.length; i++){
+                        var h2 = document.createElement("h2");
+                        var p = document.createElement("p");
+
+                        h2.innerHTML = list[i].title;
+                        p.innerHTML = list[i].link;
+
+                        resultDiv.appendChild(h2);
+                        resultDiv.appendChild(p);
+                    }
+                })
+
+                return false;
+            }
+
+        </script>
+    </head>
+    <body>
+        <form id="searchScholar" onsubmit="return searchScholar();" role="search">
+                <input id="searchBar" type="text" size="20" autocomplete="off">
+                
+                <button type="submit">Search</button>
+        </form>
+
+        <div id='searchResult'>
+        </div>
+    </body>
+</html>
