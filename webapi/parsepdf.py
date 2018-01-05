@@ -28,10 +28,10 @@ def parsePdf(pdflink):
    
     pdf = requests.get(pdflink)
 
-    with open('./temp.pdf', 'wb') as f:
+    with open('./pdfs/temp.pdf', 'wb') as f:
         f.write(pdf.content)
     
-    my_file = "./temp.pdf"
+    my_file = "./pdfs/temp.pdf"
     password = ""
     extracted_text = ""
 
