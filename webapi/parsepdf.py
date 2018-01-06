@@ -1,11 +1,6 @@
 #! /usr/bin/env python
 
-from fake_useragent import UserAgent
-import os
-import re
 import requests
-import time
-
 import json
 import xml.etree.ElementTree as ET
 
