@@ -168,15 +168,18 @@ include 'auth.php';
 
 <div class="tab-content"> 
   <div id="showData" class="tab-pane fade in active">
-    <table  id="huku" class="table">
+    <table class="table">
         <thead class="thead-dark">
           <tr>
             <th>Title</th>
-            <th>Site Link</th>
             <th>Description</th>
+            <th>Year</th>
             <th>Graph</th>
           </tr>
         </thead>
+        <tbody id="searchResult">
+
+        </tbody>
       </table>
   </div>
  </div> 
@@ -187,67 +190,59 @@ include 'auth.php';
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-			
-            var rdata = this.responseText;
-			//alert(rdata);
-            var data = JSON.parse(rdata);
-			//alert(data.length);
-			
-            /*var col = [];
+            
+            var data = JSON.parse(this.responseText);
+            
+            var table = document.getElementById("searchResult");
             for (var i = 0; i < data.length; i++) {
-                for (var key in data[i]) {
-                    if (col.indexOf(key) === -1) {
-                        col.push(key);
-                    }
-                }
-            }*/
-            var table = document.getElementById("huku");
-            for (var i = 0; i < data.length; i++) {
-				//alert(data[i].title);
-                var tr = table.insertRow(-1);
-
-                var tabCell = tr.insertCell(-1);
-                tabCell.innerHTML = data[i].title;
-
-                tabCell = tr.insertCell(-1);
-                tabCell.innerHTML = data[i].sitelink;
-
-                tabCell = tr.insertCell(-1);
-                tabCell.innerHTML = data[i].description;
-
-                var pdfID = data[i].data_cid;
-				var pdfURL= data[i].pdflink;
+                var a = document.createElement("a");
+                a.innerHTML = data[i].title;
+                a.setAttribute('href', data[i].sitelink);
+                a.setAttribute('target', "_blank");
+                var title = document.createElement("td");
+                title.appendChild(a)
                 
+                var description = document.createElement("td");
+                description.innerHTML = data[i].description
+                
+                var pubin = document.createElement("td");
+                pubin.innerHTML = data[i].pubin
+
+
                 var form = document.createElement("form");
-                form.setAttribute('method',"post");
-                form.setAttribute('action',"graph.php");
+                form.setAttribute('method', "post");
+                form.setAttribute('action', "graph.php");
 
                 var input = document.createElement("input"); 
                 input.setAttribute('type',"hidden");
                 input.setAttribute('name',"pdfID");
-                input.setAttribute('value', pdfID);
+                input.setAttribute('value', data[i].data_cid);
 				
 				var input2 = document.createElement("input"); 
                 input2.setAttribute('type',"hidden");
                 input2.setAttribute('name',"pdfURL");
-                input2.setAttribute('value', pdfURL);
+                input2.setAttribute('value', data[i].pdfurl);
 
-                var submit = document.createElement("button"); 
+                var submit = document.createElement("input"); 
                 submit.setAttribute('type',"submit");
+                submit.setAttribute('value',"Generate");
                 submit.className = "btn btn-default";
                 submit.innerHTML = "Generate";
 
                 form.appendChild(input);
                 form.appendChild(input2);
                 form.appendChild(submit);
+                formtd = document.createElement("td");
+                formtd.appendChild(form);
 
-                tabCell = tr.insertCell(-1);
-                tr.appendChild(form);
+                var tr = document.createElement("tr");
+                tr.appendChild(title);
+                tr.appendChild(description);
+                tr.appendChild(pubin);
+                tr.appendChild(formtd)
+                
+                table.appendChild(tr)
             }
-
-            var divContainer = document.getElementById("showData");
-            divContainer.innerHTML = "";
-            divContainer.appendChild(table);
         }
       };
       var searchKey=document.getElementById("searchKey").value;
