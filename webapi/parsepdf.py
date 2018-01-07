@@ -50,7 +50,8 @@ def parsePdf(pdflink):
             if isinstance(lt_obj, LTTextBox) or isinstance(lt_obj, LTTextLine):
                 extracted_text += lt_obj.get_text()	
 
-    extracted_text=extracted_text[extracted_text.find("References")+10:]	
+    extracted_text=extracted_text[extracted_text.lower().find("references")+10:]
+    print "HLALALALALALALALA: ", extracted_text
     text=extracted_text.strip()
     text = text.split('[')
     
@@ -76,11 +77,6 @@ def parsePdf(pdflink):
     xml = r.text
     etree = ET.fromstring(xml.encode('utf-8'))
 
-    main = {}
-    main['author'] = ["Wei Wang", "Jianlin Feng", "Hongjun Lu"]
-    main['title'] = "Condensed Cube: An EffectiveApproach to ReducingData CubeSize"
-    main['volume'] = 2
-
     cites = []
     for citation in etree.findall("citation"):
         bib = {}
@@ -95,9 +91,7 @@ def parsePdf(pdflink):
         print bib
         cites.append(bib)
 
-    info = [main, cites]
-
-    return json.dumps(info)
+    return json.dumps(cites)
 
 def gettext(citation, tag):
     if citation.find(tag) is not None:
