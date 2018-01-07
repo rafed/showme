@@ -33,71 +33,72 @@ def searchPdf(query):
     result = []
 
     for div in soup.findAll('div', {'class':['gs_r', 'gs_or', 'gs_scl']}):
-        paper = {}
+        if div.has_attr('data-cid'):
+            paper = {}
 
-        paper['data_cid'] = div['data-cid']
-        for title in div.findAll('h3', {'class':'gs_rt'}):
-            for a in title.findAll('a', href=True):
-                paper['title'] = a.text
-                paper['sitelink'] = a['href']
+            paper['data_cid'] = div['data-cid']
+            for title in div.findAll('h3', {'class':'gs_rt'}):
+                for a in title.findAll('a', href=True):
+                    paper['title'] = a.text
+                    paper['sitelink'] = a['href']
 
-        for desc in div.findAll(True, {'class':'gs_rs'}):
-            paper['description'] = desc.text
+            for desc in div.findAll(True, {'class':'gs_rs'}):
+                paper['description'] = desc.text
 
-        # re for year
-        for string in div.findAll(True, {'class':'gs_a'}):
-            year = re.compile('[12][0-9]{3}')
-            matchresult = year.search(string.text)
+            # re for year
+            for string in div.findAll(True, {'class':'gs_a'}):
+                year = re.compile('[12][0-9]{3}')
+                matchresult = year.search(string.text)
 
-            if matchresult:
-                paper['pubin'] = matchresult.group(0)
+                if matchresult:
+                    paper['pubin'] = matchresult.group(0)
 
-        for pdf in div.findAll(True, {'class':'gs_or_ggsm'}):
-            for a in pdf.findAll('a', href=True):
-                paper['pdflink'] = a['href']
+            for pdf in div.findAll(True, {'class':'gs_or_ggsm'}):
+                for a in pdf.findAll('a', href=True):
+                    paper['pdflink'] = a['href']
 
-        if 'pdflink' in paper.keys():
-            result.append(paper)
-
-    return json.dumps(result)
-
-@one.route('/searchPdfLink/<title>')
-def searchPdfLink(title):
-    google = 'https://scholar.google.com'
-    url = google + '/scholar?q=' + query + '&btnG=&hl=en&as_sdt=0%2C5'
-
-    ua = UserAgent()
-    header = {'User-Agent':ua.random}
-
-    r = requests.get(url, header)
-    if(r.status_code != 200):
-        print r.status_code, "Error!!!"
-        return "Error in searching google scholar", r.status_code
-
-    soup = BeautifulSoup(r.text, 'html.parser')
-
-    result = []
-
-    for div in soup.findAll('div', {'class':['gs_r', 'gs_or', 'gs_scl']}):
-        paper = {}
-
-        paper['data-cid'] = div['data-cid']
-        for title in div.findAll('h3', {'class':'gs_rt'}):
-            for a in title.findAll('a', href=True):
-                paper['title'] = a.text
-                paper['sitelink'] = a['href']
-
-        for desc in div.findAll(True, {'class':'gs_rs'}):
-            paper['description'] = desc.text
-
-        for pdf in div.findAll(True, {'class':'gs_or_ggsm'}):
-            for a in pdf.findAll('a', href=True):
-                paper['pdflink'] = a['href']
-
-        if 'pdflink' in paper.keys():
-            result.append(paper)
+            if 'pdflink' in paper.keys():
+                result.append(paper)
 
     return json.dumps(result)
+
+# @one.route('/searchPdfLink/<title>')
+# def searchPdfLink(title):
+#     google = 'https://scholar.google.com'
+#     url = google + '/scholar?q=' + query + '&btnG=&hl=en&as_sdt=0%2C5'
+
+#     ua = UserAgent()
+#     header = {'User-Agent':ua.random}
+
+#     r = requests.get(url, header)
+#     if(r.status_code != 200):
+#         print r.status_code, "Error!!!"
+#         return "Error in searching google scholar", r.status_code
+
+#     soup = BeautifulSoup(r.text, 'html.parser')
+
+#     result = []
+
+#     for div in soup.findAll('div', {'class':['gs_r', 'gs_or', 'gs_scl']}):
+#         paper = {}
+
+#         paper['data-cid'] = div['data-cid']
+#         for title in div.findAll('h3', {'class':'gs_rt'}):
+#             for a in title.findAll('a', href=True):
+#                 paper['title'] = a.text
+#                 paper['sitelink'] = a['href']
+
+#         for desc in div.findAll(True, {'class':'gs_rs'}):
+#             paper['description'] = desc.text
+
+#         for pdf in div.findAll(True, {'class':'gs_or_ggsm'}):
+#             for a in pdf.findAll('a', href=True):
+#                 paper['pdflink'] = a['href']
+
+#         if 'pdflink' in paper.keys():
+#             result.append(paper)
+
+#     return json.dumps(result)
 
 @one.route('/bibtex/<id>')
 def getBibtex(id):
