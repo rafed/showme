@@ -1,2 +1,3 @@
-webapi/pdfs
+webapi/src/pdfs
 *.pyc
+__pychache__

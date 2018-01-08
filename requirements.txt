@@ -1,0 +1,8 @@
+beautifulsoup4==4.6.0
+bibtexparser==0.6.2
+fake-useragent==0.1.7
+Flask==0.12.2
+Flask-Cors==3.0.3
+pdfminer==20140328
+stem==1.5.4
+xmltodict==0.11.0
