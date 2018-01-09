@@ -200,13 +200,13 @@ include 'auth.php';
                 a.setAttribute('href', data[i].sitelink);
                 a.setAttribute('target', "_blank");
                 var title = document.createElement("td");
-                title.appendChild(a)
+                title.appendChild(a);
                 
                 var description = document.createElement("td");
-                description.innerHTML = data[i].description
+                description.innerHTML = data[i].description;
                 
                 var pubin = document.createElement("td");
-                pubin.innerHTML = data[i].pubin
+                pubin.innerHTML = data[i].pubin;
 
 
                 var form = document.createElement("form");
@@ -221,7 +221,13 @@ include 'auth.php';
 				var input2 = document.createElement("input"); 
                 input2.setAttribute('type',"hidden");
                 input2.setAttribute('name',"pdfURL");
-                input2.setAttribute('value', data[i].pdfurl);
+                input2.setAttribute('value', data[i].pdflink);
+                
+                // for(var i=0; i<data.length; i++){
+                //     console.log(data[i]);
+                // }
+                // console.log("HAKALALA" + data[i]);
+
 
                 var submit = document.createElement("input"); 
                 submit.setAttribute('type',"submit");
@@ -239,9 +245,9 @@ include 'auth.php';
                 tr.appendChild(title);
                 tr.appendChild(description);
                 tr.appendChild(pubin);
-                tr.appendChild(formtd)
+                tr.appendChild(formtd);
                 
-                table.appendChild(tr)
+                table.appendChild(tr);
             }
         }
       };
