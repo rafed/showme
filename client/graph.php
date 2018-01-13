@@ -274,32 +274,34 @@ include 'auth.php';
 			container: document.getElementById('cy'), 
 			style: [ 
 				{
-				  selector: 'node',
-				  style: {
-						'background-color': '#FFC0CB',
-						'label': 'data(id)', 
-						'width': '40',
-						'height': '40',
-						'text-valign' : 'center',
-						'font-size': '8',
-						'text-max-width':'35',
-						'text-wrap':'ellipsis',
-					}
+					selector: 'node',
+					style: {
+						  'background-color': '#FFC0CB',
+						  'label': 'data(id)', //author dile author dekhabe
+						  'width': '40',
+						  'height': '40',
+						  'text-valign' : 'center',
+						  'font-size': '4',
+						  //'text-max-width':'60',
+						  //'text-wrap':'ellipsis',
+						  "text-wrap": "wrap"
+										  }
 				},
-
+  
 				{
-				  selector: 'edge',
-				  style: {
-					'width': 1,
-					'line-color': '#FF6347', 
-					'target-arrow-color': '#ccc', //keno dorkar bujhi ni
-					'target-arrow-shape': 'triangle' //keno dorkar bujhi ni
-				  }
+					selector: 'edge',
+					style: {
+					  'curve-style': 'bezier',
+					  'width': 1,
+					  'target-arrow-shape': 'triangle',
+					  'line-color': '#ff0000',
+					  'target-arrow-color': '#ff0000'
+					}
 				}
-			],
-			
+			],	
 		});
-		
+		cy.minZoom(0.5);
+
 		function requestPDFData() {
 			var xhttp = new XMLHttpRequest();
 			var v;
@@ -351,11 +353,32 @@ include 'auth.php';
 			var newNodes=[];
 			var newEdges=[];
 			
+			str=mainPDF["title"];
+			//console.log(str);
+			var array1 = str.match(/[0-9A-Za-z_:)'"-]+/gi);
+			//alert("L"+array1.length);
+			var mainTitle="";
+			var count=0;
+			for(var x = 0 ; x < array1.length-1 ; x++)
+			{
+				//console.log("W" +array1[x]);
+				if(array1[x].length+ array1[x+1].length<20)
+				{
+					mainTitle=mainTitle+array1[x]+" "+ array1[x+1]+"\n";
+					x++;
+				} 
+				else{
+					mainTitle=mainTitle+array1[x]+"\n";
+				}
+				count++;
+				if(count>3)
+					break;
+			}
 			newNodes.push(
 				{ 
 					group: "nodes", 
 					data: { 
-						id: mainPDF.title, 
+						id: mainTitle //mainPDF.title, 
 					}, 
 				},
 			);
@@ -363,11 +386,33 @@ include 'auth.php';
 				var value = reference[i];
 				//alert(value);
 				//alert(i+" "+value["title"]);
+				str=value["title"];
+				console.log(str);
+				var array1 = str.match(/[0-9A-Za-z_:)'"-]+/gi);
+				//alert("L"+array1.length);
+				var title="";
+				var count=0;
+				for(var x = 0 ; x < array1.length-1 ; x++)
+				{
+					//console.log("W" +array1[x]);
+					if(array1[x].length+ array1[x+1].length<20)
+					{
+						title=title+array1[x]+" "+ array1[x+1]+"\n";
+						x++;
+					} 
+					else{
+						title=title+array1[x]+"\n";
+					}
+					count++;
+					if(count>3)
+						break;
+				}
+
 				newNodes.push(
 					{ 
 						group: "nodes", 
 						data: { 
-							id: value["title"], 
+							id: title, //value["title"], 
 							Journal: value["journal"],
 						}, 
 					},
@@ -377,8 +422,8 @@ include 'auth.php';
 						group: "edges", 
 						data: { 
 							id:i,
-							source: mainPDF.title, 
-							target: value["title"],
+							source: mainTitle, 
+							target: title //value["title"],
 						}, 
 					},
 				);
@@ -391,7 +436,7 @@ include 'auth.php';
 			cy.elements().qtip({
 				overwrite: false,
 				
-				content: function(){ return this.id() },
+				content: function(){ return "Click "+ this.id() },
 				position: {
 					my: 'top center',
 					at: 'bottom center'
@@ -431,7 +476,7 @@ include 'auth.php';
 				hide: {
 					event: 'mouseout'
 				},
-				content: function(){ return this.id() },
+				content: function(){ return "Hover "+ this.id() },
 				position: {
 					my: 'top center',
 					at: 'bottom center'
@@ -445,16 +490,11 @@ include 'auth.php';
 				}		
 			});
 
-			cy.nodes().style({"text-max-width":'35'});
-			cy.nodes().style({"text-wrap": "ellipsis"});
 			
 			var layout = cy.layout({ name: 'concentric' }); //concentric, cose, circle
 
 			layout.run();
-			/*cy.viewport({
-				zoom:2,
-				pan: { x: 10, y: 10 }
-			});*/
+			
 		}
 		</script>
 
