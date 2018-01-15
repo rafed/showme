@@ -218,13 +218,13 @@ include 'auth.php';
     <li class = "active"><a  href="graph.php">Graph</a></li>
   </ul>
     <br>
-    <button type="button" data-toggle="modal" data-target="#myModal" class="btn center-block btn-primary">Filter Graph</button>
-    <button type="button" class="btn center-block btn-primary">Batch Download</button>
+    <button type="button" data-toggle="modal" data-target="#myModal" class="btn center-block btn-primary">Filter Graph</button><br>
+    <!-- <button type="button" class="btn center-block btn-primary">Batch Download</button> -->
  
 
   
 		<div class="well" id = "cy">
-			<span id="para" class="tooltiptext">Tooltip text</span>
+			<span id="para" class="tooltiptext"></span>
 		</div>
 		<input type="hidden" id="pdfURL" value=<?php echo $_POST['pdfURL'];?>>
 		<input type="hidden" id="pdfID" value=<?php echo $_POST['pdfID'];?>>
@@ -276,7 +276,7 @@ include 'auth.php';
 				{
 					selector: 'node',
 					style: {
-						  'background-color': '#FFC0CB',
+						  'background-color': '#6495ED',
 						  'label': 'data(id)', //author dile author dekhabe
 						  'width': '40',
 						  'height': '40',
@@ -294,8 +294,8 @@ include 'auth.php';
 					  'curve-style': 'bezier',
 					  'width': 1,
 					  'target-arrow-shape': 'triangle',
-					  'line-color': '#ff0000',
-					  'target-arrow-color': '#ff0000'
+					  'line-color': '#191970',
+					  'target-arrow-color': '#191970'
 					}
 				}
 			],	
@@ -326,7 +326,7 @@ include 'auth.php';
 			var v;
 			xhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
-					alert("PELAM ref"+this.responseText);
+					//alert("PELAM ref"+this.responseText);
 					// return JSON.parse(this.responseText);
 					v=JSON.parse(this.responseText);
 					//v = x[0];
@@ -378,7 +378,8 @@ include 'auth.php';
 				{ 
 					group: "nodes", 
 					data: { 
-						id: mainTitle //mainPDF.title, 
+						id: mainTitle, //
+						title: mainPDF.title 
 					}, 
 				},
 			);
@@ -414,6 +415,7 @@ include 'auth.php';
 						data: { 
 							id: title, //value["title"], 
 							Journal: value["journal"],
+							title: value["title"];
 						}, 
 					},
 				);
@@ -476,7 +478,7 @@ include 'auth.php';
 				hide: {
 					event: 'mouseout'
 				},
-				content: function(){ return "Hover "+ this.id() },
+				content: function(){ return this.data('title') },
 				position: {
 					my: 'top center',
 					at: 'bottom center'

@@ -138,8 +138,8 @@ include 'auth.php';
 	
 	<!--search bar-->
 
-            <div class="input-group" id="adv-search">
-              <form action="searchResult.php" method="post">
+            <div  id="adv-search">
+              <form class="input-group" action="searchResult.php" method="post">
                 <input type="text" name="paper" class="form-control" placeholder="Enter paper title" />
                 <div class="input-group-btn">
                     <div class="btn-group" role="group">
