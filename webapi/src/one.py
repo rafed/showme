@@ -20,7 +20,7 @@ def searchPdf(query):
     google = 'https://scholar.google.com'
     
     url = google + '/scholar?' \
-        + 'as_q=' + query \
+        + 'q=' + query \
         + '&as_epq' \
         + '&as_oq=' \
         + '&as_eq=' \
