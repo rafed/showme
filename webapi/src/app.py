@@ -8,8 +8,8 @@ CORS(app)
 
 PREFIX = '/api'
 
-from one import one
-app.register_blueprint(one, url_prefix=PREFIX)
+from gsearch import gsearch
+app.register_blueprint(gsearch, url_prefix=PREFIX)
 
 from parsepdf import pdf
 app.register_blueprint(pdf, url_prefix=PREFIX)

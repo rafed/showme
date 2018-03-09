@@ -8,14 +8,13 @@ import bibtexparser
 import re
 
 from flask import Blueprint
-one = Blueprint('one', __name__)
-
+gsearch = Blueprint('gsearch', __name__)
 
 def extractInfoFromDiv():
     # TO DO
     print 'lala'
 
-@one.route('/search/<query>')
+@gsearch.route('/search/<query>')
 def searchPdf(query):
     google = 'https://scholar.google.com'
     
@@ -133,7 +132,7 @@ def searchPdf(query):
 
 #     return json.dumps(result)
 
-@one.route('/bibtex/<id>')
+@gsearch.route('/bibtex/<id>')
 def getBibtex(id):
     refurl = 'https://scholar.google.com/scholar?q=info:' + id + ':scholar.google.com/&output=cite&scirp=9&hl=en'
     
