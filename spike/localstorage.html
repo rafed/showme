@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lol</title>
+        <script>
+            function addToList(searchString){
+                var list = JSON.parse(localStorage.getItem("history"));
+
+                for(var i=0; i<list.length; i++){
+                    if(list[i] == searchString)
+                        return;
+                }
+
+                if(list.length >= 10){
+                    list.splice(-1, 1);
+                }
+
+                list.splice(0, 0, searchString);
+                localStorage.setItem("history", JSON.stringify(list));
+                console.log(list);
+            }
+
+            var list = ['data cube'];
+            localStorage.setItem("history", JSON.stringify(list));
+
+            addToList('lala');
+            addToList('kala')
+            addToList('kala')
+            addToList('tala')
+            addToList('tala')
+            
+        </script>
+    </head>
+    <body>
+
+    </body>
+</html>
