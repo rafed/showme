@@ -1,0 +1,23 @@
+.nav-tabs li a {
+    color: #777;
+}
+
+.navbar {
+    font-family: Montserrat, sans-serif;
+    margin-bottom: 0;
+    background-color: #2d2d30;
+    border: 0;
+    font-size: 15px !important;
+    letter-spacing: 2px;
+    opacity: 0.9;
+}
+.navbar li a, .navbar .navbar-brand { 
+    color: #d5d5d5 !important;
+}
+.navbar-nav li a:hover {
+    color: #fff !important;
+}
+.navbar-nav li.active a {
+    color: #fff !important;
+    background-color: #29292c !important;
+}

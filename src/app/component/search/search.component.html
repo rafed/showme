@@ -1,0 +1,59 @@
+<app-navbar></app-navbar>
+<div id="band" class="container text-center">
+  <div *ngIf="showDescription">
+    <h3>Welcome<?php echo " " . $_SESSION["email"]; ?></h3>
+    <p><em>Show me related work</em></p>
+    <p>ShowMe is a web application that will help the research community to find related work and understand relationship among them.
+    Finding related work and understanding the relation among papers is a non-trivial task. Many services offer help, e.g., GoogleScholar, but they lack many (dynamic) features. Ideally, we are be able to visualize relations among papers as graphs; each node is a paper and there is a directed edge between two nodes if one paper cites another. A click on a node in the graph will show the pdf (if available), and a click on an edge in the graph should show the way one paper cites another. Furthermore, the graph can be enhanced by users; the users can mark an edge as strong (i.e., paper is closely related) or weak.</p>
+	</div>
+  <hr>
+
+  <h4>Search paper here</h4>
+	
+	<!--search bar-->
+
+            <div  id="adv-search">
+              <form class="input-group"> <!-->action="searchResult.php" method="post"-->
+                <input type="text" name="paper" class="form-control" placeholder="Enter paper title" />
+                <div class="input-group-btn">
+                    <div class="btn-group" role="group">
+                        <div class="dropdown dropdown-lg">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+                            <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                <form class="form-horizontal" role="form">
+                                  <div class="form-group">
+                                    <label for="contain">Articles dated between</label>
+                                    <input  type="text" /> -
+                                    <input  type="text" />
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="contain">Author</label>
+                                    <input class="form-control" type="text" />
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="contain">Contains the words</label>
+                                    <input class="form-control" type="text" />
+                                  </div>
+                                  <a routerLink="result"><button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></a>
+                                </form>
+                            </div>
+                        </div>
+                        <a routerLink="result"><button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></a>
+                    </div>
+                </div>
+              </form>  
+            </div>
+            <ul class="nav nav-tabs">
+              <li class = "active"><a  routerLink="result">Search Result</a></li>
+              <li><a  routerLink="graph">Graph</a></li>
+            </ul>
+            <router-outlet></router-outlet>
+
+
+
+  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+</div>
+
+<footer class="text-center">
+  <p>Developed by Team ARME</p> 
+</footer>
