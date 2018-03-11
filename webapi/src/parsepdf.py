@@ -3,6 +3,7 @@
 import requests
 import json
 import xml.etree.ElementTree as ET
+import datetime
 
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
@@ -18,19 +19,11 @@ from pdfminer.converter import PDFPageAggregator
 from flask import Blueprint
 pdf = Blueprint('pdf', __name__)
 
-@pdf.route('/parse/<path:pdflink>')
-def parsePdf(pdflink):
-   
-    pdf = requests.get(pdflink)
-
-    with open('./pdfs/temp.pdf', 'wb') as f:
-        f.write(pdf.content)
-    
-    my_file = "./pdfs/temp.pdf"
+def extractTextFromPDF(filename):
     password = ""
     extracted_text = ""
 
-    fp = open(my_file, "rb")
+    fp = open(filename, "rb")
 
     parser = PDFParser(fp)
     document = PDFDocument(parser, password)
@@ -48,10 +41,14 @@ def parsePdf(pdflink):
         layout = device.get_result()
         for lt_obj in layout:
             if isinstance(lt_obj, LTTextBox) or isinstance(lt_obj, LTTextLine):
-                extracted_text += lt_obj.get_text()	
+                extracted_text += lt_obj.get_text()
+    
+    fp.close()
+    return extracted_text
 
-    extracted_text=extracted_text[extracted_text.lower().find("references")+10:]
-    print "HLALALALALALALALA: ", extracted_text
+def extractReferences(extracted_text):
+    extracted_text[extracted_text.lower().find("references")+10:]
+    print "Extracted text:", extracted_text
     text=extracted_text.strip()
     text = text.split('[')
     
@@ -65,16 +62,15 @@ def parsePdf(pdflink):
         index = tex_split[0]
         bibs.append(ref.replace('\n', ' '))
     
-    fp.close()
-
     HOST = 'http://freecite.library.brown.edu/citations/create'
-    data={"citation[]" : bibs}
+    data = {"citation[]" : bibs}
 
-    print data
+    # print data
 
     r = requests.post(HOST, data=data, headers={"Accept": "text/xml"})
 
     xml = r.text
+    print xml
     etree = ET.fromstring(xml.encode('utf-8'))
 
     cites = []
@@ -92,6 +88,20 @@ def parsePdf(pdflink):
         cites.append(bib)
 
     return json.dumps(cites)
+
+@pdf.route('/parse/<path:pdflink>')
+def parsePdf(pdflink):
+    pdf = requests.get(pdflink)
+
+    filename = "./pdfs/" + str(datetime.datetime.now().date()) + '_' + str(datetime.datetime.now().time()).replace(':', '.') + ".pdf"
+
+    with open(filename, 'wb') as f:
+        f.write(pdf.content)
+    
+    extracted_text = extractTextFromPDF(filename)
+
+    return extractReferences(extracted_text) 
+    # return extracted_text
 
 def gettext(citation, tag):
     if citation.find(tag) is not None:
