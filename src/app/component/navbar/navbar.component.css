@@ -1,23 +1,77 @@
-.nav-tabs li a {
-    color: #777;
-}
-
 .navbar {
     font-family: Montserrat, sans-serif;
     margin-bottom: 0;
-    background-color: #2d2d30;
+    background-color: #3f3f44;
     border: 0;
     font-size: 15px !important;
     letter-spacing: 2px;
-    opacity: 0.9;
 }
-.navbar li a, .navbar .navbar-brand { 
+.navbar-brand { 
     color: #d5d5d5 !important;
 }
+
+.logout{
+    color: #d5d5d5 !important;
+}
+
 .navbar-nav li a:hover {
     color: #fff !important;
 }
 .navbar-nav li.active a {
     color: #fff !important;
     background-color: #29292c !important;
+}
+
+.dropbtn {
+    background-color: #3f3f44;
+    color: #d5d5d5 !important;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    font-family: Montserrat, sans-serif;
+    font-size: 15px !important;
+    letter-spacing: 2px;
+    
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: rgb(245, 243, 243);
+    min-width: 400px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    color: black;
+    right: 0;
+}
+
+.dropdown-content a, p {
+    color: black;
+    padding: 10px 10px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px
+}
+
+.dropdown-content li {
+    color: black;
+}
+
+.dropdown-content a:hover {
+    background-color: #666669;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+    color: black
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #202220e3;
 }

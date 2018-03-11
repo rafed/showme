@@ -10,6 +10,9 @@ import { SearchComponent } from './component/search/search.component';
 import { NavbarComponent } from './component/navbar/navbar.component';
 import { SearchResultComponent } from './component/search-result/search-result.component';
 import { GraphComponent } from './component/graph/graph.component';
+import { SearchResultService } from './service/search-result.service';
+import { HttpClientModule } from '@angular/common/http';
+import { GenerateGraphService } from './service/generate-graph.service';
 
 
 @NgModule({
@@ -24,9 +27,10 @@ import { GraphComponent } from './component/graph/graph.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [SearchResultService, GenerateGraphService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
