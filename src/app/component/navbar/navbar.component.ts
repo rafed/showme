@@ -35,6 +35,7 @@ export class NavbarComponent implements OnInit {
   onSelect(searchKey:any){
     console.log(searchKey+" selected");
     this.searchResultService.setPaper(searchKey);
+    //this.router.navigate(['/search']);
     this.router.navigate(['/search/result']);
   }
   

@@ -1,9 +1,12 @@
+.container {
+  padding: 80px 120px;
+  text-align: left
+}
 #cy {
     width: 90%;
     height: 90%;
     position: absolute;
     left: 80px;
- 
     top: 50;
     right: 40px;
     bottom: 50;

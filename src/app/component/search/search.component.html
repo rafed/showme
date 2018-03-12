@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 <div id="band" class="container text-center">
-  <div *ngIf="showDescription">
+  <div [attr.display]="showDescription ? none: null">
     <h3>Welcome<?php echo " " . $_SESSION["email"]; ?></h3>
     <p><em>Show me related work</em></p>
     <p>ShowMe is a web application that will help the research community to find related work and understand relationship among them.
@@ -34,7 +34,7 @@
                                     <label for="contain">Contains the words</label>
                                     <input class="form-control" type="text" />
                                   </div>
-                                  <a routerLink="result"><button type="submit" class="btn btn-primary"  (click)="updateDescription(false)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></a>
+                                  <a routerLink="result"><button type="submit" class="btn btn-primary" ><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></a>
                                 </form>
                             </div>
                         </div>
@@ -44,10 +44,10 @@
               </form>  
             </div>
             <br><br><br>
-            <div *ngIf="!showDescription">
+            <div [attr.display]="!showDescription ? none: null">
               <ul class="nav nav-tabs">
-                <li [class.active]= "activeSearchResult==true"><a  routerLink="result" (click)="updateSearchResult(true,false)">Search Result</a></li>
-                <li [class.active]= "activeSearchResult==false"><a  routerLink="graph" (click)="updateSearchResult(false,false)">Graph</a></li>
+                <li><a  routerLink="result">Search Result</a></li>
+                <li><a  routerLink="graph">Graph</a></li>
               </ul>
               <router-outlet></router-outlet>
             </div>

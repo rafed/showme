@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SearchResultService } from '../../service/search-result.service';
 import { Paper } from '../../../utils/Paper';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { GenerateGraphService } from '../../service/generate-graph.service';
 
 @Component({
@@ -12,29 +12,35 @@ import { GenerateGraphService } from '../../service/generate-graph.service';
 export class SearchResultComponent implements OnInit {
   papers: Paper[];
 
-  constructor(private searchResultService: SearchResultService,
-              private router:Router,
-              private generateGraphService: GenerateGraphService) { console.log("HI1");}
+  // constructor(private searchResultService: SearchResultService,
+  //             private router:Router,
+  //             private generateGraphService: GenerateGraphService) {}
+  constructor(private router: Router,
+    private generateGraphService: GenerateGraphService,
+    private searchResultService: SearchResultService ){
+     // override the route reuse strategy
+     this.router.routeReuseStrategy.shouldReuseRoute = function(){
+        return false;
+     }
 
+     this.router.events.subscribe((evt) => {
+        if (evt instanceof NavigationEnd) {
+           // trick the Router into believing it's last link wasn't previously loaded
+           this.router.navigated = false;
+           this.getSearchResult();
+           // if you need to scroll back to top, here is the right place
+           //window.scrollTo(0, 0);
+        }
+    });
+
+}
   ngOnInit() {
-    // console.log("HI");
-    // //let p = new Paper();
-    // //p.title = 'my title';
-    // //this.papers.push(p);
-    // if(this.searchResultService.searchKey==''){
-    //   console.log('redirect');
-    //   this.router.navigate(['/search']);
-    // }
-    console.log(this.searchResultService.searchKey);
+  }
+
+  getSearchResult(){
+    console.log("KEY: " + this.searchResultService.searchKey);
     this.searchResultService.getPapers()
       .subscribe(papers => this.papers = papers);
-    
-   // this.papers = this.searchResultService.getPapers();
-    //localstorage exists 
-    //does not exist
-
-    //  .subscribe(papers => 
-    //   this.papers = papers);
   }
 
   onSelect(selectedPaper: Paper): void {

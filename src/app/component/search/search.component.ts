@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { SearchResultService } from '../../service/search-result.service';
 import { DisplayHistoryService } from '../../service/display-history.service';
 
@@ -9,12 +8,12 @@ import { DisplayHistoryService } from '../../service/display-history.service';
   styleUrls: ['../../../assets/bootstrap/css/bootstrap.min.css','./search.component.css']
 })
 export class SearchComponent implements OnInit {
-  showDescription = false;
+  showDescription = true;
   activeSearchResult = false;
 
-  constructor(private router: Router, 
-    private searchResultService: SearchResultService,
-    private displayHistoryService: DisplayHistoryService) { }
+  constructor(private searchResultService: SearchResultService,
+    private displayHistoryService: DisplayHistoryService) {
+  }
 
   ngOnInit() {
     let dynamicScripts = ["../../../assets/js/jquery-1.11.1.min.js","../../../assets/bootstrap/js/bootstrap.min.js"];
@@ -27,23 +26,25 @@ export class SearchComponent implements OnInit {
         node.charset = 'utf-8';
         document.getElementsByTagName('head')[0].appendChild(node);
     }
-    this.updateDescription(true);
+    //this.updateDescription(true);
+    console.log(this.showDescription);
   }
 
-  updateDescription(value: boolean): void {
-    this.showDescription = value;
-  }
+  // updateDescription(value: boolean): void {
+  //   this.showDescription = value;
+  // }
 
   search(searchKey: string): void {
-    this.updateSearchResult(true,false);
+    //this.updateSearchResult(true);
+    this.showDescription = false;
     console.log("Ädding to history");
     this.displayHistoryService.addToList(searchKey);
     this.searchResultService.setPaper(searchKey);
   }
 
-  updateSearchResult(activeSearchResult: boolean,showDescription:boolean): void {
+  updateSearchResult(): void {
     //console.log('sr úpdated '+activeSearchResult);
-    this.activeSearchResult = activeSearchResult;
-    this.updateDescription(showDescription);
+    //this.activeSearchResult = activeSearchResult;
+    //this.updateDescription(showDescription);
   }
 }
