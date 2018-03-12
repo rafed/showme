@@ -47,7 +47,7 @@ def extractTextFromPDF(filename):
     return extracted_text
 
 def extractReferences(extracted_text):
-    extracted_text[extracted_text.lower().find("references")+10:]
+    extracted_text = extracted_text[extracted_text.lower().find("references")+10:]
     print "Extracted text:", extracted_text
     text=extracted_text.strip()
     text = text.split('[')
@@ -65,8 +65,6 @@ def extractReferences(extracted_text):
     HOST = 'http://freecite.library.brown.edu/citations/create'
     data = {"citation[]" : bibs}
 
-    # print data
-
     r = requests.post(HOST, data=data, headers={"Accept": "text/xml"})
 
     xml = r.text
@@ -83,8 +81,7 @@ def extractReferences(extracted_text):
         bib['pages'] = gettext(citation, 'pages')
         bib['raw_string'] = gettext(citation, 'raw_string')
         
-        print "This is a bib"
-        print bib
+        print "This is a bib", bib
         cites.append(bib)
 
     return json.dumps(cites)
