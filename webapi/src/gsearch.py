@@ -26,7 +26,6 @@ header = {
 
 def extractFromSearchResult(html):
     soup = BeautifulSoup(html, 'html.parser')
-
     result = []
 
     for div in soup.findAll('div', {'class':['gs_r', 'gs_or', 'gs_scl']}):
@@ -113,8 +112,8 @@ def getBibtex(id):
             r = requests.get(biburl)
             bibtex_str = r.text
             
-            bib_database = bibtexparser.loads(bibtex_str)
-            return json.dumps(bib_database.entries)
+            bib = bibtexparser.loads(bibtex_str)
+            return json.dumps(bib.entries)
             
     return 'Not found!'
 

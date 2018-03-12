@@ -8,13 +8,14 @@ import datetime
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
 from pdfminer.pdfpage import PDFPage
-# From PDFInterpreter import both PDFResourceManager and PDFPageInterpreter
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.pdfdevice import PDFDevice
-# Import this to raise exception whenever text extraction from PDF is not allowed
-from pdfminer.pdfpage import PDFTextExtractionNotAllowed
 from pdfminer.layout import LAParams, LTTextBox, LTTextLine
 from pdfminer.converter import PDFPageAggregator
+
+# Import this to raise exception whenever text extraction from PDF is not allowed
+from pdfminer.pdfpage import PDFTextExtractionNotAllowed
+
 
 from flask import Blueprint
 pdf = Blueprint('pdf', __name__)
@@ -98,7 +99,6 @@ def parsePdf(pdflink):
     extracted_text = extractTextFromPDF(filename)
 
     return extractReferences(extracted_text) 
-    # return extracted_text
 
 def gettext(citation, tag):
     if citation.find(tag) is not None:
