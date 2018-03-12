@@ -112,7 +112,7 @@ export class GraphComponent implements OnInit {
       //alert(value);
       //alert(i+" "+value["title"]);
       str=value["title"];
-      console.log(str);
+      
       let arr = str.match(/[0-9A-Za-z_:)'"-]+/gi);
       //alert("L"+array1.length);
       let title="";
@@ -129,8 +129,10 @@ export class GraphComponent implements OnInit {
           title=title+arr[x]+"\n";
         }
         count++;
-        if(count>3)
+        if(count>3){
+          console.log(title);
           break;
+        }
       }
 
       newNodes.push(

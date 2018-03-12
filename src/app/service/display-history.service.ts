@@ -9,11 +9,15 @@ export class DisplayHistoryService {
 
   constructor() { }
   addToList(searchString){
+    console.log("called history");
     let list = JSON.parse(localStorage.getItem('history'));
     if(list!=null){
       for(var i=0; i<list.length; i++){
-        if(list[i] == searchString)
-            return;
+        if(list[i] == searchString){
+          console.log('exist');
+          this.prepareList();
+          return;
+        }
       }
       if(list.length >= 10){
           list.splice(-1, 1);
@@ -22,10 +26,12 @@ export class DisplayHistoryService {
     else{
       list=[];
     }
+    console.log('hi');
     list.splice(0, 0, searchString);
     localStorage.setItem("history", JSON.stringify(list));
-    console.log('after adding history');
+    console.log('after adding to history');
     console.log(list);
+    this.prepareList();
   }
 
   getList(): Observable<any> {

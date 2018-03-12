@@ -42,7 +42,7 @@ export class SearchComponent implements OnInit {
   }
 
   updateSearchResult(activeSearchResult: boolean,showDescription:boolean): void {
-    console.log('sr úpdated '+activeSearchResult);
+    //console.log('sr úpdated '+activeSearchResult);
     this.activeSearchResult = activeSearchResult;
     this.updateDescription(showDescription);
   }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
+import { Router } from '@angular/router';
 import { DisplayHistoryService } from '../../service/display-history.service';
+import { SearchResultService } from '../../service/search-result.service';
 
 @Component({
   selector: 'app-navbar',
@@ -11,25 +13,29 @@ import { DisplayHistoryService } from '../../service/display-history.service';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private displayHistoryService: DisplayHistoryService) { }
+  constructor(private displayHistoryService: DisplayHistoryService,
+    private searchResultService: SearchResultService,
+    private router:Router) { }
 
   history:any[]
   ngOnInit() {
-    this.displayHistoryService.getList()
-      .subscribe(history => {
-        this.history = history
-        console.log('HISTORY');
-        console.log(history);
-      });
+    // this.displayHistoryService.getList()
+    //   .subscribe(history => {
+        
+    //     console.log('HISTORY');
+    //     console.log(history);
+    //   });
 
-      this.uploadFileService.getValue().subscribe((percent: any) => { 
-        console.log("Sending "+percent['number']);
-        this.percentage=percent['number'];
-      });
+    this.displayHistoryService.getList().subscribe((history: any) => { 
+      console.log("got "+history['list']);
+      this.history = history['list'];
+    });
   }
 
   onSelect(searchKey:any){
-    console.log(searchKey+"selected");
+    console.log(searchKey+" selected");
+    this.searchResultService.setPaper(searchKey);
+    this.router.navigate(['/search/result']);
   }
   
 }

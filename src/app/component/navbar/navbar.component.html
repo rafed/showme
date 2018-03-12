@@ -16,7 +16,7 @@
                 <div class="dropdown-content">
                   <p>Search History (Last 10)</p><hr/>
                   <div *ngFor="let hist of this.history">
-                    <a href="#" click="onSelect(hist)">{{hist}}</a>
+                    <a routerLink="result" (click)="onSelect(hist)">{{hist}}</a>
                   </div>
                 </div>
               </div>
