@@ -13,6 +13,7 @@ import { GraphComponent } from './component/graph/graph.component';
 import { SearchResultService } from './service/search-result.service';
 import { HttpClientModule } from '@angular/common/http';
 import { GenerateGraphService } from './service/generate-graph.service';
+import { DisplayHistoryService } from './service/display-history.service';
 
 
 @NgModule({
@@ -30,7 +31,7 @@ import { GenerateGraphService } from './service/generate-graph.service';
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [SearchResultService, GenerateGraphService],
+  providers: [SearchResultService, GenerateGraphService, DisplayHistoryService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

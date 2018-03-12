@@ -6,7 +6,6 @@ import { Server } from '../../utils/Server';
 @Injectable()
 export class GenerateGraphService {
   paper: Paper;
-  url="http://192.168.0.106:9999/api/";
   constructor(private http: HttpClient) { }
 
   setPaper(paper:Paper):  void{

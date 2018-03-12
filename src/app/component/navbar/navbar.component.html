@@ -12,21 +12,12 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
             <div class="dropdown">
-                <button class="dropbtn">History</button>
+                <button class="dropbtn"><i class="fa fa-caret-down"></i> History</button>
                 <div class="dropdown-content">
                   <p>Search History (Last 10)</p><hr/>
-                    <ol>
-                      <li><a href="#">data cube asdadasdasadasdasd</a></li>
-                      <li><a href="#">data cube asdadasd</a></li>
-                      <li><a href="#">data cube asdadasdasdasd</a></li>
-                      <li><a href="#">data cube asdadasdasadasdasd</a></li>
-                      <li><a href="#">data cube asdasdasd</a></li>
-                      <li><a href="#">data cube asdadasdasadasdasd</a></li>
-                      <li><a href="#">data cube asdadasdasadasdasd</a></li>
-                      <li><a href="#">data cube asdadasd</a></li>
-                      <li><a href="#">data cube asdadasdasadasdasd</a></li>
-                      <li><a href="#">data cube asdadasdasadasdasd</a></li>
-                    </ol>
+                  <div *ngFor="let hist of this.history">
+                    <a href="#" click="onSelect(hist)">{{hist}}</a>
+                  </div>
                 </div>
               </div>
         </li>

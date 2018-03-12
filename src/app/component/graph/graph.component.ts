@@ -92,8 +92,11 @@ export class GraphComponent implements OnInit {
         mainTitle=mainTitle+arr[x]+"\n";
       }
       count++;
-      if(count>3)
+      if(count>3){
+        console.log("title: "+mainTitle);
         break;
+      }
+        
     }
     newNodes.push(
       { 

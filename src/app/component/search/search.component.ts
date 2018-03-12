@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SearchResultService } from '../../service/search-result.service';
+import { DisplayHistoryService } from '../../service/display-history.service';
 
 @Component({
   selector: 'app-search',
@@ -11,7 +12,9 @@ export class SearchComponent implements OnInit {
   showDescription = false;
   activeSearchResult = false;
 
-  constructor(private router: Router, private searchResultService: SearchResultService) { }
+  constructor(private router: Router, 
+    private searchResultService: SearchResultService,
+    private displayHistoryService: DisplayHistoryService) { }
 
   ngOnInit() {
     let dynamicScripts = ["../../../assets/js/jquery-1.11.1.min.js","../../../assets/bootstrap/js/bootstrap.min.js"];
@@ -33,6 +36,8 @@ export class SearchComponent implements OnInit {
 
   search(searchKey: string): void {
     this.updateSearchResult(true,false);
+    console.log("Ädding to history");
+    this.displayHistoryService.addToList(searchKey);
     this.searchResultService.setPaper(searchKey);
   }
 

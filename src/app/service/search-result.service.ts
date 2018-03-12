@@ -8,7 +8,6 @@ import { Server } from '../../utils/Server';
 
 @Injectable()
 export class SearchResultService {
-  url="http://192.168.0.106:9999/api/";//"http://172.16.18.105:9999/api/search";
   searchKey:string;
   constructor(private http: HttpClient) { }
 

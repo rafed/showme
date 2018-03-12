@@ -29,10 +29,8 @@
     font-size: 16px;
     border: none;
     cursor: pointer;
-    font-family: Montserrat, sans-serif;
     font-size: 15px !important;
     letter-spacing: 2px;
-    
 }
 
 .dropdown {
@@ -44,19 +42,19 @@
     display: none;
     position: absolute;
     background-color: rgb(245, 243, 243);
-    min-width: 400px;
+    min-width: 300px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
-    color: black;
     right: 0;
 }
 
 .dropdown-content a, p {
-    color: black;
+    color: #777;
     padding: 10px 10px;
     text-decoration: none;
     display: block;
-    font-size: 14px
+    font-size: 14px;
+    letter-spacing: 0px
 }
 
 .dropdown-content li {
