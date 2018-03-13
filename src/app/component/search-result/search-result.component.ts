@@ -19,28 +19,29 @@ export class SearchResultComponent implements OnInit {
     private generateGraphService: GenerateGraphService,
     private searchResultService: SearchResultService ){
      // override the route reuse strategy
-     this.router.routeReuseStrategy.shouldReuseRoute = function(){
-        return false;
-     }
+    //  this.router.routeReuseStrategy.shouldReuseRoute = function(){
+    //     return false;
+    //  }
 
-     this.router.events.subscribe((evt) => {
-        if (evt instanceof NavigationEnd) {
-           // trick the Router into believing it's last link wasn't previously loaded
-           this.router.navigated = false;
-           this.getSearchResult();
-           // if you need to scroll back to top, here is the right place
-           //window.scrollTo(0, 0);
-        }
-    });
+    //  this.router.events.subscribe((evt) => {
+    //     if (evt instanceof NavigationEnd) {
+    //        // trick the Router into believing it's last link wasn't previously loaded
+    //        this.router.navigated = false;
+    //        this.getSearchResult();
+    //        // if you need to scroll back to top, here is the right place
+    //        //window.scrollTo(0, 0);
+    //     }
+    // });
 
 }
   ngOnInit() {
+    this.getSearchResult();
   }
 
   getSearchResult(){
     console.log("KEY: " + this.searchResultService.searchKey);
     this.searchResultService.getPapers()
-      .subscribe(papers => this.papers = papers);
+       .subscribe(papers => this.papers = papers);
   }
 
   onSelect(selectedPaper: Paper): void {

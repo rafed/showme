@@ -5,4 +5,5 @@ export class Paper {
     pdflink: string;
     sitelink: string;
     data_cid: string;
+    authors: string[];
 }

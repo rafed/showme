@@ -16,6 +16,7 @@ export class GraphComponent implements OnInit {
 
   ngOnInit() {
     console.log('graph');
+  
     this.cy = cytoscape({
 			container: document.getElementById('cy'), // container to render in
 

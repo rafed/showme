@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Paper } from '../../utils/Paper';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Server } from '../../utils/Server';
 
 @Injectable()
 export class GenerateGraphService {
   paper: Paper;
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json'})
+  };
+
   constructor(private http: HttpClient) { }
 
   setPaper(paper:Paper):  void{
@@ -14,7 +18,13 @@ export class GenerateGraphService {
   }
 
   getBibtex() {
-    return this.http.get(Server.API_ENDPOINT+"bibtex/"+this.paper.data_cid);
+    return this.http.post(Server.API_ENDPOINT+"bibtex", {
+      data_cid: this.paper.data_cid,
+      title: this.paper.title,
+      authors: this.paper.authors
+    },this.httpOptions)
+    
+    //return this.http.get(Server.API_ENDPOINT+"bibtex/"+this.paper.data_cid);
   }
 
    getReferenceData() {

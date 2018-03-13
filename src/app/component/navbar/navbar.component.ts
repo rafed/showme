@@ -19,17 +19,18 @@ export class NavbarComponent implements OnInit {
 
   history:any[]
   ngOnInit() {
+    console.log("HISTORY");
     // this.displayHistoryService.getList()
     //   .subscribe(history => {
         
     //     console.log('HISTORY');
     //     console.log(history);
     //   });
-
     this.displayHistoryService.getList().subscribe((history: any) => { 
       console.log("got "+history['list']);
       this.history = history['list'];
     });
+    this.displayHistoryService.prepareList();
   }
 
   onSelect(searchKey:any){

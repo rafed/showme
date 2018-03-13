@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SearchResultService } from '../../service/search-result.service';
 import { DisplayHistoryService } from '../../service/display-history.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search',
@@ -12,7 +13,8 @@ export class SearchComponent implements OnInit {
   activeSearchResult = false;
 
   constructor(private searchResultService: SearchResultService,
-    private displayHistoryService: DisplayHistoryService) {
+    private displayHistoryService: DisplayHistoryService,
+    private router: Router) {
   }
 
   ngOnInit() {
@@ -27,7 +29,10 @@ export class SearchComponent implements OnInit {
         document.getElementsByTagName('head')[0].appendChild(node);
     }
     //this.updateDescription(true);
-    console.log(this.showDescription);
+    this.searchResultService.getValue().subscribe((boolean: any) => { 
+      this.showDescription = boolean['value'];
+    });
+    console.log("INIT "+this.showDescription);
   }
 
   // updateDescription(value: boolean): void {
@@ -36,15 +41,10 @@ export class SearchComponent implements OnInit {
 
   search(searchKey: string): void {
     //this.updateSearchResult(true);
-    this.showDescription = false;
+    //this.showDescription = false;
     console.log("Ädding to history");
     this.displayHistoryService.addToList(searchKey);
     this.searchResultService.setPaper(searchKey);
-  }
-
-  updateSearchResult(): void {
-    //console.log('sr úpdated '+activeSearchResult);
-    //this.activeSearchResult = activeSearchResult;
-    //this.updateDescription(showDescription);
+    this.router.navigate(['/search/result']);
   }
 }

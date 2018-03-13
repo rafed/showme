@@ -42,6 +42,7 @@ export class DisplayHistoryService {
     console.log('getting history');
     let history=localStorage.getItem('history');
     if ( history!= null) {
+      console.log(history);
       var list = JSON.parse(history);
       this.subject.next({ list: list });
     }

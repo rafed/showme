@@ -5,13 +5,21 @@ import { of } from 'rxjs/observable/of';
 import { tap } from 'rxjs/operators';
 import { Paper } from '../../utils/Paper';
 import { Server } from '../../utils/Server';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class SearchResultService {
   searchKey:string;
+  private subject = new Subject<any>();
+  
   constructor(private http: HttpClient) { }
 
+  getValue(): Observable<any> {
+    return this.subject.asObservable();
+  }
+
   setPaper(searchKey:string):  void{
+    this.subject.next({ value: false });
     console.log(searchKey);
     this.searchKey=searchKey;
     if (localStorage.getItem('searchResult') != null) {

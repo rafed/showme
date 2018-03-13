@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 <div id="band" class="container text-center">
-  <div [attr.display]="showDescription ? none: null">
-    <h3>Welcome<?php echo " " . $_SESSION["email"]; ?></h3>
+  <div [style.display]="this.showDescription ? 'block': 'none'">
+    <h3>Welcome</h3>
     <p><em>Show me related work</em></p>
     <p>ShowMe is a web application that will help the research community to find related work and understand relationship among them.
     Finding related work and understanding the relation among papers is a non-trivial task. Many services offer help, e.g., GoogleScholar, but they lack many (dynamic) features. Ideally, we are be able to visualize relations among papers as graphs; each node is a paper and there is a directed edge between two nodes if one paper cites another. A click on a node in the graph will show the pdf (if available), and a click on an edge in the graph should show the way one paper cites another. Furthermore, the graph can be enhanced by users; the users can mark an edge as strong (i.e., paper is closely related) or weak.</p>
@@ -34,20 +34,20 @@
                                     <label for="contain">Contains the words</label>
                                     <input class="form-control" type="text" />
                                   </div>
-                                  <a routerLink="result"><button type="submit" class="btn btn-primary" ><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></a>
+                                  <button type="button" class="btn btn-primary" ><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                                 </form>
                             </div>
                         </div>
-                        <a routerLink="result"><button type="submit" class="btn btn-primary"  (click)="search(paper.value)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></a>
+                        <button type="button" class="btn btn-primary"  (click)="search(paper.value)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                     </div>
                 </div>
               </form>  
             </div>
             <br><br><br>
-            <div [attr.display]="!showDescription ? none: null">
+            <div [style.display]="this.showDescription ? 'none': 'block'">
               <ul class="nav nav-tabs">
-                <li><a  routerLink="result">Search Result</a></li>
-                <li><a  routerLink="graph">Graph</a></li>
+                <li><a routerLink="result">Search Result</a></li>
+                <li><a routerLink="graph">Graph</a></li>
               </ul>
               <router-outlet></router-outlet>
             </div>
