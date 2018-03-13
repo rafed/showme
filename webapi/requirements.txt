@@ -6,3 +6,5 @@ Flask-Cors==3.0.3
 pdfminer==20140328
 stem==1.5.4
 xmltodict==0.11.0
+pymysql==0.8.0
+

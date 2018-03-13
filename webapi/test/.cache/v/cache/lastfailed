@@ -1,0 +1,5 @@
+{
+  "app_test.py::MyTest": true, 
+  "gsearch_test.py::GsearchTest": true, 
+  "gsearch_test.py::GsearchTest::testGetTitle": true
+}
