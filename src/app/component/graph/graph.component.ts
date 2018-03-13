@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Paper } from '../../../utils/Paper';
 import { GenerateGraphService } from '../../service/generate-graph.service';
-import * as cytoscape from '../../../assets/cytoscape.js';
+//import * as cytoscape from 'cytoscape';
+declare var cytoscape: any;
 
 @Component({
   selector: 'app-graph',
@@ -16,7 +17,17 @@ export class GraphComponent implements OnInit {
 
   ngOnInit() {
     console.log('graph');
-  
+    // var dynamicScripts = ["../../../assets/cytoscape.js"];
+
+    // for (var i = 0; i < dynamicScripts .length; i++) {
+    //     let node = document.createElement('script');
+    //     node.src = dynamicScripts [i];
+    //     node.type = 'text/javascript';
+    //     node.async = false;
+    //     node.charset = 'utf-8';
+    //     document.getElementsByTagName('head')[0].appendChild(node);
+    // }
+    
     this.cy = cytoscape({
 			container: document.getElementById('cy'), // container to render in
 
