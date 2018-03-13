@@ -26,8 +26,8 @@ create table if not exists Node(
 	journal varchar (150),
 	volume varchar (10),
 	pages varchar (10),
-	year year (10),
-	pdfLink varchar (200),
+	year year,
+	-- pdfLink varchar (200),
 
 	primary key (id)
 );

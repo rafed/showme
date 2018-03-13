@@ -1,23 +1,17 @@
 import configparser
 import pymysql.cursors
+
 class DatabaseUtil:
-    connection=None;
+    connection=None
 
     def __init__(self):
-        """reads setup.ini configuration file and
-        initializes the connection
-        """
-        config = configparser.ConfigParser()
-        config.read('setup.ini')
-        host=config['database']['host']
-        username=config['database']['username']
-        password=config['database']['password']
-        databaseName=config['database']['database']
+        host = "localhost"
+        username = "root"
+        password = "rafed"
+        databaseName = "showme"
         self.setup(host,username,password,databaseName)
 
     def setup(self, host, username, password, databaseName):
-        """initialize the connection
-        """
         self.connection = pymysql.connect(host=host,
                              user=username,
                              password=password,
@@ -26,20 +20,15 @@ class DatabaseUtil:
                              cursorclass=pymysql.cursors.DictCursor)
 
     def executeCUDSQL(self, sql, args=None):
-        """executes sql related to insert, update or delete
-        the sql argument takes the sql with optional arguments
-        argument can be a tuple or list
-        """
         connection=self.connection
         with connection.cursor() as cursor:
             cursor.execute(sql, args)
+
+        id = connection.insert_id()
         connection.commit()
+        return id
 
     def retrieve(self, sql, args=None):
-        """executes sql related to selection or retrieval
-        the sql argument takes the sql with optional arguments
-        argument can be a tuple or list
-        """
         connection=self.connection
         with connection.cursor() as cursor:
             cursor.execute(sql, args)
