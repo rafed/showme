@@ -37,11 +37,11 @@ export class SearchResultService {
       return of(list);
     }
 
-    //console.log('getting result from server\n');
-      // return this.http.get<Paper[]>(Server.API_ENDPOINT+'search/'+this.searchKey)
-      // .pipe(
-      //   tap(response => localStorage.setItem("searchResult", JSON.stringify(response)))
-      // );
-      return of([]);
+    console.log('getting result from server\n');
+    return this.http.get<Paper[]>(Server.API_ENDPOINT+'search/'+this.searchKey)
+    .pipe(
+      tap(response => localStorage.setItem("searchResult", JSON.stringify(response)))
+    );
+      //return of([]);
   }
 }

@@ -18,6 +18,7 @@ export class GenerateGraphService {
   }
 
   getBibtex() {
+    console.log('äuthors:'+ this.paper.authors);
     return this.http.post(Server.API_ENDPOINT+"bibtex", {
       data_cid: this.paper.data_cid,
       title: this.paper.title,

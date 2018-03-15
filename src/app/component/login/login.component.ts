@@ -5,12 +5,11 @@ import { LoginService } from '../../service/login.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css',
-    '../../../assets/css/fonts.css', //http://fonts.googleapis.com/css?family=Roboto:400,100,300,500 k fonts.css hishabe save korsi
-    '../../../assets/bootstrap/css/bootstrap.min.css',
+  styleUrls: ['../../../assets/bootstrap/css/bootstrap.min.css',
     '../../../assets/font-awesome/css/font-awesome.min.css',
     '../../../assets/css/form-elements.css',
-    '../../../assets/css/style.css']
+    '../../../assets/css/style.css',
+    './login.component.css']
 })
 export class LoginComponent implements OnInit {
   
