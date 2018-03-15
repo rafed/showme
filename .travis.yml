@@ -4,4 +4,4 @@ python:
 install:
   - pip install -r webapi/requirements.txt
 script:
-  - py.test
+  - cd webapi/src && python3 -m pytest webapi/test/
