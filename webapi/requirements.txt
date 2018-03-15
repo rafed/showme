@@ -6,4 +6,4 @@ pdfminer.six==20170720
 xmltodict==0.11.0
 pymysql==0.8.0
 pytest==3.4.2
-
+requests==2.12.4
