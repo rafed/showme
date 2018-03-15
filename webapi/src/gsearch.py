@@ -96,7 +96,6 @@ def getPdfLink(div):
         for a in pdf.findAll('a', href=True):
             return a['href']
     return None
-###################################################
 
 def extractFromSearchResult(html):
     soup = BeautifulSoup(html, 'html.parser')
@@ -128,6 +127,7 @@ def extractFromSearchResult(html):
                 result.append(paper)
 
     return json.dumps(result)
+###################################################
 
 @gsearch.route('/search/<query>')
 def searchScholar(query):
@@ -154,7 +154,7 @@ def searchScholar(query):
 
 
 @gsearch.route('/bibtex', methods=['POST'])
-def getBibtex():
+def getPaperInfo():
     databaseUtil=DatabaseUtil()
     data = request.get_json()
 
@@ -190,8 +190,6 @@ def getBibtex():
 
         title = bibjson['title']
         # authors already got from client request, dont take from bibtex
-        # author = bibjson['author']
-        # authors = author.split(",")
         journal = bibjson['journal'] if 'journal' in bibjson else ''
         volume = bibjson['volume'] if 'volume' in bibjson else ''
         pages = bibjson['pages'] if 'pages' in bibjson else ''
@@ -216,7 +214,7 @@ def getBibtex():
         bibjson['year'] = year
 
         return json.dumps(bibjson)
-    else:
+    else: # already available in database
         for row in rows:
             id = row['id']
             break
