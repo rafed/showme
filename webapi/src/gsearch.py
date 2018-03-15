@@ -1,16 +1,19 @@
 #! /usr/bin/env python
 
-from fake_useragent import UserAgent
 import requests
 from bs4 import BeautifulSoup
 import json
 import bibtexparser
 import re
+import os
+import http.cookiejar
 
-from flask import Blueprint
+from databaseUtil import DatabaseUtil
+
+from flask import Blueprint, request
 gsearch = Blueprint('gsearch', __name__)
 
-###### Constants ########
+###### Constants ######
 google = 'https://scholar.google.com'
 header = {
     'Host':'scholar.google.com',
@@ -21,8 +24,79 @@ header = {
     'Connection':'keep-alive',
     'Upgrade-Insecure-Requests':1
 }
+cj = http.cookiejar.MozillaCookieJar()
+cookiepath = os.getcwd()
+cj.load(os.path.join(cookiepath, 'cookies.txt'))
 #########################
 
+###### GOOGLE SEARCH TEXT EXTRACTION METHODS ######
+def getTitle(div):
+    for string in div.findAll('h3', {'class':'gs_rt'}):
+        for a in string.findAll('a', href=True):
+            title = a.text
+            if title.endswith('...'):
+                title = title[:-3]
+            return title
+    return None
+
+def getDescription(div):
+    for desc in div.findAll(True, {'class':'gs_rs'}):
+        return desc.text
+    return None
+
+def getYear(div):
+    for string in div.findAll(True, {'class':'gs_a'}):
+        year = re.compile('[12][0-9]{3}')
+        matchresult = year.search(string.text)
+
+        if matchresult:
+            return matchresult.group(0)
+    return None
+
+def getAuthors(div):
+    for stuff in div.findAll(True, {'class':'gs_a'}):
+        if "-" in stuff.text:
+            string = stuff.text.split("-", 1)[0]
+        else:
+            string = stuff.text
+
+        string.strip()
+
+        if "," in string:
+            authors = []
+            
+            fullname = [x.strip() for x in string.split(",")]
+            
+            for name in fullname:
+                if " " in name:
+                    lastname = name.split()[-1]
+                    lastname.strip()
+                else:
+                    lastname = name
+
+                authors.append(lastname)
+            
+            return authors
+        else:
+            if " " in string:
+                return string.split()[-1].strip()
+            else:
+                return string
+
+    return None
+    
+def getSiteLink(div):
+    for string in div.findAll('h3', {'class':'gs_rt'}):
+        for a in string.findAll('a', href=True):
+            return a['href']
+    return None
+
+def getPdfLink(div):
+    for pdf in div.findAll(True, {'class':'gs_or_ggsm'}):
+        for a in pdf.findAll('a', href=True):
+            return a['href']
+    return None
+###################################################
 
 def extractFromSearchResult(html):
     soup = BeautifulSoup(html, 'html.parser')
@@ -33,25 +107,22 @@ def extractFromSearchResult(html):
             paper = {}
 
             paper['data_cid'] = div['data-cid']
-            for title in div.findAll('h3', {'class':'gs_rt'}):
-                for a in title.findAll('a', href=True):
-                    paper['title'] = a.text
-                    paper['sitelink'] = a['href']
 
-            for desc in div.findAll(True, {'class':'gs_rs'}):
-                paper['description'] = desc.text
+            paper['title'] = getTitle(div)
+            paper['description'] = getDescription(div)
+            paper['sitelink'] = getSiteLink(div)
 
-            # re for year
-            for string in div.findAll(True, {'class':'gs_a'}):
-                year = re.compile('[12][0-9]{3}')
-                matchresult = year.search(string.text)
+            year = getYear(div)
+            if year is not None:
+                paper['pubin'] = year
+            
+            authors = getAuthors(div)
+            if authors is not None:
+                paper['authors'] = authors
 
-                if matchresult:
-                    paper['pubin'] = matchresult.group(0)
-
-            for pdf in div.findAll(True, {'class':'gs_or_ggsm'}):
-                for a in pdf.findAll('a', href=True):
-                    paper['pdflink'] = a['href']
+            pdflink = getPdfLink(div)
+            if pdflink is not None:
+                paper['pdflink'] = pdflink
 
             if 'pdflink' in paper.keys():
                 result.append(paper)
@@ -59,7 +130,7 @@ def extractFromSearchResult(html):
     return json.dumps(result)
 
 @gsearch.route('/search/<query>')
-def searchForPdf(query):
+def searchScholar(query):
     url = google + '/scholar?' \
         + 'q=' + query \
         + '&as_epq=' \
@@ -74,82 +145,107 @@ def searchForPdf(query):
         + '&btnG=&hl=en' \
         + '&as_sdt=0%2C5' 
 
-    # ua = UserAgent()
-    # ua.random
-    # cookie = {
-    #     'NID':'121=GER9lM1XLuhCvzkLm0Ah7JDA1QwCzB-wMCYIbfCBwM0GOqQmd0K0TLh2TJS6cNR4kdGEm2hxLtoFVVHZZzDrYXQtdzT33prsDvhlLIQb7vIuJbbwZVw9ehcqNwgN5Nz6vAFdpYGYK-FwWCkONbRyYHCxvn1OwunDfF4w_HVIezMBAgYCTRNUzdFWDtoy0x67o7jmsXpC6Hj8EP7h5v7iygSxjFICseFQ23kUhokJsqeaAGOLoaaxBW50ZV5RxBX_v4Y7Njw4SvOg9uzs9ZPks8VFAJPjL0uSswUsz416xIjgs6RN9zJO',
-    #     '1P_JAR':'2018-1-7-16',
-    #     'SID':'nQV1fVCDraLjsxSGSwyW_5SYzvIBv1gJicxF5zPg9Tc7Uo0BMm3nTj-3ObcmJ-REhc4tsA.',
-    #     'HSID':'APNYTo-oP2-abgnwv',
-    #     'APISID':'tS49irhdEH2SH0-D/Arx0oOdhGB5MQKMWm',
-    #     'OGP':'-5061821:-5061451:',
-    #     'GSP':'LD=en:CF=4:LM=1515132400:S=Yb-wF4RBxGdxUEyy',
-    #     'SIDCC':'AAiTGe_CreNZSD-chgg-WBYa3v0GyZ1nFe2BFZnRFeTB5M__mlEyJ3U3EPFoHRmaguL8vsSE-XB88IBC3cQoKA',
-    #     'OGPC':'873035776-1:'
-    # }
-
-    r = requests.get(url, header)
+    r = requests.get(url, header, cookies = cj)
     if(r.status_code != 200):
-        print r.status_code, "Error!!!"
+        print (r.status_code, "Error!!!")
         return "Error in searching google scholar", r.status_code
 
     return extractFromSearchResult(r.text)
 
 
-@gsearch.route('/bibtex/<id>')
-def getBibtex(id):
-    refurl = google + '/scholar?q=info:' + id + ':scholar.google.com/&output=cite&scirp=9&hl=en'
-    
-    ua = UserAgent()
-    header = {'User-Agent':ua.random}
+@gsearch.route('/bibtex', methods=['POST'])
+def getBibtex():
+    databaseUtil=DatabaseUtil()
+    data = request.get_json()
 
-    r = requests.get(refurl, header)
-    soup = BeautifulSoup(r.text, 'html.parser')
+    data_cid = data['data_cid']
+    title = data['title']
+    authors = data['authors']
+    print (data_cid, title, authors[0], authors[1])
 
-    for a in soup.findAll('a', {'class':'gs_citi'}):
-        if 'BibTeX' in a.text:
-            biburl = a['href']
-            r = requests.get(biburl)
-            bibtex_str = r.text
-            
-            bib = bibtexparser.loads(bibtex_str)
-            return json.dumps(bib.entries)
-            
-    return 'Not found!'
+    query = "SELECT id FROM Node WHERE id in (SELECT node_id FROM Author WHERE name in (%s, %s)) AND title LIKE %s"
+    args = (authors[0], authors[1], title+'%')
+    rows = databaseUtil.retrieve(query, args)
 
-# @gsearch.route('/expandchild/<title>')
-# def searchPdfLink(title):
-#     url = google + '/scholar?q=' + query + '&btnG=&hl=en&as_sdt=0%2C5'
+    if not rows: # Search Google scholar and insert in DB
+        refurl = google + '/scholar?q=info:' + data_cid + ':scholar.google.com/&output=cite&scirp=9&hl=en'
+        
+        r = requests.get(refurl, header, cookies=cj)
+        soup = BeautifulSoup(r.text, 'html.parser')
 
-#     ua = UserAgent()
-#     header = {'User-Agent':ua.random}
+        for a in soup.findAll('a', {'class':'gs_citi'}):
+            if 'BibTeX' in a.text:
+                biburl = a['href']
+                r = requests.get(biburl)
+                bibtex_str = r.text
+                
+                bib = bibtexparser.loads(bibtex_str)
+                bibstring = json.dumps(bib.entries)
+                break
+        else:
+            return "{'error':'Not found'}"
+        
+        bibjson = json.loads(bibstring)
+        bibjson = bibjson[0]
 
-#     r = requests.get(url, header)
-#     if(r.status_code != 200):
-#         print r.status_code, "Error!!!"
-#         return "Error in searching google scholar", r.status_code
+        title = bibjson['title']
+        # authors already got from client request, dont take from bibtex
+        # author = bibjson['author']
+        # authors = author.split(",")
+        journal = bibjson['journal'] if 'journal' in bibjson else ''
+        volume = bibjson['volume'] if 'volume' in bibjson else ''
+        pages = bibjson['pages'] if 'pages' in bibjson else ''
+        year = bibjson['year'] if 'year' in bibjson else ''
 
-#     soup = BeautifulSoup(r.text, 'html.parser')
+        print ("[*] Inserting in Database...")
 
-#     result = []
+        query = "INSERT INTO Node (title, journal, volume, pages, year) VALUES (%s, %s, %s, %s, %s)"
+        args = (title, journal, volume, pages, year)
+        id = databaseUtil.executeCUDSQL(query, args)
 
-#     for div in soup.findAll('div', {'class':['gs_r', 'gs_or', 'gs_scl']}):
-#         paper = {}
+        query = "INSERT INTO Author VALUES (%s, %s)"
+        for a in authors:
+            args = (a, id)
+            databaseUtil.executeCUDSQL(query, args)
+        
+        bibjson = {}
+        bibjson['title'] = title
+        bibjson['authors'] = authors
+        bibjson['volume'] = volume
+        bibjson['pages'] = pages
+        bibjson['year'] = year
 
-#         paper['data-cid'] = div['data-cid']
-#         for title in div.findAll('h3', {'class':'gs_rt'}):
-#             for a in title.findAll('a', href=True):
-#                 paper['title'] = a.text
-#                 paper['sitelink'] = a['href']
+        return json.dumps(bibjson)
+    else:
+        for row in rows:
+            id = row['id']
+            break
+        
+        query = "SELECT title, journal, volume, pages, year FROM Node WHERE id=%s"
+        args = (id,)
+        rows = databaseUtil.retrieve(query, args)
 
-#         for desc in div.findAll(True, {'class':'gs_rs'}):
-#             paper['description'] = desc.text
+        bibjson = {}
 
-#         for pdf in div.findAll(True, {'class':'gs_or_ggsm'}):
-#             for a in pdf.findAll('a', href=True):
-#                 paper['pdflink'] = a['href']
+        for row in rows:
+            bibjson['title'] = row['title']
+            bibjson['journal'] = row['journal']
+            bibjson['volume'] = row['volume']
+            bibjson['pages'] = row['pages']
+            bibjson['year'] = row['year']
+            break
+        
+        print ("[*] Retrieving from database...")
 
-#         if 'pdflink' in paper.keys():
-#             result.append(paper)
+        query = "SELECT name FROM Author WHERE node_id=%s"
+        args = (id,)
+        rows = databaseUtil.retrieve(query, args)
 
-#     return json.dumps(result)
+        authors = []
+        for row in rows:
+            authors.append(row['name'])
+
+        bibjson['authors'] = authors
+
+        return json.dumps(bibjson)
+        
