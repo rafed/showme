@@ -4,7 +4,7 @@ python:
 install:
   - pip install -r webapi/requirements.txt
 script:
-  - cd webapi/src && python3 -m pytest ../test/
+  - cd webapi/src && python3 -m pytest --cov=./ ../test/
 
 after_success:
   - codecov -t 0ec0d1a7-1932-43e4-a2fd-67c633c69ef5
