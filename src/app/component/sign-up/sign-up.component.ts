@@ -29,4 +29,7 @@ export class SignUpComponent implements OnInit {
   ngOnInit() {
   }
 
+  onSubmit(data) {
+    console.log("Entered Email id : " + data.email+ ' '+ data.password1);
+  }
 }

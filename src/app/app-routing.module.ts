@@ -6,6 +6,7 @@ import { SignUpComponent } from './component/sign-up/sign-up.component';
 import { SearchComponent } from './component/search/search.component';
 import { SearchResultComponent } from './component/search-result/search-result.component';
 import { GraphComponent } from './component/graph/graph.component';
+import { PageNotFoundComponent } from './component/page-not-found/page-not-found.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -16,7 +17,8 @@ const routes: Routes = [
       { path: 'result', component: SearchResultComponent },
       { path: 'graph', component: GraphComponent }
     ]
-  }
+  },
+  { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({

@@ -66,13 +66,13 @@ export class GraphComponent implements OnInit {
         this.mainPDF=bib;
         console.log(this.mainPDF);
 
-        // this.generateGraphService.getReferenceData()
-        //   .subscribe(referenceList => {
-        //   this.reference=referenceList;
-        //   //console.log(this.reference[0]);
-        //   console.log('reference');
-        //   this.buildGraph();
-        // });
+        this.generateGraphService.getReferenceData()
+          .subscribe(referenceList => {
+          this.reference=referenceList;
+          //console.log(this.reference[0]);
+          console.log(this.reference);
+          this.buildGraph();
+        });
       });
   }
 

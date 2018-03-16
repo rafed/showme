@@ -30,12 +30,12 @@ export class GenerateGraphService {
 
    getReferenceData() {
     console.log("PDF "+this.paper.pdflink);
-    return this.http.get(Server.API_ENDPOINT+"parse/"+this.paper.pdflink);
-    // return this.http.post(Server.API_ENDPOINT+"parse", {
-    //   pdflink: this.paper.pdflink,
-    //   title: this.paper.title,
-    //   authors: this.paper.authors
-    // },this.httpOptions)
+    //return this.http.get(Server.API_ENDPOINT+"parse/"+this.paper.pdflink);
+    return this.http.post(Server.API_ENDPOINT+"parse", {
+      pdflink: this.paper.pdflink,
+      title: this.paper.title,
+      authors: this.paper.authors
+    },this.httpOptions)
   }
 
 }

@@ -1,5 +1,5 @@
 export class Paper {
-    pubin: number;
+    year: number;
     description: string;
     title: string;
     pdflink: string;
