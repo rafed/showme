@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/rafed123/showme.svg?branch=master)](https://travis-ci.org/rafed123/showme)
 [![codecov](https://codecov.io/gh/rafed123/showme/branch/master/graph/badge.svg)](https://codecov.io/gh/rafed123/showme)
+![Python](https://img.shields.io/badge/python-3.6+-blue.svg)
+![Angular](https://img.shields.io/badge/angular-5.0-blue.svg)
 
 ## ShowMe - ICSE 2018 SCORE
 
@@ -13,3 +15,5 @@ ShowMe is a an application that will help the research community to find related
 - Aquib Azmain
 - Eusha Kadir
 - [Rafed Muhammad Yasir](https://github.com/rafed123)
+
+Contributors are student of Institute of Information Technology (IIT), University of Dhaka
