@@ -22,7 +22,7 @@ create table if not exists User(
 
 create table if not exists Node(
 	id bigint not null AUTO_INCREMENT,
-	title varchar (150),
+	title varchar (400),
 	journal varchar (150),
 	volume varchar (10),
 	pages varchar (10),
@@ -33,10 +33,11 @@ create table if not exists Node(
 );
 
 create table if not exists Author(
+	id bigint not null AUTO_INCREMENT,
 	name varchar (100),
 	node_id bigint (30),
 
-	primary key (name, node_id),  
+	primary key (id),  
 	foreign key (node_id) references Node(id)
 );
 
