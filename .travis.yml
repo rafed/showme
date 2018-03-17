@@ -8,7 +8,7 @@ install:
   - cd webapi && pip install -e .
   
 script:
-  - cd webapi && python3 -m pytest --cov=./
+  - python3 -m pytest --cov=./
 
 after_success:
   - codecov -t 0ec0d1a7-1932-43e4-a2fd-67c633c69ef5
