@@ -14,7 +14,7 @@ export class SignUpComponent implements OnInit {
   constructor() { }
 
   ngAfterViewInit() {
-    var dynamicScripts = ["../../../assets/js/jquery-1.11.1.min.js","../../../assets/bootstrap/js/bootstrap.min.js","../../../assets/js/jquery.backstretch.min.js","../../../assets/js/scripts.js"];
+    var dynamicScripts = ["../../../assets/bootstrap/js/bootstrap.min.js","../../../assets/js/jquery.backstretch.min.js","../../../assets/js/scripts.js"];
 
     for (var i = 0; i < dynamicScripts .length; i++) {
         let node = document.createElement('script');

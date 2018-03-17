@@ -36,3 +36,29 @@ z-index: 1;
 .tooltip:hover .tooltiptext {
 visibility: visible;
 }
+
+.item {
+  background: #fefff9;
+  text-align: center;
+  padding: 30px;
+}
+
+h2 {
+  color: #6a6a6a;
+  font-size: 15px;
+}
+
+.rate {
+  text-align: center;
+  background-color: #5b5b5b;
+}
+
+.rate a {
+  font-size: 36px;
+  cursor: pointer;
+  color: #FFD119;
+}
+
+.snippetButton {
+  border: none;
+}

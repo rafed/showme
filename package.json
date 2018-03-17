@@ -21,7 +21,10 @@
     "@angular/platform-browser": "^5.2.0",
     "@angular/platform-browser-dynamic": "^5.2.0",
     "@angular/router": "^5.2.0",
+    "@types/cytoscape": "^3.1.7",
     "core-js": "^2.4.1",
+    "cytoscape-qtip": "^2.7.1",
+    "qtip2": "^3.0.3",
     "rxjs": "^5.5.6",
     "zone.js": "^0.8.19"
   },

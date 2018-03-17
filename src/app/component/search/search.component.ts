@@ -19,7 +19,7 @@ export class SearchComponent implements OnInit {
   }
 
   ngOnInit() {
-    let dynamicScripts = ["../../../assets/js/jquery-1.11.1.min.js","../../../assets/bootstrap/js/bootstrap.min.js"];
+    let dynamicScripts = ["../../../assets/bootstrap/js/bootstrap.min.js"];
 
     for (let i = 0; i < dynamicScripts .length; i++) {
         let node = document.createElement('script');
