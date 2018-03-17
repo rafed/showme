@@ -5,7 +5,7 @@ python:
 
 install:
   - pip install -r webapi/requirements.txt
-  - pip install -e .
+  - pip install -e webapi/setup.py
   
 script:
   - cd webapi && python3 -m pytest --cov=./
