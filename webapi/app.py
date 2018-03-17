@@ -3,13 +3,12 @@
 from flask import Flask
 from flask_cors import CORS
 
-from gsearch import gsearch
-from parsepdf import pdf
+from src.gsearch import gsearch
+from src.parsepdf import pdf
 
 
 app = Flask(__name__)
 CORS(app)
-
 PREFIX = '/api'
 
 app.register_blueprint(gsearch, url_prefix=PREFIX)
@@ -21,4 +20,4 @@ def index():
     return 'Showme API 2018. See the documents for usage.'
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=9999)
+    app.run(host='0.0.0.0', port=8000)

@@ -26,4 +26,14 @@ class GsearchTest(unittest.TestCase):
         authors = ["Wang", "Xu"]
         self.assertEqual(gsearch.getAuthors(soup), authors)
     
-    
+    def testGetSiteLink(self):
+        sitelink = "http://ieeexplore.ieee.org/abstract/document/4548235/"
+        self.assertEqual(gsearch.getSiteLink(soup), sitelink)
+
+    def testGetPdfLink(self):
+        pdflink = "https://www.researchgate.net/profile/Zhuo_Wang/publication/4347298_Minimal_Condensed_Cube_Data_Organization_Fast_Computation_and_Incremental_Update/links/564da42608ae4988a7a45fae.pdf"
+        self.assertEqual(gsearch.getPdfLink(soup), pdflink)
+
+    def testExtractFromSearchResult(self):
+        output = '''[{"data_cid": "XEec5xrhXmEJ", "title": "Minimal Condensed Cube: data organization, fast computation, and incremental update", "description": "The condensed cube has been proposed to reduce the huge size of data cubes in OLAP system. The intuition of condensed cube is to compress semantically redundant tuples into their representative Base Single Tuples (BSTs). However, previous studies showed that a ", "sitelink": "http://ieeexplore.ieee.org/abstract/document/4548235/", "year": "2008", "authors": ["Wang", "Xu"], "pdflink": "https://www.researchgate.net/profile/Zhuo_Wang/publication/4347298_Minimal_Condensed_Cube_Data_Organization_Fast_Computation_and_Incremental_Update/links/564da42608ae4988a7a45fae.pdf"}]'''
+        self.assertEqual(gsearch.extractFromSearchResult(html), output)
