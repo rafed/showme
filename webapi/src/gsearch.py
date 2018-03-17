@@ -8,7 +8,7 @@ import re
 import os
 import http.cookiejar
 
-from databaseUtil import DatabaseUtil
+from src.databaseUtil import DatabaseUtil
 
 from flask import Blueprint, request
 gsearch = Blueprint('gsearch', __name__)
@@ -25,8 +25,8 @@ header = {
     'Upgrade-Insecure-Requests':1
 }
 cj = http.cookiejar.MozillaCookieJar()
-cookiepath = os.getcwd()
-cj.load(os.path.join(cookiepath, 'cookies.txt'))
+# cookiepath = os.getcwd()
+cj.load('files/cookies.txt')
 #########################
 
 ###### GOOGLE SEARCH TEXT EXTRACTION METHODS ######
@@ -113,7 +113,7 @@ def extractFromSearchResult(html):
 
             year = getYear(div)
             if year is not None:
-                paper['pubin'] = year
+                paper['year'] = year
             
             authors = getAuthors(div)
             if authors is not None:
@@ -163,8 +163,8 @@ def getPaperInfo():
     authors = data['authors']
     print (data_cid, title, authors[0], authors[1])
 
-    query = "SELECT id FROM Node WHERE id in (SELECT node_id FROM Author WHERE name in (%s, %s)) AND title LIKE %s"
-    args = (authors[0], authors[1], title+'%')
+    query = "SELECT DISTINCT id FROM Node WHERE id IN (SELECT DISTINCT node_id FROM Author WHERE name IN %s) AND title LIKE %s"
+    args = (authors, title+'%')
     rows = databaseUtil.retrieve(query, args)
 
     if not rows: # Search Google scholar and insert in DB
@@ -201,7 +201,7 @@ def getPaperInfo():
         args = (title, journal, volume, pages, year)
         id = databaseUtil.executeCUDSQL(query, args)
 
-        query = "INSERT INTO Author VALUES (%s, %s)"
+        query = "INSERT INTO Author (name, node_id) VALUES (%s, %s)"
         for a in authors:
             args = (a, id)
             databaseUtil.executeCUDSQL(query, args)
