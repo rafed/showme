@@ -54,7 +54,7 @@ create table if not exists Edge(
 create table if not exists Citation_snippet(
 	id bigint not null AUTO_INCREMENT,
 	edge_id bigint (30),
-	text varchar (300),
+	text varchar (600),
 
 	primary key (id),
 	foreign key (edge_id) references Edge(id)
