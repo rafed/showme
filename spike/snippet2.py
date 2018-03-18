@@ -1,5 +1,6 @@
 import os
 import re
+
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
 from pdfminer.pdfpage import PDFPage
@@ -15,30 +16,35 @@ snippets={}
 
 filter_list = ['[', ']', ',']
 def get_citation(citation):
-	text=citation.encode('utf-8')
-	candidate_citation_regex_result=re.findall(r'(\[.*?\])',text)
+	print ('HI')
+	text=citation.replace('\n', ' ')
+	candidate_citation_regex_result=re.findall(r'(\[.*?\])', text)
 	candidate_citations=[]
 	valid_citations={}
 	searched_citations=[]
+
 	for (group) in candidate_citation_regex_result:
-		#print group
+		print (group)
 		candidate_citations.append(group)
+
 	for candidate_citation in candidate_citations:
 		transformed_candidate_citation=candidate_citation
 		for item in filter_list:
 			transformed_candidate_citation=transformed_candidate_citation.replace(item,"")
 		transformed_candidate_citation=re.sub(r"\s+", "", transformed_candidate_citation, flags=re.UNICODE)
 		valid_citations[candidate_citation]=transformed_candidate_citation
-	regex_extract_searched = re.compile("^\s+|\s*,\s*|\s+$")
-	for key,value in valid_citations.iteritems():
+	regex_extract_searched = re.compile(r"^\s+|\s*,\s*|\s+$")
+
+	for key,value in valid_citations.items():
 		numeric_key=key.replace('[',"")
 		numeric_key=numeric_key.replace(']',"")
 		for cite in regex_extract_searched.split(numeric_key):
+			print (cite)
 			if str(cite) not in snippets.keys():
 				snippets[str(cite)]=[]
 			snippets[str(cite)].append(text)
 
-my_file = os.path.join("ai.pdf")
+my_file = os.path.join("eipdf.pdf")
 log_file = os.path.join("out.txt")
 
 password = ""
@@ -86,12 +92,18 @@ for page in PDFPage.create_pages(document):
 		if isinstance(lt_obj, LTTextBox) or isinstance(lt_obj, LTTextLine):
 			extracted_text += lt_obj.get_text()	
 			#pages.append(lt_obj.get_text())
-			if "References" in lt_obj.get_text():
+			if "references" in lt_obj.get_text().lower():
 				stop=True	
 			if isinstance(lt_obj, LTTextBox) and stop==False:
+				print ('true')
 				a.append(lt_obj.get_text())
-	
+			elif isinstance(lt_obj, LTTextLine) and stop==False:
+				print (lt_obj.get_text())
+				a.append(lt_obj.get_text())
+print (len(a))
+#print(extracted_text.replace('\n', ''))	
 for para in a:
+	print(para)
 	get_citation(para)
 
 references=[]
@@ -111,7 +123,7 @@ for i in references:
 	if i in snippets.keys():
 		finalSnippets[i]=snippets[i]
 
-print finalSnippets
+print (finalSnippets)
 
 fp.close()
 
