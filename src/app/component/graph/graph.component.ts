@@ -4,37 +4,38 @@ import { GenerateGraphService } from '../../service/generate-graph.service';
 //import * as cytoscape from 'cytoscape';
 declare var cytoscape: any;
 declare var qtip: any;
-declare var jquery:any;
-declare var $ :any;
+declare var jquery: any;
+declare var $: any;
 
 @Component({
   selector: 'app-graph',
   templateUrl: './graph.component.html',
-  styleUrls: ['../../../assets/bootstrap/css/bootstrap.min.css','./graph.component.css']
+  styleUrls: ['../../../assets/bootstrap/css/bootstrap.min.css', './graph.component.css']
 })
 export class GraphComponent implements OnInit {
   cy: any;
   mainPDF: any;
   reference: any;
+  showGraph = false;
 
-  snippets= ['Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-  'Second Snippet',
-  'Third Snippet'];
+  snippets = ['Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
+    'Second Snippet',
+    'Third Snippet'];
 
   constructor(private generateGraphService: GenerateGraphService) { }
-  
+
 
   ngOnInit() {
     console.log('graph');
     var dynamicScripts = ["../../../assets/bootstrap/js/bootstrap.min.js"];
 
     for (var i = 0; i < dynamicScripts.length; i++) {
-        let node = document.createElement('script');
-        node.src = dynamicScripts [i];
-        node.type = 'text/javascript';
-        node.async = false;
-        node.charset = 'utf-8';
-        document.getElementsByTagName('head')[0].appendChild(node);
+      let node = document.createElement('script');
+      node.src = dynamicScripts[i];
+      node.type = 'text/javascript';
+      node.async = false;
+      node.charset = 'utf-8';
+      document.getElementsByTagName('head')[0].appendChild(node);
     }
 
     this.cy = cytoscape({
@@ -72,11 +73,13 @@ export class GraphComponent implements OnInit {
 
     this.generateGraphService.getBibtex()
       .subscribe(bib => {
+        this.showGraph = false;
         this.mainPDF = bib;
         console.log(this.mainPDF);
 
         this.generateGraphService.getReferenceData()
           .subscribe(referenceList => {
+            this.showGraph=true;
             this.reference = referenceList;
             //console.log(this.reference[0]);
             console.log(this.reference);
@@ -84,8 +87,6 @@ export class GraphComponent implements OnInit {
           });
       });
   }
-
-
 
   buildGraph() {
 
@@ -109,7 +110,6 @@ export class GraphComponent implements OnInit {
       }
       count++;
       if (count > 3) {
-        console.log("title: " + mainTitle);
         break;
       }
 
@@ -123,11 +123,10 @@ export class GraphComponent implements OnInit {
         }
       }
     );
-    console.log(this.reference.length);
+    //console.log(this.reference.length);
     for (let i = 0; i < this.reference.length; i++) {
       let value = this.reference[i];
-      //alert(value);
-      //alert(i+" "+value["title"]);
+      
       str = value["title"];
 
       let arr = str.match(/[0-9A-Za-z_:)'"-]+/gi);
@@ -145,7 +144,7 @@ export class GraphComponent implements OnInit {
         }
         count++;
         if (count > 3) {
-          console.log(title);
+          //console.log(title);
           break;
         }
       }
@@ -164,7 +163,7 @@ export class GraphComponent implements OnInit {
         {
           group: "edges",
           data: {
-            id: i,
+            id: value["edge_id"],
             source: mainTitle,
             target: title //value["title"],
           }
@@ -180,31 +179,39 @@ export class GraphComponent implements OnInit {
     });
 
     let edges = this.cy.edges();
-    let iDiv = document.createElement('div');
-    iDiv.id = 'OuterDiv';
-    iDiv.setAttribute('display','none');
-    document.getElementsByTagName('body')[0].appendChild(iDiv);
-
+    let iDiv=document.getElementById('OuterDiv');
+    if(iDiv==null){
+      console.log("nei");
+      iDiv = document.createElement('div');
+      iDiv.id = 'OuterDiv';
+      iDiv.setAttribute('display', 'none');
+      document.getElementsByTagName('body')[0].appendChild(iDiv);
+    }
 
     for (let i = 0; i < edges.length; i++) {
+      this.snippets=this.reference[i]["snippets"];
       let innerDiv;
-      console.log(edges[i].id());
-    
-      //innerDiv.removeChild('div');
-      innerDiv = document.createElement('div');
-      //innerDiv.id = edges[i].id();
-      innerDiv.innerHTML = "<div class='carousel slide' data-interval='false'>" +
-        "                        <div class='carousel-inner' id="+ edges[i].id()+"></div>" +
-        "                        <button class='snippetButton carousel-control left' href='#DemoCarousel' data-slide='prev'>" +
-        "                        <span class='glyphicon glyphicon-chevron-left'></span></button>" +
-        "                        <button class='snippetButton carousel-control right' href='#DemoCarousel' data-slide='next'>" +
-        "                        <span class='glyphicon glyphicon-chevron-right'></span> </button>" +
-        "                        </div><br/><p style='color: #FFD119; font-size:20px; text-align: center'>Rate Relationship</p>";
-
-      let x = 0;
-      iDiv.appendChild(innerDiv);
       //console.log(edges[i].id());
+
+      //innerDiv.removeChild('div');
+      if(document.getElementById("innerDiv"+edges[i].id())==null){
+        console.log('nei');
+        innerDiv = document.createElement('div');
+        innerDiv.id = "innerDiv"+edges[i].id();
+        innerDiv.innerHTML = "<div id=DemoCarousel"+ edges[i].id() +" class='carousel slide' data-interval='false'>" +
+          "                        <div class='carousel-inner' id=" + edges[i].id() + "></div>" +
+          "                        <button class='snippetButton carousel-control left'"+" href='#DemoCarousel"+ edges[i].id() + "' data-slide='prev'>" +
+          "                        <span class='glyphicon glyphicon-chevron-left'></span></button>" +
+          "                        <button class='snippetButton carousel-control right' "+" href='#DemoCarousel"+ edges[i].id() + "' data-slide='next'>" +
+          "                        <span class='glyphicon glyphicon-chevron-right'></span> </button>" +
+          "                        </div><br/><p style='color: #FFD119; font-size:20px; text-align: center'>Rate Relationship</p>";
+
+        let x = 0;
+        iDiv.appendChild(innerDiv);
+      }
+      document.getElementById(edges[i].id()).innerHTML="";      
       for (let x = 0; x < this.snippets.length; x++) {
+        console.log(x+ ' '+this.snippets[x]);
         if (x == 0) {
           let option = "<div class='item active'><h2>" + "<p style='font-size:20px;text-align: center'><b>Snippet: " + (x + 1) + "</b></p>" + this.snippets[x] + "</h2></div>";
           document.getElementById(edges[i].id()).innerHTML += option;
@@ -214,7 +221,7 @@ export class GraphComponent implements OnInit {
           document.getElementById(edges[i].id()).innerHTML += option;
         }
       }
-      
+
       //on edge click
       edges[i].qtip({
         id: edges[i].id(),
@@ -222,7 +229,7 @@ export class GraphComponent implements OnInit {
         html: true,
         content: function () {
           //return "Click edge "+ this.id()
-          return innerDiv;
+          return document.getElementById("innerDiv"+edges[i].id());
         },
         position: {
           my: 'top center',
@@ -240,73 +247,71 @@ export class GraphComponent implements OnInit {
           show: function () {
             console.log("HI");
             $('.rate').starrr({
-                  rating: 0,
-                  max: 5,
-                  change: function (e, value) {
-                      //console.log("HI");
-                      if (value) {
-          
-                          console.log(value);
-                          //$("[name=rating]").attr("value",value);
-                      }
-                  }
-              });
+              rating: 0,
+              max: 5,
+              change: function (e, value) {
+                //console.log("HI");
+                if (value) {
+                  console.log(value);
+                  //$("[name=rating]").attr("value",value);
+                }
+              }
+            });
 
-              
+
             //this.myFunction();
-            //this.snippets = []
+            // this.snippets = [];
           }
         }
       });
     }
-      // outside node on click
-      this.cy.qtip({
-        content: 'kono node nai mama ekhane',
-        position: {
-          my: 'top center',
-          at: 'bottom center'
-        },
-        show: {
-          cyBgOnly: true
-        },
-        style: {
+    // outside node on click
+    this.cy.qtip({
+      content: 'kono node nai mama ekhane',
+      position: {
+        my: 'top center',
+        at: 'bottom center'
+      },
+      show: {
+        cyBgOnly: true
+      },
+      style: {
 
-          tip: {
-            width: 16,
-            height: 8
-          }
+        tip: {
+          width: 16,
+          height: 8
         }
-      });
+      }
+    });
 
-      // hover
-      this.cy.nodes().qtip({
-        overwrite: false,
-        show: {
-          event: 'mouseover'
-        },
-        hide: {
-          event: 'mouseout'
-        },
-        content: function () { return this.data('title') },
-        position: {
-          my: 'top center',
-          at: 'bottom center'
-        },
-        style: {
-          classes: 'qtip-bootstrap',
-          tip: {
-            width: 16,
-            height: 8
-          }
+    // hover
+    this.cy.nodes().qtip({
+      overwrite: false,
+      show: {
+        event: 'mouseover'
+      },
+      hide: {
+        event: 'mouseout'
+      },
+      content: function () { return this.data('title') },
+      position: {
+        my: 'top center',
+        at: 'bottom center'
+      },
+      style: {
+        classes: 'qtip-bootstrap',
+        tip: {
+          width: 16,
+          height: 8
         }
-      });
+      }
+    });
 
-      //
-      let layout = this.cy.layout({ name: 'concentric' }); //concentric, cose, circle
+    //
+    let layout = this.cy.layout({ name: 'concentric' }); //concentric, cose, circle
 
-      layout.run();
+    layout.run();
 
-    }
   }
-
 }
+

@@ -1,0 +1,21 @@
+<div class="tab-content"> 
+  <div id="showData" class="tab-pane fade in active">
+    <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Year</th>
+            <th>Graph</th>
+          </tr>
+        </thead>
+        <tbody id="searchResult">
+          <tr *ngFor="let paper of this.papers">
+            <td><a href='{{paper.sitelink}}' target="_blank">{{paper.title}}</a></td>
+            <td>{{paper.authors}}</td>
+            <td>{{paper.year}}</td>
+            <td><button type="button" class="btn btn-default" (click)="onSelect(paper)">Generate</button></td>
+        </tbody>
+      </table>
+  </div>
+ </div> 
