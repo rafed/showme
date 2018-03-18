@@ -6,6 +6,7 @@ from flask_cors import CORS
 from src.gsearch import gsearch
 from src.parsepdf import pdf
 from src.rating import rating
+from src.authentication import authentication
 
 app = Flask(__name__)
 CORS(app)
