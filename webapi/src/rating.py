@@ -20,6 +20,6 @@ def rate_relation():
     args = (email, edge_id, value, value)
     databaseUtil.executeCUDSQL(query, args)
 
-    return json.dumps({"msg":"done"})
+    return json.dumps({"msg":"success"})
 
     
