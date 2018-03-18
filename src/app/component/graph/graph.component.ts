@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Paper } from '../../../utils/Paper';
 import { GenerateGraphService } from '../../service/generate-graph.service';
+import { RatingService } from '../../service/rating.service';
 //import * as cytoscape from 'cytoscape';
 declare var cytoscape: any;
 declare var qtip: any;
@@ -22,7 +23,8 @@ export class GraphComponent implements OnInit {
     'Second Snippet',
     'Third Snippet'];
 
-  constructor(private generateGraphService: GenerateGraphService) { }
+  constructor(private generateGraphService: GenerateGraphService,
+    private ratingService: RatingService) { }
 
 
   ngOnInit() {
@@ -38,9 +40,31 @@ export class GraphComponent implements OnInit {
       document.getElementsByTagName('head')[0].appendChild(node);
     }
 
+    this.generateGraphService.getBibtex()
+      .subscribe(bib => {
+        this.showGraph = false;
+        this.mainPDF = bib;
+        console.log(this.mainPDF);
+
+        this.generateGraphService.getReferenceData()
+          .subscribe(referenceList => {
+            console.log('ref peyechi');
+            this.showGraph=true;
+            this.reference = referenceList;
+            //console.log(this.reference[0]);
+            console.log(this.reference);
+            
+            this.buildGraph();
+
+          });
+      });
+  }
+
+  buildGraph() {
+   
     this.cy = cytoscape({
       container: document.getElementById('cy'), // container to render in
-
+      
       style: [ // the stylesheet for the graph
         {
           selector: 'node',
@@ -70,25 +94,6 @@ export class GraphComponent implements OnInit {
     });
 
     this.cy.minZoom(0.5);
-
-    this.generateGraphService.getBibtex()
-      .subscribe(bib => {
-        this.showGraph = false;
-        this.mainPDF = bib;
-        console.log(this.mainPDF);
-
-        this.generateGraphService.getReferenceData()
-          .subscribe(referenceList => {
-            this.showGraph=true;
-            this.reference = referenceList;
-            //console.log(this.reference[0]);
-            console.log(this.reference);
-            this.buildGraph();
-          });
-      });
-  }
-
-  buildGraph() {
 
     let newNodes = [];
     let newEdges = [];
@@ -181,10 +186,10 @@ export class GraphComponent implements OnInit {
     let edges = this.cy.edges();
     let iDiv=document.getElementById('OuterDiv');
     if(iDiv==null){
-      console.log("nei");
+      //console.log("nei");
       iDiv = document.createElement('div');
       iDiv.id = 'OuterDiv';
-      iDiv.setAttribute('display', 'none');
+      iDiv.style.display='none';
       document.getElementsByTagName('body')[0].appendChild(iDiv);
     }
 
@@ -195,7 +200,7 @@ export class GraphComponent implements OnInit {
 
       //innerDiv.removeChild('div');
       if(document.getElementById("innerDiv"+edges[i].id())==null){
-        console.log('nei');
+        //console.log('nei');
         innerDiv = document.createElement('div');
         innerDiv.id = "innerDiv"+edges[i].id();
         innerDiv.innerHTML = "<div id=DemoCarousel"+ edges[i].id() +" class='carousel slide' data-interval='false'>" +
@@ -252,7 +257,10 @@ export class GraphComponent implements OnInit {
               change: function (e, value) {
                 //console.log("HI");
                 if (value) {
-                  console.log(value);
+                  let edgeID=e.target.id;
+                  edgeID=edgeID.substring(5,edgeID.length);
+                  console.log(edgeID+' '+value);
+                  this.ratingService.sendRate("mou@gmail.com",edgeID,value);
                   //$("[name=rating]").attr("value",value);
                 }
               }

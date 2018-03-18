@@ -46,7 +46,7 @@ var slice = [].slice;
       var j, ref, results;
       results = [];
       for (j = 1, ref = this.options.max; 1 <= ref ? j <= ref : j >= ref; 1 <= ref ? j++ : j--) {
-        results.push(this.$el.append("<a href='#' />"));
+        results.push(this.$el.append("<a/>"));
       }
       return results;
     };

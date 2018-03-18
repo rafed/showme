@@ -16,6 +16,7 @@ import { GenerateGraphService } from './service/generate-graph.service';
 import { DisplayHistoryService } from './service/display-history.service';
 import { PageNotFoundComponent } from './component/page-not-found/page-not-found.component';
 import { LoginService } from './service/login.service';
+import { RatingService } from './service/rating.service';
 
 
 @NgModule({
@@ -35,7 +36,7 @@ import { LoginService } from './service/login.service';
     HttpClientModule,
     FormsModule
   ],
-  providers: [SearchResultService, GenerateGraphService, DisplayHistoryService, LoginService],
+  providers: [SearchResultService, GenerateGraphService, DisplayHistoryService, LoginService, RatingService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

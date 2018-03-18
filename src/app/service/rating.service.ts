@@ -1,28 +1,23 @@
 import { Injectable } from '@angular/core';
-import { User } from '../../utils/User';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Server } from '../../utils/Server';
 
 @Injectable()
-export class LoginService {
+export class RatingService {
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json'})
   };
-  
   constructor(private http: HttpClient) { }
-  login(email:string, password:string){
-    
-    this.http.post(Server.API_ENDPOINT+"login", {
+
+  sendRating(email, edgeID, rating): void{
+    //console.log('äuthors:'+ this.paper.authors);
+    this.http.post(Server.API_ENDPOINT+"bibtex", {
       email: email,
-      password: password
+      edgeID: edgeID,
+      rating: rating
     },this.httpOptions)
-    .subscribe(
-      res => {
-        console.log(res);
-      },
-      err => {
-        console.log("Error occured");
-      }
-    );  
+    .subscribe(response => {
+      console.log(response);
+    });
   }
 }
