@@ -58,13 +58,24 @@ export class GraphComponent implements OnInit {
 
           });
       });
+
+      let node =document.getElementById("edgeID");
+
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => this.handleRating());
+      });
+
+      observer.observe(node, {
+        attributes: true,
+        characterData: true
+      });
   }
 
   buildGraph() {
    
     this.cy = cytoscape({
       container: document.getElementById('cy'), // container to render in
-      
+      wheelSensitivity: 0.3,
       style: [ // the stylesheet for the graph
         {
           selector: 'node',
@@ -93,7 +104,7 @@ export class GraphComponent implements OnInit {
       ],
     });
 
-    this.cy.minZoom(0.5);
+    this.cy.minZoom(1);
 
     let newNodes = [];
     let newEdges = [];
@@ -214,15 +225,16 @@ export class GraphComponent implements OnInit {
         let x = 0;
         iDiv.appendChild(innerDiv);
       }
-      document.getElementById(edges[i].id()).innerHTML="";      
-      for (let x = 0; x < this.snippets.length; x++) {
+      document.getElementById(edges[i].id()).innerHTML=""; 
+      let length=this.snippets.length;     
+      for (let x = 0; x < length; x++) {
         console.log(x+ ' '+this.snippets[x]);
         if (x == 0) {
-          let option = "<div class='item active'><h2>" + "<p style='font-size:20px;text-align: center'><b>Snippet: " + (x + 1) + "</b></p>" + this.snippets[x] + "</h2></div>";
+          let option = "<div class='item active'><h2>" + "<p style='font-size:20px;text-align: center'><b>Snippet: " + (x + 1) + "/" + length + "</b></p>" + this.snippets[x] + "</h2></div>";
           document.getElementById(edges[i].id()).innerHTML += option;
         }
         else {
-          let option = "<div class='item'><h2>" + "<p style='font-size:20px;text-align: center'><b>Snippet: " + (x + 1) + "</b></p>" + this.snippets[x] + "</h2></div>";
+          let option = "<div class='item'><h2>" + "<p style='font-size:20px;text-align: center'><b>Snippet: " + (x + 1)  + "/"+length + "</b></p>" + this.snippets[x] + "</h2></div>";
           document.getElementById(edges[i].id()).innerHTML += option;
         }
       }
@@ -259,8 +271,12 @@ export class GraphComponent implements OnInit {
                 if (value) {
                   let edgeID=e.target.id;
                   edgeID=edgeID.substring(5,edgeID.length);
-                  console.log(edgeID+' '+value);
-                  this.ratingService.sendRate("mou@gmail.com",edgeID,value);
+
+                  $("[name=edgeID]").attr("value",edgeID);
+                  $("[name=rating]").attr("value",value);
+
+                  
+                  
                   //$("[name=rating]").attr("value",value);
                 }
               }
@@ -320,6 +336,20 @@ export class GraphComponent implements OnInit {
 
     layout.run();
 
+  }
+
+  handleRating(){
+    console.log('rate');
+    let token=localStorage.getItem('token');
+    //console.log(edgeID+' '+value);
+    if(token==null){
+      alert('Please login first');
+    }
+    else {
+      let edgeID=document.getElementById("edgeID").getAttribute("value");
+      let rating=document.getElementById("rating").getAttribute("value");
+      this.ratingService.sendRating(JSON.parse(token), edgeID ,rating);
+    }
   }
 }
 

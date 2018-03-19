@@ -9,11 +9,12 @@ export class RatingService {
   };
   constructor(private http: HttpClient) { }
 
-  sendRating(email, edgeID, rating): void{
+  sendRating(token, edgeID, rating): void{
     //console.log('äuthors:'+ this.paper.authors);
-    this.http.post(Server.API_ENDPOINT+"bibtex", {
-      email: email,
-      edgeID: edgeID,
+    console.log(token+" "+edgeID+ " "+rating);
+    this.http.post(Server.API_ENDPOINT+"rating", {
+      token: token,
+      edge_id: edgeID,
       rating: rating
     },this.httpOptions)
     .subscribe(response => {

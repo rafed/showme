@@ -10,7 +10,7 @@ export class LoginService {
   };
   
   constructor(private http: HttpClient) { }
-  login(email:string, password:string){
+  login(email:any, password:any){
     
     this.http.post(Server.API_ENDPOINT+"login", {
       email: email,
@@ -19,6 +19,7 @@ export class LoginService {
     .subscribe(
       res => {
         console.log(res);
+        localStorage.setItem("token", JSON.stringify(res));
       },
       err => {
         console.log("Error occured");

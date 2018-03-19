@@ -1,8 +1,64 @@
 <div  [style.display]="this.showGraph ? 'none':'block'" class="loader text-center"></div>
+<input type="hidden" name="edgeID" id="edgeID">
+<input type="hidden" name="rating" id="rating">
 <div class="container">
-  <button type="button" data-toggle="modal" data-target="#myModal" class="btn center-block btn-primary">Filter Graph</button>
-  <br>
-  <div class="well" id="cy">
-    <span id="para" class="tooltiptext"></span>
+  <!-- <button type="button" data-toggle="modal" data-target="#myModal" class="btn center-block btn-primary">Filter Graph</button> -->
+  <!-- <br> -->
+  <div class="well" id="cy"></div>
+  <div class="well rightDiv">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Filter Type</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="radio">
+              <label>
+                <input type="radio" name="typeOne">Journal</label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" name="typeOne">Published in</label>
+            </div>
+          </td>
+          <td>
+            <input type="text" class="form-control" id="typeOneValue">
+            <br/>
+            <label class="switch">
+              <input type="checkbox">
+              <span class="slider round"></span>
+            </label>
+            <p class="text-right">(Remove)</p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="radio">
+              <label>
+                <input type="radio" name="typeTwo">Title</label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" name="typeTwo">Author</label>
+            </div>
+          </td>
+          <td>
+            <input type="text" class="form-control" id="typeTwoalue">
+            <br/>
+            <label class="switch">
+              <input type="checkbox">
+              <span class="slider round"></span>
+            </label>
+            <p class="text-right">(Show only)</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button type="submit" style="background-color:#3F3F44; color:aliceblue" class="btn btn-block btn-default">Filter Graph</button>
   </div>
+  <div class="well rightBelowDiv">similarity/color etc thakbe ei div e</div>
 </div>

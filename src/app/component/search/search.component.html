@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
-<div id="band" class="container text-center">
-  <div [style.display]="this.showDescription ? 'block': 'none'">
-    <h3>Welcome</h3>
+<div id="band" class="container">
+  <div class="text-center" [style.display]="this.showDescription ? 'block': 'none'">
+    <h3 class="text-center">Welcome</h3>
     <p>
       <em>Show me related work</em>
     </p>
@@ -15,7 +15,7 @@
     <hr>
   </div>
 
-  <h4>Search paper here</h4>
+  <h4 class="text-center">Search paper here</h4>
 
   <!--search bar-->
 
@@ -27,14 +27,6 @@
 
       <div class="input-group-btn">
         <div class="btn-group" role="group">
-          <!-- <div class="dropdown dropdown-lg">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
-                            <div class="dropdown-menu dropdown-menu-right" role="menu">
-                              <div *ngFor="let hist of this.history">
-                                <a (click)="search(hist)">{{hist}}</a>
-                              </div>
-                            </div>
-                        </div> -->
           <datalist id="historyList">
             <option *ngFor="let hist of this.history" value="{{hist}}">
           </datalist>
@@ -44,6 +36,37 @@
         </div>
       </div>
     </form>
+    <br/>
+    <button data-toggle="collapse" data-target="#advanced" class="btn btn-block btn-primary">Advanced Search</button>
+    <div id="advanced" class="collapse">
+      <div style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);margin: auto; padding:5px">
+        <form class="form-horizontal" action="/action_page.php">
+          <div class="form-group">
+            <label class="control-label col-sm-4">with the exact phrase</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="phrase" placeholder="Enter phrase">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-4">without the words</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="words" placeholder="Enter words">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-4">Return articles authored by</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="author" placeholder="Enter author's name">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
   <br>
   <br>
