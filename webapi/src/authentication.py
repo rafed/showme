@@ -18,8 +18,10 @@ success =  '{"msg":"success"}'
 
 @authentication.route('/register', methods=['POST'])
 def registration():
-    email = request.form['email']
-    password = request.form['password']
+    data = request.get_json()
+    
+    email = data['email']
+    password = data['password'] #############################################################
     
     queryFind = "SELECT email FROM User WHERE email=%s"
     queryCreate = "INSERT INTO TABLE User (email, password) Values (%s, %s)"
@@ -35,8 +37,10 @@ def registration():
 
 @authentication.route('/login', methods=['POST'])
 def login():
-    email = request.form['email']
-    password = request.form['password']
+    data = request.get_json()
+
+    email = data['email']
+    password = data['password'] ############################################################
 
     query = "SELECT email FROM User WHERE email=%s AND password=%s"
     rows = databaseUtil.retrieve(query, (email, password))
@@ -44,9 +48,11 @@ def login():
     if not rows:
         return error
 
-    return jwt.encode({'email': email, 'msg':'success'}, settings.JWT_SECRET, algorithm=settings.JWT_ALGO)
+    token = jwt.encode({'email': email, 'msg':'success'}, settings.JWT_SECRET, algorithm=settings.JWT_ALGO).decode("utf-8")
+    print("THE jwt token:", token)
+    return json.dumps(token)
 
-
-def getEmail(jwt):
-    decoded = jwt.decode(jwt, settings.JWT_SECRET, settings.JWT_ALGO)
+def getEmail(token):
+    print (token)
+    decoded = jwt.decode(token, settings.JWT_SECRET, settings.JWT_ALGO)
     return decoded['email']
