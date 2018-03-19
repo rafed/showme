@@ -1,13 +1,14 @@
 import pymysql.cursors
+import src.settings as settings
 
 class DatabaseUtil:
     connection=None
 
     def __init__(self):
-        host = "localhost"
-        username = "root"
-        password = "rafed"
-        databaseName = "showme"
+        host = settings.HOST
+        username = settings.DB_USERNAME
+        password = settings.DB_PASSWORD
+        databaseName = settings.DB_NAME
         self.setup(host,username,password,databaseName)
 
     def setup(self, host, username, password, databaseName):
