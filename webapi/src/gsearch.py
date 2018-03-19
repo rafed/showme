@@ -10,25 +10,12 @@ import http.cookiejar
 
 from src.databaseUtil import DatabaseUtil
 from src.scholarparser import ScholarParser
+from src.requester import Requester
 
 from flask import Blueprint, request
 gsearch = Blueprint('gsearch', __name__)
 
-###### Constants ######
 google = 'https://scholar.google.com'
-header = {
-    'Host':'scholar.google.com',
-    'User-Agent':"Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0",
-    'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Accept-Language':'en-US,en;q=0.5',
-    'Accept-Encoding':'gzip, deflate',
-    'Connection':'keep-alive',
-    'Upgrade-Insecure-Requests':1
-}
-cj = http.cookiejar.MozillaCookieJar()
-# cookiepath = os.getcwd()
-cj.load('files/cookies.txt')
-#########################
 
 @gsearch.route('/search/<query>')
 def searchScholar(query):
@@ -46,7 +33,8 @@ def searchScholar(query):
         + '&btnG=&hl=en' \
         + '&as_sdt=0%2C5' 
 
-    r = requests.get(url, header, cookies = cj)
+    requester = Requester()
+    r = requester.sendRequest(url)
     if(r.status_code != 200):
         print (r.status_code, "Error!!!")
         return "Error in searching google scholar", r.status_code
@@ -70,9 +58,9 @@ def getPaperInfo():
     rows = databaseUtil.retrieve(query, args)
 
     if not rows: # Search Google scholar and insert in DB
-        refurl = google + '/scholar?q=info:' + data_cid + ':scholar.google.com/&output=cite&scirp=9&hl=en'
-        
-        r = requests.get(refurl, header, cookies=cj)
+        url = google + '/scholar?q=info:' + data_cid + ':scholar.google.com/&output=cite&scirp=9&hl=en'
+        requester = Requester()
+        r = requester.sendRequest(url)
         soup = BeautifulSoup(r.text, 'html.parser')
 
         for a in soup.findAll('a', {'class':'gs_citi'}):
