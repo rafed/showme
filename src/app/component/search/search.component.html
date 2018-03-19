@@ -40,23 +40,58 @@
     <button data-toggle="collapse" data-target="#advanced" class="btn btn-block btn-primary">Advanced Search</button>
     <div id="advanced" class="collapse">
       <div style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);margin: auto; padding:5px">
-        <form class="form-horizontal" action="/action_page.php">
+        <form class="form-horizontal">
           <div class="form-group">
-            <label class="control-label col-sm-4">with the exact phrase</label>
+            <label class="control-label col-sm-4">with <b>all</b> of the words</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" id="phrase" placeholder="Enter phrase">
+              <input type="text" class="form-control"  placeholder="Enter words">
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-4">without the words</label>
+            <label class="control-label col-sm-4">with the <b>exact phrase</b></label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" id="words" placeholder="Enter words">
+              <input type="text" class="form-control"  placeholder="Enter phrase">
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-4">Return articles authored by</label>
+            <label class="control-label col-sm-4">with <b>at least one</b> of the words</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" id="author" placeholder="Enter author's name">
+              <input type="text" class="form-control" placeholder="Enter words">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-4"><b>without</b> the words</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control"  placeholder="Enter words">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-4">where my words occur</label>
+            <div class="col-sm-8">
+              <div class="radio">
+                <label><input type="radio" value="anywhere in the article" name="type">anywhere in the article</label>
+                <br/>
+                <label><input type="radio" value="in the title of the article" name="type">in the title of the article</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-4">Return articles <b>authored</b> by</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control"  placeholder="Enter author's name">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-4">Return articles <b>published</b> in</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control"  placeholder="Enter year">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-4">Return articles <b>dated</b> between</label>
+            <div class="col-sm-8">
+              <input type="text" placeholder=" From (year)"><b> - </b>
+              <input type="text" placeholder=" To (year)">
             </div>
           </div>
           <div class="form-group">

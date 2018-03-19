@@ -11,54 +11,69 @@
         <tr>
           <th>Filter Type</th>
           <th>Value</th>
+          <th>Options</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>
             <div class="radio">
-              <label>
-                <input type="radio" name="typeOne">Journal</label>
-            </div>
-            <div class="radio">
-              <label>
-                <input type="radio" name="typeOne">Published in</label>
+              <label><input type="radio" checked value="Journal" (click)="setRadio('Journal')" name="type">Journal</label>
             </div>
           </td>
           <td>
-            <input type="text" class="form-control" id="typeOneValue">
-            <br/>
-            <label class="switch">
-              <input type="checkbox">
-              <span class="slider round"></span>
-            </label>
-            <p class="text-right">(Remove)</p>
+            <input type="text"  class="form-control inputField" id="JournalValue">
+          </td>
+          <td>
+            <button class = "btn btn-default" id = "RemoveJournal" (click)="toggleJournal()" >Remove</button>
+            <button class = "btn btn-default" id = "ShowJournal" disabled = "true" (click)="toggleJournal()" >Show only</button>
           </td>
         </tr>
         <tr>
           <td>
             <div class="radio">
-              <label>
-                <input type="radio" name="typeTwo">Title</label>
-            </div>
-            <div class="radio">
-              <label>
-                <input type="radio" name="typeTwo">Author</label>
+              <label><input type="radio" value="PublishedIn" (click)="setRadio('PublishedIn')" name="type">Published in</label>
             </div>
           </td>
           <td>
-            <input type="text" class="form-control" id="typeTwoalue">
-            <br/>
-            <label class="switch">
-              <input type="checkbox">
-              <span class="slider round"></span>
-            </label>
-            <p class="text-right">(Show only)</p>
+            <input type="text" disabled = "true" class="form-control inputField" id="PublishedInValue">
+          </td>
+          <td>
+            <button class = "btn btn-default" id = "RemovePublishedIn" (click)="togglePublishedIn()" >Remove</button>
+            <button class = "btn btn-default" id = "ShowPublishedIn"disabled = "true" (click)="togglePublishedIn()" >Show only</button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="radio">
+              <label><input type="radio" value="Title" name="type" (click)="setRadio('Title')">Title</label>
+            </div>
+          </td>
+          <td>
+            <input type="text" disabled = "true" class="form-control inputField" id="TitleValue">
+          </td>
+          <td>
+            <button class = "btn btn-default" id = "RemoveTitle" (click)="toggleTitle()" >Remove</button>
+            <button class = "btn btn-default" id = "ShowTitle" disabled = "true" (click)="toggleTitle()" >Show only</button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="radio">
+              <label><input type="radio" value="Author" name="type" (click)="setRadio('Author')">Author</label>
+            </div>
+          </td>
+          <td>
+            <input type="text" disabled = "true" class="form-control inputField" id="AuthorValue">
+          </td>
+          <td>
+            <button class = "btn btn-default" id = "RemoveAuthor" (click)="toggleAuthor()" >Remove</button>
+            <button class = "btn btn-default" id = "ShowAuthor" disabled = "true" (click)="toggleAuthor()" >Show only</button>
           </td>
         </tr>
       </tbody>
     </table>
-    <button type="submit" style="background-color:#3F3F44; color:aliceblue" class="btn btn-block btn-default">Filter Graph</button>
+    <button type="submit" (click)="filterGraph()" style="background-color:#3F3F44; color:aliceblue" class="btn btn-block btn-default">Filter Graph</button>
   </div>
   <div class="well rightBelowDiv">similarity/color etc thakbe ei div e</div>
 </div>

@@ -18,14 +18,22 @@ export class GraphComponent implements OnInit {
   mainPDF: any;
   reference: any;
   showGraph = false;
+  filterData: any;
 
+  filterGraph(){
+    if (document.getElementById("").getAttribute){
+
+    }
+
+  }
+
+  
   snippets = ['Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
     'Second Snippet',
     'Third Snippet'];
 
   constructor(private generateGraphService: GenerateGraphService,
     private ratingService: RatingService) { }
-
 
   ngOnInit() {
     console.log('graph');
@@ -40,6 +48,8 @@ export class GraphComponent implements OnInit {
       document.getElementsByTagName('head')[0].appendChild(node);
     }
 
+
+    this.filterGraph();
     this.generateGraphService.getBibtex()
       .subscribe(bib => {
         this.showGraph = false;
@@ -386,6 +396,72 @@ export class GraphComponent implements OnInit {
       let edgeID=document.getElementById("edgeID").getAttribute("value");
       let rating=document.getElementById("rating").getAttribute("value");
       this.ratingService.sendRating(JSON.parse(token), edgeID ,rating);
+    }
+  }
+  toggleJournal(){
+    if(document.getElementById("ShowJournal").getAttribute("disabled")=="true"){
+      document.getElementById("ShowJournal").removeAttribute("disabled");
+      document.getElementById("RemoveJournal").setAttribute("disabled","true");
+    }
+    else {
+      document.getElementById("RemoveJournal").removeAttribute("disabled");
+      document.getElementById("ShowJournal").setAttribute("disabled","true");
+    }
+  }
+  togglePublishedIn(){
+    if(document.getElementById("ShowPublishedIn").getAttribute("disabled")=="true"){
+      document.getElementById("ShowPublishedIn").removeAttribute("disabled");
+      document.getElementById("RemovePublishedIn").setAttribute("disabled","true");
+    }
+    else {
+      document.getElementById("RemovePublishedIn").removeAttribute("disabled");
+      document.getElementById("ShowPublishedIn").setAttribute("disabled","true");
+    }
+  }
+  toggleTitle(){
+    if(document.getElementById("ShowTitle").getAttribute("disabled")=="true"){
+      document.getElementById("ShowTitle").removeAttribute("disabled");
+      document.getElementById("RemoveTitle").setAttribute("disabled","true");
+    }
+    else {
+      document.getElementById("RemoveTitle").removeAttribute("disabled");
+      document.getElementById("ShowTitle").setAttribute("disabled","true");
+    }
+  }
+  toggleAuthor(){
+    if(document.getElementById("ShowAuthor").getAttribute("disabled")=="true"){
+      document.getElementById("ShowAuthor").removeAttribute("disabled");
+      document.getElementById("RemoveAuthor").setAttribute("disabled","true");
+    }
+    else {
+      document.getElementById("RemoveAuthor").removeAttribute("disabled");
+      document.getElementById("ShowAuthor").setAttribute("disabled","true");
+    }
+  }
+  setRadio(type: string){
+    if (type=='Journal'){
+      document.getElementById("JournalValue").removeAttribute("disabled");
+      document.getElementById("PublishedInValue").setAttribute("disabled","true");
+      document.getElementById("TitleValue").setAttribute("disabled","true");
+      document.getElementById("AuthorValue").setAttribute("disabled","true");
+    }
+    else if (type=='PublishedIn'){
+      document.getElementById("PublishedInValue").removeAttribute("disabled");
+      document.getElementById("JournalValue").setAttribute("disabled","true");
+      document.getElementById("TitleValue").setAttribute("disabled","true");
+      document.getElementById("AuthorValue").setAttribute("disabled","true");
+    }
+    else if (type=='Title'){
+      document.getElementById("TitleValue").removeAttribute("disabled");
+      document.getElementById("JournalValue").setAttribute("disabled","true");
+      document.getElementById("PublishedInValue").setAttribute("disabled","true");
+      document.getElementById("AuthorValue").setAttribute("disabled","true");
+    }
+    else if (type=='Author'){
+      document.getElementById("AuthorValue").removeAttribute("disabled");
+      document.getElementById("JournalValue").setAttribute("disabled","true");
+      document.getElementById("TitleValue").setAttribute("disabled","true");
+      document.getElementById("PublishedInValue").setAttribute("disabled","true");
     }
   }
 }
