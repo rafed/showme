@@ -15,6 +15,7 @@ PREFIX = '/api'
 app.register_blueprint(gsearch, url_prefix=PREFIX)
 app.register_blueprint(pdf, url_prefix=PREFIX)
 app.register_blueprint(rating, url_prefix=PREFIX)
+app.register_blueprint(authentication, url_prefix=PREFIX)
 
 @app.route('/')
 @app.route('/index')

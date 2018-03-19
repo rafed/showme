@@ -16,7 +16,7 @@ databaseUtil = DatabaseUtil()
 error = '{"msg":"error"}'
 success =  '{"msg":"success"}'
 
-@authentication.route('/registration', methods=['POST'])
+@authentication.route('/register', methods=['POST'])
 def registration():
     email = request.form['email']
     password = request.form['password']
