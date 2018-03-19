@@ -9,6 +9,7 @@ import os
 import http.cookiejar
 
 from src.databaseUtil import DatabaseUtil
+from src.scholarparser import ScholarParser
 
 from flask import Blueprint, request
 gsearch = Blueprint('gsearch', __name__)
@@ -28,106 +29,6 @@ cj = http.cookiejar.MozillaCookieJar()
 # cookiepath = os.getcwd()
 cj.load('files/cookies.txt')
 #########################
-
-###### GOOGLE SEARCH TEXT EXTRACTION METHODS ######
-def getTitle(div):
-    for string in div.findAll('h3', {'class':'gs_rt'}):
-        for a in string.findAll('a', href=True):
-            title = a.text
-            if title.endswith('...'):
-                title = title[:-3]
-            return title
-    return None
-
-def getDescription(div):
-    for desc in div.findAll(True, {'class':'gs_rs'}):
-        return desc.text
-    return None
-
-def getYear(div):
-    for string in div.findAll(True, {'class':'gs_a'}):
-        year = re.compile('[12][0-9]{3}')
-        matchresult = year.search(string.text)
-
-        if matchresult:
-            return matchresult.group(0)
-    return None
-
-def getAuthors(div):
-    for stuff in div.findAll(True, {'class':'gs_a'}):
-        if "-" in stuff.text:
-            string = stuff.text.split("-", 1)[0]
-        else:
-            string = stuff.text
-
-        string.strip()
-
-        if "," in string:
-            authors = []
-            
-            fullname = [x.strip() for x in string.split(",")]
-            
-            for name in fullname:
-                if " " in name:
-                    lastname = name.split()[-1]
-                    lastname.strip()
-                else:
-                    lastname = name
-
-                authors.append(lastname)
-            
-            return authors
-        else:
-            if " " in string:
-                return string.split()[-1].strip()
-            else:
-                return string
-
-    return None
-    
-def getSiteLink(div):
-    for string in div.findAll('h3', {'class':'gs_rt'}):
-        for a in string.findAll('a', href=True):
-            return a['href']
-    return None
-
-def getPdfLink(div):
-    for pdf in div.findAll(True, {'class':'gs_or_ggsm'}):
-        for a in pdf.findAll('a', href=True):
-            return a['href']
-    return None
-
-def extractFromSearchResult(html):
-    soup = BeautifulSoup(html, 'html.parser')
-    result = []
-
-    for div in soup.findAll('div', {'class':['gs_r', 'gs_or', 'gs_scl']}):
-        if div.has_attr('data-cid'):
-            paper = {}
-
-            paper['data_cid'] = div['data-cid']
-
-            paper['title'] = getTitle(div)
-            paper['description'] = getDescription(div)
-            paper['sitelink'] = getSiteLink(div)
-
-            year = getYear(div)
-            if year is not None:
-                paper['year'] = year
-            
-            authors = getAuthors(div)
-            if authors is not None:
-                paper['authors'] = authors
-
-            pdflink = getPdfLink(div)
-            if pdflink is not None:
-                paper['pdflink'] = pdflink
-
-            if 'pdflink' in paper.keys():
-                result.append(paper)
-
-    return json.dumps(result)
-###################################################
 
 @gsearch.route('/search/<query>')
 def searchScholar(query):
@@ -150,7 +51,8 @@ def searchScholar(query):
         print (r.status_code, "Error!!!")
         return "Error in searching google scholar", r.status_code
 
-    return extractFromSearchResult(r.text)
+    scholarParser = ScholarParser(r.text)
+    return scholarParser.parse()
 
 
 @gsearch.route('/bibtex', methods=['POST'])
@@ -190,10 +92,10 @@ def getPaperInfo():
 
         title = bibjson['title']
         # authors already got from client request, dont take from bibtex
-        journal = bibjson['journal'] if 'journal' in bibjson else ''
-        volume = bibjson['volume'] if 'volume' in bibjson else ''
-        pages = bibjson['pages'] if 'pages' in bibjson else ''
-        year = bibjson['year'] if 'year' in bibjson else ''
+        journal = bibjson['journal'] if 'journal' in bibjson else None
+        volume = bibjson['volume'] if 'volume' in bibjson else None
+        pages = bibjson['pages'] if 'pages' in bibjson else None
+        year = bibjson['year'] if 'year' in bibjson else None
 
         print ("[*] Inserting in Database...")
 
