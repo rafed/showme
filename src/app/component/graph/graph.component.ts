@@ -47,7 +47,8 @@ export class GraphComponent implements OnInit {
         console.log(this.mainPDF);
 
         this.generateGraphService.getReferenceData()
-          .subscribe(referenceList => {
+          .subscribe(
+            referenceList => {
             console.log('ref peyechi');
             this.showGraph=true;
             this.reference = referenceList;
@@ -56,6 +57,9 @@ export class GraphComponent implements OnInit {
             
             this.buildGraph();
 
+          },
+          err => {
+            alert("This PDF Format is not supported by ShowMe")
           });
       });
 
@@ -81,12 +85,11 @@ export class GraphComponent implements OnInit {
           selector: 'node',
           style: {
             'background-color': '#6495ED',
-            'label': 'data(id)', //author dile author dekhabe
+            'label': 'data(id)', 
             'width': '40',
             'height': '40',
             'text-valign': 'center',
             'font-size': '4',
-            //'text-max-width':'35',
             "text-wrap": 'wrap'
           }
         },
@@ -97,8 +100,8 @@ export class GraphComponent implements OnInit {
             'curve-style': 'bezier',
             'width': 1,
             'line-color': '#191970',
-            'target-arrow-color': '#191970', //keno dorkar bujhi ni
-            'target-arrow-shape': 'triangle' //keno dorkar bujhi ni
+            'target-arrow-color': '#191970', 
+            'target-arrow-shape': 'triangle' 
           }
         }
       ],
@@ -110,6 +113,10 @@ export class GraphComponent implements OnInit {
     let newEdges = [];
 
     let str = this.mainPDF["title"];
+    if(str==null){
+      str="not available";
+    }
+    
     //console.log(str);
     let arr = str.match(/[0-9A-Za-z_:)'"-]+/gi);
     //alert("L"+array1.length);
@@ -128,14 +135,33 @@ export class GraphComponent implements OnInit {
       if (count > 3) {
         break;
       }
-
     }
+
+    let author="";
+    if(this.mainPDF["authors"]==null){
+      author="not available";
+    }
+
+    for(let i=0; i<this.mainPDF["authors"].length;i++ ){
+      if(i!=0)
+        author=author+", "+this.mainPDF["authors"][i];
+      else
+      author=this.mainPDF["authors"][0];
+    }
+
+    let journal=this.mainPDF["journal"];
+    if(journal==null){
+      journal="not available";
+    }
+    console.log(author);
     newNodes.push(
       {
         group: "nodes",
         data: {
           id: mainTitle, //
-          title: this.mainPDF.title
+          title: this.mainPDF.title,
+          journal: this.mainPDF["journal"],
+          author: author
         }
       }
     );
@@ -165,13 +191,23 @@ export class GraphComponent implements OnInit {
         }
       }
 
+      author="";
+      for(let i=0; i<value["authors"].length;i++ ){
+        if(i!=0)
+          author=author+", "+value["authors"][i];
+        else
+        author=value["authors"][i];
+
+      }
+      console.log(author);
       newNodes.push(
         {
           group: "nodes",
           data: {
             id: title, //value["title"], 
-            Journal: value["journal"],
-            title: value["title"]
+            journal: value["journal"],
+            title: value["title"],
+            author:author
           }
         }
       );
@@ -181,7 +217,8 @@ export class GraphComponent implements OnInit {
           data: {
             id: value["edge_id"],
             source: mainTitle,
-            target: title //value["title"],
+            target: title, //value["title"],
+            author: author
           }
         }
       );
@@ -228,7 +265,6 @@ export class GraphComponent implements OnInit {
       document.getElementById(edges[i].id()).innerHTML=""; 
       let length=this.snippets.length;     
       for (let x = 0; x < length; x++) {
-        console.log(x+ ' '+this.snippets[x]);
         if (x == 0) {
           let option = "<div class='item active'><h2>" + "<p style='font-size:20px;text-align: center'><b>Snippet: " + (x + 1) + "/" + length + "</b></p>" + this.snippets[x] + "</h2></div>";
           document.getElementById(edges[i].id()).innerHTML += option;
@@ -290,23 +326,23 @@ export class GraphComponent implements OnInit {
       });
     }
     // outside node on click
-    this.cy.qtip({
-      content: 'kono node nai mama ekhane',
-      position: {
-        my: 'top center',
-        at: 'bottom center'
-      },
-      show: {
-        cyBgOnly: true
-      },
-      style: {
+    // this.cy.qtip({
+    //   content: 'kono node nai mama ekhane',
+    //   position: {
+    //     my: 'top center',
+    //     at: 'bottom center'
+    //   },
+    //   show: {
+    //     cyBgOnly: true
+    //   },
+    //   style: {
 
-        tip: {
-          width: 16,
-          height: 8
-        }
-      }
-    });
+    //     tip: {
+    //       width: 16,
+    //       height: 8
+    //     }
+    //   }
+    // });
 
     // hover
     this.cy.nodes().qtip({
@@ -317,7 +353,8 @@ export class GraphComponent implements OnInit {
       hide: {
         event: 'mouseout'
       },
-      content: function () { return this.data('title') },
+      content: function () { return "Title: " +this.data('title')+ 
+      "<br> Author:"+this.data('author')},
       position: {
         my: 'top center',
         at: 'bottom center'
