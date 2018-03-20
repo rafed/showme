@@ -21,10 +21,11 @@ def registration():
     data = request.get_json()
     
     email = data['email']
-    password = data['password'] #############################################################
+    password = data['password']
+    password = hashlib.sha256(password.encode()).hexdigest()
     
     queryFind = "SELECT email FROM User WHERE email=%s"
-    queryCreate = "INSERT INTO TABLE User (email, password) Values (%s, %s)"
+    queryCreate = "INSERT INTO User (email, password) VALUES (%s, %s)"
     
     rows = databaseUtil.retrieve(queryFind, (email,))
 
@@ -40,7 +41,8 @@ def login():
     data = request.get_json()
 
     email = data['email']
-    password = data['password'] ############################################################
+    password = data['password']
+    password = hashlib.sha256(password.encode()).hexdigest()
 
     query = "SELECT email FROM User WHERE email=%s AND password=%s"
     rows = databaseUtil.retrieve(query, (email, password))
