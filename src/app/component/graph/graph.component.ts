@@ -18,14 +18,15 @@ export class GraphComponent implements OnInit {
   mainPDF: any;
   reference: any;
   showGraph = false;
-  filteringValue: any;
-  filteringCriteria = 'Journal';
-  journalValue: string;
-  yearValue: string;
-  titleValue:  string;
-  authorValue: string;
-  filteringOption: string;
-  collection: any;
+  filteringValue="";
+  filteringCriteria = 'Title';
+  journalValue="";
+  yearValue="";
+  titleValue="";
+  authorValue="";
+  filteringOption="";
+  nodeCollection: any;
+  edgeCollection: any;
   
   snippets = [];
 
@@ -88,7 +89,7 @@ export class GraphComponent implements OnInit {
           selector: 'node',
           style: {
             'background-color': '#6495ED',
-            'label': 'data(id)', 
+            'label': 'data(label)', 
             'width': '40',
             'height': '40',
             'text-valign': 'center',
@@ -158,7 +159,8 @@ export class GraphComponent implements OnInit {
       {
         group: "nodes",
         data: {
-          id: mainTitle, //
+          id: this.mainPDF.id,
+          label: mainTitle, //
           title: this.mainPDF.title,
           journal: journal,
           author: author,//author
@@ -191,16 +193,7 @@ export class GraphComponent implements OnInit {
           break;
         }
       }
-
-      // author="";
-      // for(let i=0; i<value["authors"].length;i++ ){
-      //   if(i!=0)
-      //     author=author+", "+value["authors"][i];
-      //   else
-      //   author=value["authors"][i];
-
-      // }
-      //console.log(author);
+      
       year=value["year"];
       if(year==null){
         year="not available";
@@ -220,7 +213,8 @@ export class GraphComponent implements OnInit {
         {
           group: "nodes",
           data: {
-            id: title, //value["title"], 
+            id: value["id"],
+            label: title, //value["title"], 
             journal: journal,
             title: value["title"],
             author: author,
@@ -232,9 +226,9 @@ export class GraphComponent implements OnInit {
         {
           group: "edges",
           data: {
-            id: value["edge_id"],
-            source: mainTitle,
-            target: title //value["title"],
+            id: 'e'+value["edge_id"],
+            source: this.mainPDF.id,
+            target: value["id"] //value["title"],
           }
         }
       );
@@ -242,6 +236,9 @@ export class GraphComponent implements OnInit {
 
     this.cy.add(newNodes);
     this.cy.add(newEdges);
+
+    // this.elementCollection=this.cy.elements().clone();
+    // console.log("TOTAL Clone "+this.elementCollection.length);
 
     this.cy.nodes().on("click", function () {
       console.log('node click korechi');
@@ -307,34 +304,32 @@ export class GraphComponent implements OnInit {
         style: {
           classes: 'rate',
           width: 500,
-          // tip: {
-          //   width: 16,
-          //   height: 8
-          // }
         },
         events: {
           show: function () {
-            console.log("HI");
+            //console.log("HI");
             $('.rate').starrr({
               rating: 0,
               max: 5,
               change: function (e, value) {
                 //console.log("HI");
                 if (value) {
-                  let edgeID=e.target.id;
-                  edgeID=edgeID.substring(5,edgeID.length);
+                  let token=localStorage.getItem('token');
+                  if(token==null){
+                    alert('Please login first');
+                    this.rating = void 0;
+                  }
+                  else{
+                    let edgeID=e.target.id;
+                    edgeID=edgeID.substring(6,edgeID.length);
+                    $("[name=edgeID]").attr("value",edgeID);
+                    $("[name=rating]").attr("value",value);
+                  }
 
-                  $("[name=edgeID]").attr("value",edgeID);
-                  $("[name=rating]").attr("value",value);
-
-                  
                 }
               }
             });
 
-
-            //this.myFunction();
-            // this.snippets = [];
           }
         }
       });
@@ -349,8 +344,9 @@ export class GraphComponent implements OnInit {
       hide: {
         event: 'mouseout'
       },
-      content: function () { return "Title: " +this.data('title')+ 
-      "<br> Author:"+this.data('author')},
+      content: function () { return "Title: " + this.data('title') + 
+      "<br> Author:"+this.data('author') + "<br> Year:"+this.data('year') +
+      "<br> Journal:"+this.data('journal')},
       position: {
         my: 'top center',
         at: 'bottom center'
@@ -373,26 +369,26 @@ export class GraphComponent implements OnInit {
   handleRating(){
     console.log('rate');
     let token=localStorage.getItem('token');
-    if(token==null){
-      alert('Please login first');
-    }
-    else {
+    // if(token==null){
+    //   alert('Please login first');
+    // }
+    // else {
       let edgeID=document.getElementById("edgeID").getAttribute("value");
       let rating=document.getElementById("rating").getAttribute("value");
       this.ratingService.sendRating(JSON.parse(token), edgeID ,rating);
-    }
+    // }
   }
 
   toggleJournal(){
     if(document.getElementById("ShowJournal").getAttribute("disabled")=="true"){
       document.getElementById("ShowJournal").removeAttribute("disabled");
       document.getElementById("RemoveJournal").setAttribute("disabled","true");
-      this.filteringOption="RemoveJournal";
+      this.filteringOption="ShowJournal";
     }
     else {
       document.getElementById("RemoveJournal").removeAttribute("disabled");
       document.getElementById("ShowJournal").setAttribute("disabled","true");
-      this.filteringOption="ShowJournal";
+      this.filteringOption="RemoveJournal";
     }
   }
 
@@ -400,12 +396,12 @@ export class GraphComponent implements OnInit {
     if(document.getElementById("ShowYear").getAttribute("disabled")=="true"){
       document.getElementById("ShowYear").removeAttribute("disabled");
       document.getElementById("RemoveYear").setAttribute("disabled","true");
-      this.filteringOption="RemoveYear";
+      this.filteringOption="ShowYear";
     }
     else {
       document.getElementById("RemoveYear").removeAttribute("disabled");
       document.getElementById("ShowYear").setAttribute("disabled","true");
-      this.filteringOption="ShowYear";
+      this.filteringOption="RemoveYear";
     }
   }
 
@@ -413,12 +409,12 @@ export class GraphComponent implements OnInit {
     if(document.getElementById("ShowTitle").getAttribute("disabled")=="true"){
       document.getElementById("ShowTitle").removeAttribute("disabled");
       document.getElementById("RemoveTitle").setAttribute("disabled","true");
-      this.filteringOption="RemoveTitle";
+      this.filteringOption="ShowTitle";
     }
     else {
       document.getElementById("RemoveTitle").removeAttribute("disabled");
       document.getElementById("ShowTitle").setAttribute("disabled","true");
-      this.filteringOption="ShowTitle";
+      this.filteringOption="RemoveTitle";
     }
   }
 
@@ -426,109 +422,154 @@ export class GraphComponent implements OnInit {
     if(document.getElementById("ShowAuthor").getAttribute("disabled")=="true"){
       document.getElementById("ShowAuthor").removeAttribute("disabled");
       document.getElementById("RemoveAuthor").setAttribute("disabled","true");
-      this.filteringOption="RemoveAuthor";
+      this.filteringOption="ShowAuthor";
     }
     else {
       document.getElementById("RemoveAuthor").removeAttribute("disabled");
       document.getElementById("ShowAuthor").setAttribute("disabled","true");
-      this.filteringOption="ShowAuthor";
+      this.filteringOption="RemoveAuthor";
     }
   }
 
   setRadio(type: string){
+    this.journalValue="";
+    this.authorValue="";
+    this.yearValue="";
+    this.titleValue="";
     this.filteringCriteria=type;
     if (type=='Journal'){
       document.getElementById("JournalValue").removeAttribute("disabled");
       document.getElementById("YearValue").setAttribute("disabled","true");
       document.getElementById("TitleValue").setAttribute("disabled","true");
       document.getElementById("AuthorValue").setAttribute("disabled","true");
+      this.filteringOption="ShowJournal";
     }
     else if (type=='Year'){
       document.getElementById("YearValue").removeAttribute("disabled");
       document.getElementById("JournalValue").setAttribute("disabled","true");
       document.getElementById("TitleValue").setAttribute("disabled","true");
       document.getElementById("AuthorValue").setAttribute("disabled","true");
+      this.filteringOption="ShowYear";
     }
     else if (type=='Title'){
       document.getElementById("TitleValue").removeAttribute("disabled");
       document.getElementById("JournalValue").setAttribute("disabled","true");
       document.getElementById("YearValue").setAttribute("disabled","true");
       document.getElementById("AuthorValue").setAttribute("disabled","true");
+      this.filteringOption="ShowTitle";
     }
     else if (type=='Author'){
       document.getElementById("AuthorValue").removeAttribute("disabled");
       document.getElementById("JournalValue").setAttribute("disabled","true");
       document.getElementById("TitleValue").setAttribute("disabled","true");
       document.getElementById("YearValue").setAttribute("disabled","true");
+      this.filteringOption="ShowAuthor";
     }
   }
 
   filterGraph(){
-    if (this.filteringOption==null){
+    this.undoFiltering();
+    if (this.filteringOption==""){
       this.filteringOption = 'Show' + this.filteringCriteria;
     }
 
-    if(this.authorValue!=null){
+    console.log(this.filteringCriteria+" "+this.filteringOption);
+
+    if(this.authorValue!=""){
       console.log(this.authorValue);
+      document.getElementById("AuthorValue").setAttribute('value',this.authorValue);
       if(this.filteringOption=='ShowAuthor'){
-        this.collection = this.cy.nodes().filter(function( ele ){
-          return (ele.data('author').indexOf(this.authorValue) <= -1) ;
+        this.nodeCollection = this.cy.nodes().filter(function( ele ){
+          console.log(ele.data('author').indexOf(document.getElementById("AuthorValue").getAttribute('value')));
+          return (ele.data('author').indexOf(document.getElementById("AuthorValue").getAttribute('value')) <= -1) ;
         });   
       }
       else{
-        this.collection = this.cy.nodes().filter(function( ele ){
-          return (ele.data('author').indexOf(this.authorValue) > -1) ;
+        this.nodeCollection = this.cy.nodes().filter(function( ele ){
+          console.log(ele.data('author').indexOf(document.getElementById("AuthorValue").getAttribute('value')));
+          return (ele.data('author').indexOf(document.getElementById("AuthorValue").getAttribute('value')) > -1) ;
         });
       }
     }
 
-    else if(this.journalValue!=null){
+    else if(this.journalValue!=""){
       console.log(this.journalValue);
-      let condition="";
+      // let condition;
+      // if(this.filteringOption=='ShowJournal'){
+      //   condition="[journal!='"+this.journalValue+"']";
+      // }
+      // else{
+      //   condition="[journal='"+this.journalValue+"']";
+      // }
+      // console.log(condition);
+      // this.nodeCollection= this.cy.nodes().filter(condition); 
+      document.getElementById("JournalValue").setAttribute('value',this.journalValue);
       if(this.filteringOption=='ShowJournal'){
-        condition="[journal!='"+this.journalValue+"']";
+        this.nodeCollection = this.cy.nodes().filter(function( ele ){
+          //console.log(ele.data('title'));          
+          //console.log(document.getElementById("JournalValue").getAttribute('value'));
+          return (ele.data('journal').indexOf(document.getElementById("JournalValue").getAttribute('value')) <= -1) ;
+        });   
       }
       else{
-        condition="[journal='"+this.journalValue+"']";
+        this.nodeCollection = this.cy.nodes().filter(function( ele ){
+          return (ele.data('journal').indexOf(document.getElementById("JournalValue").getAttribute('value')) > -1) ;
+        });
       }
-      this.collection= this.cy.nodes(condition); 
     }
 
-    else if(this.yearValue!=null){
+    else if(this.yearValue!=""){
       console.log(this.yearValue);
-      let condition="";
+      let condition;
       if(this.filteringOption=='ShowYear'){
         condition="[year!='"+this.yearValue+"']";   
       }
       else{
         condition="[year='"+this.yearValue+"']";
       }
-      this.collection= this.cy.nodes(condition); 
+      //console.log(condition);
+      this.nodeCollection= this.cy.nodes().filter(condition); 
     }
 
     else {
       console.log(this.titleValue);
+      document.getElementById("TitleValue").setAttribute('value',this.titleValue);
       if(this.filteringOption=='ShowTitle'){
-        this.collection = this.cy.nodes().filter(function( ele ){
-          return (ele.data('title').indexOf(this.titleValue) <= -1) ;
+        this.nodeCollection = this.cy.nodes().filter(function( ele ){
+          //console.log(ele.data('title'));          
+          //console.log(document.getElementById("TitleValue").getAttribute('value'));
+          return (ele.data('title').indexOf(document.getElementById("TitleValue").getAttribute('value')) <= -1) ;
         });   
       }
       else{
-        this.collection = this.cy.nodes().filter(function( ele ){
-          return (ele.data('title').indexOf(this.titleValue) > -1) ;
+        this.nodeCollection = this.cy.nodes().filter(function( ele ){
+          return (ele.data('title').indexOf(document.getElementById("TitleValue").getAttribute('value')) > -1) ;
         });
       }
     }
     
-    this.cy.remove( this.collection );
+    this.edgeCollection=this.nodeCollection.connectedEdges();
+    console.log("LEN: "+this.nodeCollection.length)
+    
+    for(let i=0;i<this.nodeCollection.length;i++){
+     //console.log(this.mainPDF.id);
+      if(this.nodeCollection[i].data('id')==this.mainPDF.id){
+        continue;
+      }
+      console.log(this.nodeCollection[i]);
+      this.cy.remove(this.nodeCollection[i]);
+    }
+
     let layout = this.cy.layout({ name: 'concentric' }); 
     layout.run();
-    
-    console.log(this.filteringCriteria+" "+this.filteringOption);
   }
 
   undoFiltering(){
-    this.cy.add(this.collection);
+    if(this.nodeCollection){
+      this.nodeCollection.restore();
+      this.edgeCollection.restore();
+    }
+
     let layout = this.cy.layout({ name: 'concentric' }); 
     layout.run();
   }
