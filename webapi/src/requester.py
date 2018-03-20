@@ -15,19 +15,40 @@ class Requester:
         'Upgrade-Insecure-Requests':1
     }
     cookieFile = "files/cookies.txt"
+    google = 'https://scholar.google.com'
 
 
-    def sendRequest(self, url):
-        
-        if os.path.exists(self.cookieFile):
+    @staticmethod
+    def sendRequest(url):
+        if os.path.exists(Requester.cookieFile):
             print("[*] Cookie file exists!")
             cj = http.cookiejar.MozillaCookieJar()
-            cj.load(self.cookieFile)
-            
-            return requests.get(url, self.header, cookies=cj)
-
-        return requests.get(url, self.header)
-            
+            cj.load(Requester.cookieFile)
+        else:
+            cj = None
         
-        
+        return requests.get(url, Requester.header, cookies=cj)
 
+    @staticmethod 
+    def scholarQuerier(query, phrase='', words_some='', words_none='', scope='any', authors='', published_in='', year_low='', year_hi='') :
+        url = Requester.google + '/scholar?' \
+        + 'as_q=' + query \
+        + '&as_epq=' + phrase \
+        + '&as_oq=' + words_some \
+        + '&as_eq=' + words_none \
+        + '&as_occt=' + scope \
+        + '&as_sauthors=' + authors \
+        + '&as_publication=' + published_in \
+        + '&as_ylo=' + year_low \
+        + '&as_yhi=' + year_hi \
+        + '&as_vis=' \
+        + '&btnG=&hl=en' \
+        + '&as_sdt=0%2C5' 
+
+        r = Requester.sendRequest(url)
+        if(r.status_code != 200):
+            print (r.status_code, "Error!!!")
+            return "Error in searching google scholar", r.status_code
+
+        return r
+        

@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 
+from difflib import SequenceMatcher
+
 class Util:
     @staticmethod
     def lastNamify(authors):
@@ -10,7 +12,7 @@ class Util:
             else:
                 lastname = author
             lastname = lastname.strip()
-            
+
             trimmedAuthors.append(lastname)
         return trimmedAuthors
     
@@ -35,3 +37,7 @@ class Util:
         cite['year'] = Util.getFromXml(citation, 'year')
 
         return cite
+
+    @staticmethod
+    def similar(a, b):
+        return SequenceMatcher(None, a, b).ratio() > 0.85

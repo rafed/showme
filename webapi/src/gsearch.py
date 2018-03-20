@@ -1,45 +1,24 @@
 #! /usr/bin/env python
 
 import requests
-from bs4 import BeautifulSoup
 import json
 import bibtexparser
 
 from src.databaseUtil import DatabaseUtil
 from src.scholarparser import ScholarParser
 from src.requester import Requester
+from src.util import Util
 
 from flask import Blueprint, request
 gsearch = Blueprint('gsearch', __name__)
 
-google = 'https://scholar.google.com'
 
 @gsearch.route('/search/<query>')
 def searchScholar(query):
-    url = google + '/scholar?' \
-        + 'q=' + query \
-        + '&as_epq=' \
-        + '&as_oq=' \
-        + '&as_eq=' \
-        + '&as_occt=' \
-        + '&as_sauthors=' \
-        + '&as_publication=' \
-        + '&as_ylo=' \
-        + '&as_yhi=' \
-        + '&as_vis=' \
-        + '&btnG=&hl=en' \
-        + '&as_sdt=0%2C5' 
-
-    requester = Requester()
-    r = requester.sendRequest(url)
-    if(r.status_code != 200):
-        print (r.status_code, "Error!!!")
-        return "Error in searching google scholar", r.status_code
-
+    r = Requester.scholarQuerier(query)
     scholarParser = ScholarParser(r.text)
     return scholarParser.parse()
 
-##################################
 @gsearch.route('/search', methods=['POST'])
 def advancedSearchScholar():
     data = request.get_json()
@@ -48,31 +27,21 @@ def advancedSearchScholar():
     phrase = data['phrase'] if 'phrase' in data else ''
     words_some = data['words_some'] if 'words_some' in data else ''
     words_none = data['words_none'] if 'words_none' in data else ''
-    scope = data['scope'] if 'scope' in data else ''        # 'any' or 'title'
+    scope = data['scope'] if 'scope' in data else 'any'        # 'any' or 'title'
     authors = data['authors'] if 'authors' in data else ''
     published_in = ['published_in'] if 'published_in' in data else ''
     year_low = data['year_low'] if 'year_low' in data else ''
     year_hi = data['year_hi'] if 'year_hi' in data else ''
 
-    url = google + '/scholar?' \
-        + 'as_q=' + words \
-        + '&as_epq=' + phrase \
-        + '&as_oq=' + words_some \
-        + '&as_eq=' + words_none \
-        + '&as_occt=' + scope \
-        + '&as_sauthors=' + authors \
-        + '&as_publication=' + published_in \
-        + '&as_ylo=' + year_low \
-        + '&as_yhi=' + year_hi \
-        + '&as_vis=' \
-        + '&btnG=&hl=en' \
-        + '&as_sdt=0%2C5' 
-
-    requester = Requester()
-    r = requester.sendRequest(url)
-    if(r.status_code != 200):
-        print (r.status_code, "Error!!!")
-        return "Error in searching google scholar", r.status_code
+    r = Requester.scholarQuerier(words,
+                                 phrase=phrase,
+                                 words_some=words_some,
+                                 words_none=words_none,
+                                 scope=scope,
+                                 authors=authors,
+                                 published_in=published_in,
+                                 year_low=year_low,
+                                 year_hi=year_hi)
 
     scholarParser = ScholarParser(r.text)
     return scholarParser.parse()
@@ -91,7 +60,7 @@ def getPaperInfo():
     rows = databaseUtil.retrieve(query, args)
 
     if not rows: # Search Google scholar and insert in DB
-        url = google + '/scholar?q=info:' + data_cid + ':scholar.google.com/&output=cite&scirp=9&hl=en'
+        url = Requester.google + '/scholar?q=info:' + data_cid + ':scholar.google.com/&output=cite&scirp=9&hl=en'
         requester = Requester()
         r = requester.sendRequest(url)
         
@@ -112,7 +81,6 @@ def getPaperInfo():
         year = bibjson['year'] if 'year' in bibjson else None
 
         print ("[*] Inserting in Database...")
-
         query = "INSERT INTO Node (title, journal, volume, pages, year) VALUES (%s, %s, %s, %s, %s)"
         args = (title, journal, volume, pages, year)
         id = databaseUtil.executeCUDSQL(query, args)
@@ -123,11 +91,12 @@ def getPaperInfo():
             databaseUtil.executeCUDSQL(query, args)
         
         bibjson = {}
+        bibjson['id'] = id
         bibjson['title'] = title
         bibjson['authors'] = authors
         bibjson['volume'] = volume
         bibjson['pages'] = pages
-        bibjson['year'] = year
+        bibjson['year'] = str(year)
 
         return json.dumps(bibjson)
     else: # already available in database
@@ -135,31 +104,48 @@ def getPaperInfo():
             id = row['id']
             break
         
-        query = "SELECT title, journal, volume, pages, year FROM Node WHERE id=%s"
-        args = (id,)
-        rows = databaseUtil.retrieve(query, args)
+        query = "SELECT id, title, journal, volume, pages, year FROM Node WHERE id=%s"
+        rows = databaseUtil.retrieve(query, (id,))
 
         bibjson = {}
 
         for row in rows:
+            bibjson['id'] = row['id']
             bibjson['title'] = row['title']
             bibjson['journal'] = row['journal']
             bibjson['volume'] = row['volume']
             bibjson['pages'] = row['pages']
-            bibjson['year'] = row['year']
+            bibjson['year'] = str(row['year'])
             break
         
         print ("[*] Retrieving from database...")
-
         query = "SELECT name FROM Author WHERE node_id=%s"
-        args = (id,)
-        rows = databaseUtil.retrieve(query, args)
+        rows = databaseUtil.retrieve(query, (id,))
 
         authors = []
         for row in rows:
             authors.append(row['name'])
-
         bibjson['authors'] = authors
 
         return json.dumps(bibjson)
-        
+
+@gsearch.route('/pdflink', methods=['POST'])
+def getPdfLink():
+    data = request.get_json()
+    title = data['title']
+    authors = data['authors']
+    authors = " ".join(x for x in authors)
+
+    r = Requester.scholarQuerier(title, authors=authors)
+    scholarParser = ScholarParser(r.text)
+    searchResult = json.loads(scholarParser.parse())
+
+    firstResult = searchResult[0]
+    resultTitle = firstResult['title']
+
+    reply = {'msg':'error'}
+    if Util.similar(title, resultTitle):
+        reply['msg'] = "success"
+        reply['pdflink'] = firstResult['pdflink']
+
+    return json.dumps(reply)
