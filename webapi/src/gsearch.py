@@ -4,9 +4,6 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import bibtexparser
-import re
-import os
-import http.cookiejar
 
 from src.databaseUtil import DatabaseUtil
 from src.scholarparser import ScholarParser
@@ -42,6 +39,43 @@ def searchScholar(query):
     scholarParser = ScholarParser(r.text)
     return scholarParser.parse()
 
+##################################
+@gsearch.route('/search', methods=['POST'])
+def advancedSearchScholar():
+    data = request.get_json()
+
+    words = data['words'] if 'words' in data else ''
+    phrase = data['phrase'] if 'phrase' in data else ''
+    words_some = data['words_some'] if 'words_some' in data else ''
+    words_none = data['words_none'] if 'words_none' in data else ''
+    scope = data['scope'] if 'scope' in data else ''        # 'any' or 'title'
+    authors = data['authors'] if 'authors' in data else ''
+    published_in = ['published_in'] if 'published_in' in data else ''
+    year_low = data['year_low'] if 'year_low' in data else ''
+    year_hi = data['year_hi'] if 'year_hi' in data else ''
+
+    url = google + '/scholar?' \
+        + 'as_q=' + words \
+        + '&as_epq=' + phrase \
+        + '&as_oq=' + words_some \
+        + '&as_eq=' + words_none \
+        + '&as_occt=' + scope \
+        + '&as_sauthors=' + authors \
+        + '&as_publication=' + published_in \
+        + '&as_ylo=' + year_low \
+        + '&as_yhi=' + year_hi \
+        + '&as_vis=' \
+        + '&btnG=&hl=en' \
+        + '&as_sdt=0%2C5' 
+
+    requester = Requester()
+    r = requester.sendRequest(url)
+    if(r.status_code != 200):
+        print (r.status_code, "Error!!!")
+        return "Error in searching google scholar", r.status_code
+
+    scholarParser = ScholarParser(r.text)
+    return scholarParser.parse()
 
 @gsearch.route('/bibtex', methods=['POST'])
 def getPaperInfo():
@@ -51,7 +85,6 @@ def getPaperInfo():
     data_cid = data['data_cid']
     title = data['title']
     authors = data['authors']
-    print (data_cid, title, authors[0], authors[1])
 
     query = "SELECT DISTINCT id FROM Node WHERE id IN (SELECT DISTINCT node_id FROM Author WHERE name IN %s) AND title LIKE %s"
     args = (authors, title+'%')
@@ -61,21 +94,14 @@ def getPaperInfo():
         url = google + '/scholar?q=info:' + data_cid + ':scholar.google.com/&output=cite&scirp=9&hl=en'
         requester = Requester()
         r = requester.sendRequest(url)
-        soup = BeautifulSoup(r.text, 'html.parser')
-
-        for a in soup.findAll('a', {'class':'gs_citi'}):
-            if 'BibTeX' in a.text:
-                biburl = a['href']
-                r = requests.get(biburl)
-                bibtex_str = r.text
-                
-                bib = bibtexparser.loads(bibtex_str)
-                bibstring = json.dumps(bib.entries)
-                break
-        else:
-            return "{'error':'Not found'}"
         
-        bibjson = json.loads(bibstring)
+        scholarParser = ScholarParser(r.text)
+        biburl = scholarParser.getBibUrl()
+        r = requester.sendRequest(biburl)
+        
+        bibtex_str = r.text
+        bibtex = bibtexparser.loads(bibtex_str)
+        bibjson = bibtex.entries
         bibjson = bibjson[0]
 
         title = bibjson['title']
@@ -92,8 +118,8 @@ def getPaperInfo():
         id = databaseUtil.executeCUDSQL(query, args)
 
         query = "INSERT INTO Author (name, node_id) VALUES (%s, %s)"
-        for a in authors:
-            args = (a, id)
+        for author in authors:
+            args = (author, id)
             databaseUtil.executeCUDSQL(query, args)
         
         bibjson = {}
