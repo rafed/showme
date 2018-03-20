@@ -44,14 +44,6 @@ class ScholarParser:
             if "," in string:
                 authors = [x.strip() for x in string.split(",")]
                 authors = Util.lastNamify(authors)
-                # for name in fullname:
-                #     if " " in name:
-                #         lastname = name.split()[-1]
-                #         lastname = lastname.strip()
-                #     else:
-                #         lastname = name
-
-                #     authors.append(lastname)
                 
                 return authors
             else:
