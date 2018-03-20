@@ -21,7 +21,7 @@ from pdfminer.converter import PDFPageAggregator
 from pdfminer.pdfpage import PDFTextExtractionNotAllowed
 
 from flask import Blueprint
-pdfparser = Blueprint('pdf', __name__)
+pdfparser = Blueprint('pdfparser', __name__)
 
 
 def extractTextFromPDF(filename): # Return whole text & paragraphs
