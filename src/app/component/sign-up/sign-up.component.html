@@ -1,3 +1,20 @@
+<div *ngIf = "signupSuccess" class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <p class = "centerText">You have registered successfully.</p>
+    <a href="/login"><p class = "centerText">Sign in now!</p></a>
+</div>
+<div *ngIf="!passwordMatched" class="alert alert-danger alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <p class="centerText">Password fields must match</p>
+</div>
+<div *ngIf="!validPassword" class="alert alert-danger alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <p class="centerText">Password must be at least 4 characters</p>
+</div>
+<div *ngIf="!validEmail" class="alert alert-danger alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <p class="centerText">Must provide a valid email address</p>
+</div>
 <div class="top-content signupContent">
     <div class="container">
         <div class="row">
@@ -16,16 +33,18 @@
                         </div>
                         <div class="form-group">
                             <label class="sr-only" for="form-password">Password</label>
-                            <input type="password" name="password1" placeholder="Password" class="form-password form-control" id="form-password1" ngModel>
+                            <input type="password" name="password1" placeholder="Password (Minimum 4 characters)" class="form-password form-control"
+                                id="form-password1" ngModel>
                         </div>
                         <div class="form-group">
                             <label class="sr-only" for="form-password">Confirm Password</label>
-                            <input type="password" name="password2" placeholder="Confirm Password" class="form-password form-control" id="form-password2" ngModel>
+                            <input type="password" name="password2" placeholder="Confirm Password" class="form-password form-control" id="form-password2"
+                                ngModel>
                         </div>
-                        <button type="submit" name= "register" class="btn" (click)=onSubmit(registration.value)>Sign up!</button>
+                        <button type="submit" name="register" class="btn" (click)=onSubmit(registration.value)>Sign up!</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-  </div>
+</div>

@@ -16,6 +16,7 @@ import { GenerateGraphService } from './service/generate-graph.service';
 import { DisplayHistoryService } from './service/display-history.service';
 import { PageNotFoundComponent } from './component/page-not-found/page-not-found.component';
 import { LoginService } from './service/login.service';
+import { SignupService} from './service/signup.service';
 import { RatingService } from './service/rating.service';
 
 
@@ -36,7 +37,13 @@ import { RatingService } from './service/rating.service';
     HttpClientModule,
     FormsModule
   ],
-  providers: [SearchResultService, GenerateGraphService, DisplayHistoryService, LoginService, RatingService],
+  providers: [
+    SearchResultService,
+    GenerateGraphService, 
+    DisplayHistoryService, 
+    LoginService, 
+    SignupService, 
+    RatingService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

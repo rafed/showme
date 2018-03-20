@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../../utils/User';
 import { LoginService } from '../../service/login.service';
+import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ import { LoginService } from '../../service/login.service';
 export class LoginComponent implements OnInit {
   
   constructor(private loginService: LoginService) {};
-
+  loginSuccess: boolean = true;
   ngAfterViewInit() {
     var dynamicScripts = ["../../../assets/bootstrap/js/bootstrap.min.js","../../../assets/js/jquery.backstretch.min.js","../../../assets/js/scripts.js"];
 
@@ -33,9 +34,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit(data) {
     console.log("Entered Email id : " + data.email+ ' '+ data.password);
-    this.loginService.login(data.email,data.password);
-    // this.user.email=data.email;
-    // this.user.password=data.password;
+    this.loginSuccess = this.loginService.login(data.email,Md5.hashStr(data.password));
   }
 
 }
