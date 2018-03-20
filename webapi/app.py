@@ -4,7 +4,7 @@ from flask import Flask
 from flask_cors import CORS
 
 from src.gsearch import gsearch
-from src.parsepdf import pdf
+from src.pdfparser import pdfparser
 from src.rating import rating
 from src.authentication import authentication
 
@@ -13,7 +13,7 @@ CORS(app)
 PREFIX = '/api'
 
 app.register_blueprint(gsearch, url_prefix=PREFIX)
-app.register_blueprint(pdf, url_prefix=PREFIX)
+app.register_blueprint(pdfparser, url_prefix=PREFIX)
 app.register_blueprint(rating, url_prefix=PREFIX)
 app.register_blueprint(authentication, url_prefix=PREFIX)
 

@@ -21,7 +21,7 @@ from pdfminer.converter import PDFPageAggregator
 from pdfminer.pdfpage import PDFTextExtractionNotAllowed
 
 from flask import Blueprint
-pdf = Blueprint('pdf', __name__)
+pdfparser = Blueprint('pdf', __name__)
 
 
 def extractTextFromPDF(filename): # Return whole text & paragraphs
@@ -145,7 +145,7 @@ def extractReferences(extracted_text, paras):
 
     return cites
 
-@pdf.route('/parse', methods=['POST'])
+@pdfparser.route('/parse', methods=['POST'])
 def parsePdf():
     databaseUtil=DatabaseUtil()
     data = request.get_json()
@@ -197,7 +197,7 @@ def parsePdf():
             authors = ref['authors'] #if 'authors' in ref else None
             volume = ref['volume'] #if 'volume' in ref else None
             pages = ref['pages'] #if 'pages' in ref else None
-            year = ref['year'] #if 'year' in ref else None
+            year = str(ref['year']) #if 'year' in ref else None
 
             args = (authors, title+'%')
             rows = databaseUtil.retrieve(queryCheck, args)
@@ -213,6 +213,8 @@ def parsePdf():
                     databaseUtil.executeCUDSQL(queryAuthor, args)
             else:
                 id = rows[0]['id']
+            
+            ref['id'] = id
 
             args = (parent_id, id)
             edge_id = databaseUtil.executeCUDSQL(queryEdge, args)
@@ -228,7 +230,7 @@ def parsePdf():
     else:   # Retrieve from database and return
         print ("[*] Returning references from database")
 
-        queryData = "SELECT title, journal, volume, pages, year FROM Node WHERE id=%s"
+        queryData = "SELECT id, title, journal, volume, pages, year FROM Node WHERE id=%s"
         queryAuthor = "SELECT name FROM Author WHERE node_id=%s"
         queryEdge = "SELECT targetnode_id FROM Edge WHERE sourcenode_id=%s"
         querySnippets = "SELECT text FROM Citation_snippet WHERE edge_id=%s"
@@ -252,12 +254,13 @@ def parsePdf():
                 snippets = [s['text'] for s in snippets]
 
                 ref = {}
+                ref['id'] = data['id']
                 ref['title'] = data['title']
                 ref['authors'] = authors
                 ref['journal'] = data['journal']
                 ref['volume'] = data['volume']
                 ref['pages'] = data['pages']
-                ref['year'] = data['year']
+                ref['year'] = str(data['year'])
                 ref['edge_id'] = edge_id
                 ref['snippets'] = snippets
                 break # because only one row should be here
