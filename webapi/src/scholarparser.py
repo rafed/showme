@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import json
 import re
 
+from src.util import Util
 
 class ScholarParser:
     def __init__(self, html):
@@ -38,21 +39,19 @@ class ScholarParser:
             else:
                 string = stuff.text
 
-            string.strip()
+            string = string.strip().replace('…', '')
 
             if "," in string:
-                authors = []
-                
-                fullname = [x.strip() for x in string.split(",")]
-                
-                for name in fullname:
-                    if " " in name:
-                        lastname = name.split()[-1]
-                        lastname.strip()
-                    else:
-                        lastname = name
+                authors = [x.strip() for x in string.split(",")]
+                authors = Util.lastNamify(authors)
+                # for name in fullname:
+                #     if " " in name:
+                #         lastname = name.split()[-1]
+                #         lastname = lastname.strip()
+                #     else:
+                #         lastname = name
 
-                    authors.append(lastname)
+                #     authors.append(lastname)
                 
                 return authors
             else:
@@ -95,3 +94,12 @@ class ScholarParser:
                 result.append(paper)
 
         return json.dumps(result)
+
+    def getBibUrl(self):
+        for a in self.soup.findAll('a', {'class':'gs_citi'}):
+            if 'BibTeX' in a.text:
+                biburl = a['href']
+                return biburl
+        
+        return None
+    
