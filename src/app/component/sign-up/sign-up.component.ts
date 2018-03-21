@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SignupService } from '../../service/signup.service';
 import { Md5 } from 'ts-md5/dist/md5';
+import { Subscription } from 'rxjs/Subscription';
+
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
@@ -14,7 +16,9 @@ export class SignUpComponent implements OnInit {
   passwordMatched: boolean = true;
   validPassword: boolean = true;
   validEmail: boolean = true;
-  signupSuccess: boolean = false;
+  message: boolean;
+  isDuplicateEmail: boolean = true;
+  subscription: Subscription;
 
   constructor(private signupService: SignupService) { }
 
@@ -25,7 +29,7 @@ export class SignUpComponent implements OnInit {
     return false;
   }
   ngAfterViewInit() {
-    var dynamicScripts = ["../../../assets/bootstrap/js/bootstrap.min.js", "../../../assets/js/jquery.backstretch.min.js", "../../../assets/js/scripts.js"];
+    var dynamicScripts = ["../../../assets/bootstrap/js/bootstrap.min.js"];
 
     for (var i = 0; i < dynamicScripts.length; i++) {
       let node = document.createElement('script');
@@ -38,10 +42,17 @@ export class SignUpComponent implements OnInit {
   }
 
   ngOnInit() {
+    
   }
 
   onSubmit(data) {
-
+    this.isDuplicateEmail = this.passwordMatched = this.validPassword = this.validEmail = true;
+    this.subscription = this.signupService.getMessage().subscribe(message => { 
+      this.message = message;
+      if (this.message == false){
+        this.isDuplicateEmail = false;
+      }
+    });
     if (data.password1 != data.password2) {
       this.passwordMatched = false;
     }
@@ -52,8 +63,7 @@ export class SignUpComponent implements OnInit {
       this.validEmail = false;
     }
     else {
-      console.log(data.email + ' ' + data.password1 + ' ' + data.password2+ ' ' + Md5.hashStr(data.password1));
-      this.signupSuccess = this.signupService.signup(data.email, Md5.hashStr(data.password1));
+      this.signupService.signup(data.email, Md5.hashStr(data.password1));
     }  
   }
   

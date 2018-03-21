@@ -10,6 +10,7 @@ import { Subject } from 'rxjs/Subject';
 @Injectable()
 export class SearchResultService {
   searchKey:string;
+  data:any;
   private subject = new Subject<any>();
   
   constructor(private http: HttpClient) { }
@@ -43,5 +44,28 @@ export class SearchResultService {
       tap(response => localStorage.setItem("searchResult", JSON.stringify(response)))
     );
       //return of([]);
+  }
+
+  setAdvancedSearchPaper(data:any){
+    this.data=data;
+    if (localStorage.getItem('advancedSearchResult') != null) {
+      localStorage.removeItem('advancedSearchResult');
+      
+      console.log(localStorage.getItem('advancedSearchResult'));
+    }
+    this.subject.next({ value: true });
+  }
+
+  getAdvancedSearchPaper():Observable<Paper[]>{
+    debugger;
+    let advancedSearchResult=localStorage.getItem('advancedSearchResult');
+    if ( advancedSearchResult!= null) {
+      var list = JSON.parse(advancedSearchResult);
+      return of(list);
+    }
+    return this.http.get<Paper[]>(Server.API_ENDPOINT+'search/'+this.data)
+    .pipe(
+      tap(response => localStorage.setItem('advancedSearchResult', JSON.stringify(response)))
+    );
   }
 }

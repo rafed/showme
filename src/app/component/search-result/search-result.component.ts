@@ -19,16 +19,23 @@ export class SearchResultComponent implements OnInit {
     ngOnInit() {
     //console.log("SR");
     this.getSearchResult();
+    this.getAdvancedSearchResult();
     this.searchResultService.getValue()
       .subscribe((updated: any) => { 
         console.log("got "+updated['value']);
         this.getSearchResult();
+        this.getAdvancedSearchResult();
       });
   }
 
   getSearchResult(){
     //console.log("getting result for: " + this.searchResultService.searchKey);
     this.searchResultService.getPapers()
+       .subscribe(papers => this.papers = papers);
+  }
+
+  getAdvancedSearchResult(){
+    this.searchResultService.getAdvancedSearchPaper()
        .subscribe(papers => this.papers = papers);
   }
 

@@ -6,23 +6,19 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#myPage">ShowMe</a>
+      <a class="navbar-brand" routerLink="/search">ShowMe</a>
     </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
+    <div *ngIf="isAuthenticated" class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav navbar-right">
-        <!-- <li>
-            <div class="dropdown">
-                <button class="dropbtn"><i class="fa fa-caret-down"></i> History</button>
-                <div class="dropdown-content">
-                  <p>Search History (Last 10)</p><hr/>
-                  <div *ngFor="let hist of this.history">
-                    <a (click)="onSelect(hist)">{{hist}}</a>
-                  </div>
-                </div>
-              </div>
-        </li> -->
         <li>
-          <a class="logout" href="#">Log Out</a>
+          <a  class="logout" (click)="logout()">Sign Out</a>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="!isAuthenticated" class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a class="logout" routerLink="/login">Sign In</a>
         </li>
       </ul>
     </div>

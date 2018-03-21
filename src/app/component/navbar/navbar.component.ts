@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -8,30 +9,19 @@ import { Component, OnInit } from '@angular/core';
   './navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-
-  constructor() { }
-
-  // history:any[]
+  public isAuthenticated: boolean;
+  constructor( private Router: Router) { }
   ngOnInit() {
-    // console.log("HISTORY");
-    // this.displayHistoryService.getList()
-    //   .subscribe(history => {
-        
-    //     console.log('HISTORY');
-    //     console.log(history);
-    //   });
-    // this.displayHistoryService.getList().subscribe((history: any) => { 
-    //   console.log("got "+history['list']);
-    //   this.history = history['list'];
-    // });
-    // this.displayHistoryService.prepareList();
+    if (localStorage.getItem("token")!=null){
+      this.isAuthenticated = true;
+    }
+    else this.isAuthenticated = false;  
   }
-
-  // onSelect(searchKey:any){
-  //   console.log(searchKey+" selected");
-  //   this.searchResultService.setPaper(searchKey);
-  //   //this.router.navigate(['/search']);
-  //   //this.router.navigate(['/search/result']);
-  // }
-  
+  public logout(){
+    localStorage.removeItem('token');
+    localStorage.removeItem('email');
+    this.Router.navigate(['/search']);
+    this.isAuthenticated = false;
+  }
+ 
 }

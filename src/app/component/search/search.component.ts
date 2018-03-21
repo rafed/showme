@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SearchResultService } from '../../service/search-result.service';
 import { DisplayHistoryService } from '../../service/display-history.service';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-search',
@@ -12,10 +13,25 @@ export class SearchComponent implements OnInit {
   showDescription = true;
   history:string[];
   searchKey: string;
+  advancedSearchForm: FormGroup;
 
   constructor(private searchResultService: SearchResultService,
     private displayHistoryService: DisplayHistoryService,
-    private router: Router) {
+    private router: Router, private fb: FormBuilder) {
+      this.createAdvancedSearchForm();
+  }
+  createAdvancedSearchForm() {
+    this.advancedSearchForm = this.fb.group({
+      "words": [''],
+      "phrase": [''],
+      "words_some": [''],
+      "words_none": [''],
+      "scope": [''],
+      "authors": [''],
+      "published_in": [''],
+      "year_low": [''],
+      "year_hi":[''] 
+    });
   }
 
   ngOnInit() {
@@ -44,5 +60,10 @@ export class SearchComponent implements OnInit {
     this.displayHistoryService.addToList(this.searchKey);
     this.searchResultService.setPaper(this.searchKey);
     this.router.navigate(['/search/result']);
+  }
+
+  advancedSearch(){
+    console.log(this.advancedSearchForm.value);
+    this.searchResultService.setAdvancedSearchPaper(this.advancedSearchForm.value);
   }
 }

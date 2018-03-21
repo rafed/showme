@@ -35,7 +35,8 @@ import { RatingService } from './service/rating.service';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     SearchResultService,

@@ -12,6 +12,7 @@
 
 .logout{
     color: #d5d5d5 !important;
+    cursor: pointer;
 }
 
 .navbar-nav li a:hover {
