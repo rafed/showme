@@ -7,6 +7,7 @@ import datetime
 import re
 
 from src.databaseUtil import DatabaseUtil
+from src.rating import edgeRating
 from src.util import Util
 
 from pdfminer.pdfparser import PDFParser
@@ -215,11 +216,11 @@ def parsePdf():
                 id = rows[0]['id']
             
             ref['id'] = id
-
             args = (parent_id, id)
             edge_id = databaseUtil.executeCUDSQL(queryEdge, args)
             ref['edge_id'] = edge_id
-
+            ref['edge_rating'] = 0
+            
             snippets = ref['snippets']
             for snip in snippets:
                 args = (edge_id, snip)
@@ -262,6 +263,7 @@ def parsePdf():
                 ref['pages'] = data['pages']
                 ref['year'] = str(data['year'])
                 ref['edge_id'] = edge_id
+                ref['edge_rating'] = edgeRating(edge_id)
                 ref['snippets'] = snippets
                 break # because only one row should be here
 
