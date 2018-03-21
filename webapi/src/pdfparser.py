@@ -133,8 +133,8 @@ def extractReferences(extracted_text, paras):
 
     cites = []
     counter = 0
-    for citation in etree.findall("citation"):
-        cite = Util.getCites(citation)
+    for citations in etree.findall("citation"):
+        cite = Util.getCite(citations)
 
         if citeKey[counter] in citeSnippets.keys():
             cite['snippets'] = citeSnippets[citeKey[counter]]

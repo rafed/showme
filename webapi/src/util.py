@@ -13,28 +13,29 @@ class Util:
                 lastname = author
             lastname = lastname.strip()
 
-            trimmedAuthors.append(lastname)
+            if lastname:
+                trimmedAuthors.append(lastname)
         return trimmedAuthors
     
     @staticmethod
-    def getFromXml(citation, tag):
-        if citation.find(tag) is not None:
-            return citation.find(tag).text
+    def getXmlTagText(xml, tag):
+        if xml.find(tag) is not None:
+            return xml.find(tag).text
         else:
             return None
     
     @staticmethod
-    def getCites(citation):
+    def getCite(xml):
         cite = {}
-        authors = [i.text for i in citation.iter("author")]
+        authors = [i.text for i in xml.iter("author")]
         authors = Util.lastNamify(authors)
 
         cite['authors'] = authors
-        cite['title'] = Util.getFromXml(citation, 'title')
-        cite['journal'] = Util.getFromXml(citation, 'journal')
-        cite['volume'] = Util.getFromXml(citation, 'volume')
-        cite['pages'] = Util.getFromXml(citation, 'pages')
-        cite['year'] = Util.getFromXml(citation, 'year')
+        cite['title'] = Util.getXmlTagText(xml, 'title')
+        cite['journal'] = Util.getXmlTagText(xml, 'journal')
+        cite['volume'] = Util.getXmlTagText(xml, 'volume')
+        cite['pages'] = Util.getXmlTagText(xml, 'pages')
+        cite['year'] = Util.getXmlTagText(xml, 'year')
 
         return cite
 
