@@ -25,7 +25,7 @@ def registration():
     password = hashlib.sha256(password.encode()).hexdigest()
     
     queryFind = "SELECT email FROM User WHERE email=%s"
-    queryCreate = "INSERT INTO User (email, password) VALUES (%s, %s)"
+    queryCreate = "INSERT INTO User (email, password, created) VALUES (%s, %s, NOW())"
     
     rows = databaseUtil.retrieve(queryFind, (email,))
 

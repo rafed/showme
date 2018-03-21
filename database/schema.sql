@@ -10,7 +10,7 @@ drop table User;
 
 create table if not exists User(
 	email varchar(150),
-	password varchar (50) not null,
+	password varchar (65) not null,
 	oauth_provider varchar(20),
 	oauth_uid varchar (20),
 	fname varchar (30),
