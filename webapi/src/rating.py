@@ -26,6 +26,6 @@ def rateRelation():
 
 def edgeRating(edge_id):
     databaseUtil=DatabaseUtil()
-    query = "SELECT avg(VALUE) as avg_rating FROM Rating WHERE edge_id=%s"
+    query = "SELECT IFNULL(AVG(VALUE), 0) as avg_rating FROM Rating WHERE edge_id=%s"
     rows = databaseUtil.retrieve(query, (edge_id,))
-    return rows[0]['avg_rating']
+    return round(rows[0]['avg_rating'])
