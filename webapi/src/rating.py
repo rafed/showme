@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 
 import json
 
@@ -10,7 +9,7 @@ rating = Blueprint('rating', __name__)
 
 
 @rating.route('/rating', methods=['POST'])
-def rate_relation():
+def rateRelation():
     data = request.get_json()
 
     email = authentication.getEmail(data['token'])
@@ -25,38 +24,8 @@ def rate_relation():
     return json.dumps({"msg":"success"})
 
 
-#######################################
-
-class Rating:
-    ratingValue=0.0
-    similarity=0.0
-    count=0
-
-class RatingCalculator:
-    def calculateRating(self,ratings,similarity):
-        weightedSum=0.0
-        sumWeights=0.0
-        for rating in ratings:
-            weightedSum+=rating.count*rating.ratingValue
-            sumWeights+=rating.count
-        weightedSum/=sumWeights
-        return weightedSum+similarity
-
-# def testRating(reader, similarity):
-#     dict = {}
-#     ratingList = []
-#     for line in reader:
-#         ratingValue = int(line['Rating'])
-#         if ratingValue in dict:
-#             dict[ratingValue] += 1
-#         else:
-#             dict[ratingValue] = 1
-
-#     for ratingValue, count in dict.items():
-#         rating = Rating()
-#         rating.ratingValue = ratingValue
-#         rating.count = count
-#         ratingList.append(rating)
-    
-#     ratingCalculator = RatingCalculator()
-#     print ratingCalculator.calculateRating(ratingList, similarity)
+def edgeRating(edge_id):
+    databaseUtil=DatabaseUtil()
+    query = "SELECT avg(VALUE) as avg_rating FROM Rating WHERE edge_id=%s"
+    rows = databaseUtil.retrieve(query, (edge_id,))
+    return rows[0]['avg_rating']
