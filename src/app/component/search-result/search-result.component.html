@@ -12,7 +12,7 @@
         <tbody id="searchResult">
           <tr *ngFor="let paper of this.papers">
             <td><a href='{{paper.sitelink}}' target="_blank">{{paper.title}}</a></td>
-            <td>{{paper.authors}}</td>
+            <td>{{paper.description}}</td>
             <td>{{paper.year}}</td>
             <td><button type="button" class="btn btn-default" (click)="onSelect(paper)">Generate</button></td>
         </tbody>

@@ -21,7 +21,6 @@
 
   <div id="adv-search">
     <form class="input-group">
-      <!-->action="searchResult.php" method="post"-->
       <input list="historyList" autocomplete="off" (keyup.enter)="search(searchKey)" name="historyList" [(ngModel)]="searchKey" name="paper" class="form-control"
         placeholder="Enter paper title" />
 
@@ -40,63 +39,63 @@
     <button data-toggle="collapse" data-target="#advanced" class="btn btn-block btn-primary">Advanced Search</button>
     <div id="advanced" class="collapse">
       <div style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);margin: auto; padding:5px">
-        <form class="form-horizontal" [formGroup]="advancedSearchForm">
+        <form class="form-horizontal" role="form" #advancedSearchForm="ngForm">
           <div class="form-group">
             <label class="control-label col-sm-4">with <b>all</b> of the words</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" formControlName="words" placeholder="Enter words">
+              <input type="text" class="form-control" name="words" placeholder="Enter words" ngModel>
             </div>
           </div>
           <div class="form-group">
             <label class="control-label col-sm-4">with the <b>exact phrase</b></label>
             <div class="col-sm-8">
-              <input type="text" class="form-control"  formControlName="phrase" placeholder="Enter phrase">
+              <input type="text" class="form-control"  name="phrase" placeholder="Enter phrase" ngModel>
             </div>
           </div>
           <div class="form-group">
             <label class="control-label col-sm-4">with <b>at least one</b> of the words</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" formControlName="words_some" placeholder="Enter words">
+              <input type="text" class="form-control" name="words_some" placeholder="Enter words" ngModel>
             </div>
           </div>
           <div class="form-group">
             <label class="control-label col-sm-4"><b>without</b> the words</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" formControlName="words_none" placeholder="Enter words">
+              <input type="text" class="form-control" name="words_none" placeholder="Enter words" ngModel>
             </div>
           </div>
           <div class="form-group">
             <label class="control-label col-sm-4">where my words occur</label>
             <div class="col-sm-8">
               <div class="radio">
-                <label><input type="radio" value="any" formControlName="scope">anywhere in the article</label>
+                <label><input type="radio" value="any" name="scope" ngModel>anywhere in the article</label>
                 <br/>
-                <label><input type="radio" value="title" formControlName="scope">in the title of the article</label>
+                <label><input type="radio" value="title" name="scope" ngModel>in the title of the article</label>
               </div>
             </div>
           </div>
           <div class="form-group">
             <label class="control-label col-sm-4">Return articles <b>authored</b> by</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" formControlName="authors" placeholder="Enter author's name">
+              <input type="text" class="form-control" name="authors" placeholder="Enter author's name" ngModel>
             </div>
           </div>
           <div class="form-group">
             <label class="control-label col-sm-4">Return articles <b>published</b> in</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" formControlName = "published_in" placeholder="Enter year">
+              <input type="text" class="form-control" name = "published_in" placeholder="Enter year" ngModel>
             </div>
           </div>
           <div class="form-group">
             <label class="control-label col-sm-4">Return articles <b>dated</b> between</label>
             <div class="col-sm-8">
-              <input type="text" formControlName="year_low" placeholder=" From (year)"><b> - </b>
-              <input type="text" formControlName="year_hi" placeholder=" To (year)">
+              <input type="text" name="year_low" placeholder=" From (year)" ngModel><b> - </b>
+              <input type="text" name="year_hi" placeholder=" To (year)" ngModel>
             </div>
           </div>
           <div class="form-group">
             <div class="text-center">
-              <button type="submit" class="btn btn-primary" (click)="advancedSearch()">Search</button>
+              <button name="ad" type="submit" class="btn btn-primary" (click)="onSubmit(advancedSearchForm.value)">Search</button>
             </div>
           </div>
         </form>
@@ -109,23 +108,26 @@
   <div [style.display]="this.showDescription ? 'none': 'block'">
     <ul class="nav nav-tabs">
       <li>
-        <a routerLink="result">Search Result</a>
+        <a routerLinkActive = "tabLink" routerLink="result">Search Result</a>
       </li>
       <li>
-        <a routerLink="graph">Graph</a>
+        <a routerLinkActive = "tabLink" routerLink="graph">Graph</a>
       </li>
     </ul>
     <router-outlet></router-outlet>
   </div>
-
-
-
   <br>
   <br>
   <br>
   <br>
- 
-
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
 </div>
 
 <footer class="text-center">

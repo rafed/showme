@@ -19,12 +19,12 @@ export class SearchResultComponent implements OnInit {
     ngOnInit() {
     //console.log("SR");
     this.getSearchResult();
-    this.getAdvancedSearchResult();
+    //this.getAdvancedSearchResult();
     this.searchResultService.getValue()
       .subscribe((updated: any) => { 
         console.log("got "+updated['value']);
         this.getSearchResult();
-        this.getAdvancedSearchResult();
+        //this.getAdvancedSearchResult();
       });
   }
 
@@ -34,10 +34,10 @@ export class SearchResultComponent implements OnInit {
        .subscribe(papers => this.papers = papers);
   }
 
-  getAdvancedSearchResult(){
-    this.searchResultService.getAdvancedSearchPaper()
-       .subscribe(papers => this.papers = papers);
-  }
+  // getAdvancedSearchResult(){
+  //   this.searchResultService.getAdvancedSearchPaper()
+  //      .subscribe(papers => this.papers = papers);
+  // }
 
   onSelect(selectedPaper: Paper): void {
     this.generateGraphService.setPaper(selectedPaper);

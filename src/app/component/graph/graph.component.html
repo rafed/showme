@@ -1,4 +1,4 @@
-<div  [style.display]="this.showGraph ? 'none':'block'" class="loader text-center"></div>
+<div [style.display]="this.showGraph ? 'none':'block'" class="loader text-center"></div>
 <input type="hidden" name="edgeID" id="edgeID">
 <input type="hidden" name="rating" id="rating">
 <div class="container">
@@ -18,57 +18,61 @@
         <tr>
           <td>
             <div class="radio">
-              <label><input type="radio" checked value="Title" name="type" (click)="setRadio('Title')">Title</label>
+              <label>
+                <input type="radio" checked value="Title" name="type" (click)="setRadio('Title')">Title</label>
             </div>
           </td>
           <td>
-            <input type="text"  class="form-control inputField" id="TitleValue" [(ngModel)]="titleValue">
+            <input type="text" class="form-control inputField" id="TitleValue" [(ngModel)]="titleValue">
           </td>
           <td>
-            <button class = "btn btn-default" id = "RemoveTitle" (click)="toggleTitle()" >Remove</button>
-            <button class = "btn btn-default" id = "ShowTitle" disabled = "true" (click)="toggleTitle()" >Show only</button>
+            <button class="btn btn-default" id="RemoveTitle" (click)="toggleTitle()">Remove</button>
+            <button class="btn btn-default" id="ShowTitle" disabled="true" (click)="toggleTitle()">Show only</button>
           </td>
         </tr>
         <tr>
           <td>
             <div class="radio">
-              <label><input type="radio" value="Author" name="type" (click)="setRadio('Author')">Author</label>
+              <label>
+                <input type="radio" value="Author" name="type" (click)="setRadio('Author')">Author</label>
             </div>
           </td>
           <td>
-            <input type="text" disabled = "true" class="form-control inputField" id="AuthorValue"  [(ngModel)]="authorValue">
+            <input type="text" disabled="true" class="form-control inputField" id="AuthorValue" [(ngModel)]="authorValue">
           </td>
           <td>
-            <button class = "btn btn-default" id = "RemoveAuthor" (click)="toggleAuthor()" >Remove</button>
-            <button class = "btn btn-default" id = "ShowAuthor" disabled = "true" (click)="toggleAuthor()" >Show only</button>
+            <button class="btn btn-default" id="RemoveAuthor" (click)="toggleAuthor()">Remove</button>
+            <button class="btn btn-default" id="ShowAuthor" disabled="true" (click)="toggleAuthor()">Show only</button>
           </td>
         </tr>
         <tr>
           <td>
             <div class="radio">
-              <label><input type="radio" value="Journal" (click)="setRadio('Journal')" name="type">Journal</label>
+              <label>
+                <input type="radio" value="Journal" (click)="setRadio('Journal')" name="type">Journal</label>
             </div>
           </td>
           <td>
-            <input type="text" disabled = "true" class="form-control inputField" id="JournalValue" [(ngModel)]="journalValue">
+            <input type="text" disabled="true" class="form-control inputField" id="JournalValue" [(ngModel)]="journalValue">
           </td>
           <td>
-            <button class = "btn btn-default" id = "RemoveJournal" (click)="toggleJournal()" >Remove</button>
-            <button class = "btn btn-default" id = "ShowJournal" disabled = "true" (click)="toggleJournal()" >Show only</button>
+            <button class="btn btn-default" id="RemoveJournal" (click)="toggleJournal()">Remove</button>
+            <button class="btn btn-default" id="ShowJournal" disabled="true" (click)="toggleJournal()">Show only</button>
           </td>
         </tr>
         <tr>
           <td>
             <div class="radio">
-              <label><input type="radio" value="Year" (click)="setRadio('Year')" name="type">Year</label>
+              <label>
+                <input type="radio" value="Year" (click)="setRadio('Year')" name="type">Year</label>
             </div>
           </td>
           <td>
-            <input type="text" disabled = "true" class="form-control inputField" id="YearValue" [(ngModel)]="yearValue">
+            <input type="text" disabled="true" class="form-control inputField" id="YearValue" [(ngModel)]="yearValue">
           </td>
           <td>
-            <button class = "btn btn-default" id = "RemoveYear" (click)="toggleYear()" >Remove</button>
-            <button class = "btn btn-default" id = "ShowYear" disabled = "true" (click)="toggleYear()" >Show only</button>
+            <button class="btn btn-default" id="RemoveYear" (click)="toggleYear()">Remove</button>
+            <button class="btn btn-default" id="ShowYear" disabled="true" (click)="toggleYear()">Show only</button>
           </td>
         </tr>
       </tbody>
@@ -76,5 +80,81 @@
     <button type="submit" (click)="filterGraph()" style="background-color:#3F3F44; color:aliceblue" class="btn btn-block btn-default">Filter Graph</button>
     <button type="submit" (click)="undoFiltering()" style="background-color:#3F3F44; color:aliceblue" class="btn btn-block btn-default">Undo Filtering</button>
   </div>
-  <div class="well rightBelowDiv">similarity/color etc thakbe ei div e</div>
+
+
+  <div class="well rightBelowDiv">
+    <p class="heading" align = "center">Edge Color based on user rating.</p>
+    <hr style="border:3px solid rgb(125, 125, 131)">
+
+    <div class="row" style="padding-left:40px">
+      <div class="side">
+        <div>5 star</div>
+      </div>
+      <div class="middle">
+        <div class="bar-container">
+          <div class="bar-5"></div>
+        </div>
+      </div>
+      <div class="side right">
+        <div>&nbsp;</div>
+      </div>
+      <div class="side">
+        <div>4 star</div>
+      </div>
+      <div class="middle">
+        <div class="bar-container">
+          <div class="bar-4"></div>
+        </div>
+      </div>
+      <div class="side right">
+        <div>&nbsp;</div>
+      </div>
+      <div class="side">
+        <div>3 star</div>
+      </div>
+      <div class="middle">
+        <div class="bar-container">
+          <div class="bar-3"></div>
+        </div>
+      </div>
+      <div class="side right">
+        <div>&nbsp;</div>
+      </div>
+      <div class="side">
+        <div>2 star</div>
+      </div>
+      <div class="middle">
+        <div class="bar-container">
+          <div class="bar-2"></div>
+        </div>
+      </div>
+      <div class="side right">
+        <div>&nbsp;</div>
+      </div>
+      <div class="side">
+        <div>1 star</div>
+      </div>
+      <div class="middle">
+        <div class="bar-container">
+          <div class="bar-1"></div>
+        </div>
+      </div>
+      <div class="side right">
+        <div>&nbsp;</div>
+      </div>
+      <div class="side">
+        <div>0 star</div>
+      </div>
+      <div class="middle">
+        <div class="bar-container">
+          <div class="bar-0"></div>
+        </div>
+      </div>
+      <div class="side right">
+        <div>&nbsp;</div>
+      </div>
+    </div>
+  </div>
+
+
 </div>

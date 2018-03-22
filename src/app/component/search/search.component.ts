@@ -7,32 +7,17 @@ import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
-  styleUrls: ['../../../assets/bootstrap/css/bootstrap.min.css','./search.component.css']
+  styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
   showDescription = true;
   history:string[];
   searchKey: string;
-  advancedSearchForm: FormGroup;
 
   constructor(private searchResultService: SearchResultService,
     private displayHistoryService: DisplayHistoryService,
-    private router: Router, private fb: FormBuilder) {
-      this.createAdvancedSearchForm();
-  }
-  createAdvancedSearchForm() {
-    this.advancedSearchForm = this.fb.group({
-      "words": [''],
-      "phrase": [''],
-      "words_some": [''],
-      "words_none": [''],
-      "scope": [''],
-      "authors": [''],
-      "published_in": [''],
-      "year_low": [''],
-      "year_hi":[''] 
-    });
-  }
+    private router: Router) {}
+
 
   ngOnInit() {
     let dynamicScripts = ["../../../assets/bootstrap/js/bootstrap.min.js"];
@@ -62,8 +47,9 @@ export class SearchComponent implements OnInit {
     this.router.navigate(['/search/result']);
   }
 
-  advancedSearch(){
-    console.log(this.advancedSearchForm.value);
-    this.searchResultService.setAdvancedSearchPaper(this.advancedSearchForm.value);
+  onSubmit(data){
+    console.log(data);
+    this.searchResultService.advancedSearch(data);
+    //this.searchResultService.setAdvancedSearchPaper(this.advancedSearchForm.value);
   }
 }

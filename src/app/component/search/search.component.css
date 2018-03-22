@@ -10,6 +10,14 @@ li a{
     line-height: 1.42857143;
 }
 
+.tabLink{
+    color: #555;
+    cursor: default;
+    background-color: #EEEEEE;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
+}
+
 .bg-1 {
     background: #2d2d30;
     color: #bdbdbd;

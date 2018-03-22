@@ -9,8 +9,10 @@ import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class SearchResultService {
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
   searchKey:string;
-  data:any;
   private subject = new Subject<any>();
   
   constructor(private http: HttpClient) { }
@@ -46,26 +48,37 @@ export class SearchResultService {
       //return of([]);
   }
 
-  setAdvancedSearchPaper(data:any){
-    this.data=data;
-    if (localStorage.getItem('advancedSearchResult') != null) {
-      localStorage.removeItem('advancedSearchResult');
-      
-      console.log(localStorage.getItem('advancedSearchResult'));
-    }
-    this.subject.next({ value: true });
-  }
+  // setAdvancedSearchPaper(data:any){
+  //   this.data=data;
+  //   this.subject.next({ value: true });
+  // }
 
-  getAdvancedSearchPaper():Observable<Paper[]>{
-    debugger;
-    let advancedSearchResult=localStorage.getItem('advancedSearchResult');
-    if ( advancedSearchResult!= null) {
-      var list = JSON.parse(advancedSearchResult);
-      return of(list);
-    }
-    return this.http.get<Paper[]>(Server.API_ENDPOINT+'search/'+this.data)
-    .pipe(
-      tap(response => localStorage.setItem('advancedSearchResult', JSON.stringify(response)))
-    );
+  // getAdvancedSearchPaper():Observable<Paper[]>{
+  //   debugger;
+  //   return this.http.get<Paper[]>(Server.API_ENDPOINT+'search/'+this.data)
+  //   .pipe(
+  //     tap(response => localStorage.setItem('advancedSearchResult', JSON.stringify(response)))
+  //   );
+  // }
+  advancedSearch(data: any) {
+    this.http.post(Server.API_ENDPOINT + "search", {
+      words: data.words,
+      phrase: data.phrase,
+      words_some: data.words_some,
+      words_none: data.words_none,
+      scope: data.scope,
+      authors: data.authors,
+      published_in: data.published_in,
+      year_low: data.year_low,
+      year_hi: data.year_hi
+    }, this.httpOptions)
+      .subscribe(
+        res => {
+          console.log(res);
+        },
+        err => {
+          console.log("Error occured");
+        }
+      );
   }
 }

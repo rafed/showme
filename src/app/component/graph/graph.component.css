@@ -4,7 +4,7 @@
 }
 #cy {
     width: 800px;
-    height: 650px;
+    height: 694px;
     margin-left: -220px;
     float:left
 }
@@ -22,7 +22,9 @@ button[disabled]{
 }
 .rightBelowDiv{
   float:left;
-  margin-left:10px 
+  margin-left:10px;
+  margin-top:-10px;
+  width:432px 
 }
 
 .tooltip {
@@ -83,9 +85,59 @@ h2 {
   height: 120px;
   -webkit-animation: spin 2s linear infinite; /* Safari */
   animation: spin 2s linear infinite;
+  margin-top: 10px
 }
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.heading {
+  font-size: 15px;
+  margin-right: 25px;
+}
+
+
+
+/* Three column layout */
+.side {
+  float: left;
+  width: 15%;
+  margin-top:10px;
+}
+
+.middle {
+  margin-top:10px;
+  float: left;
+  width: 70%;
+}
+
+/* Place text to the right */
+.right {
+  text-align: right;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* The bar container */
+.bar-container {
+  width: 100%;
+  background-color: #f1f1f1;
+  text-align: center;
+  color: white;
+}
+
+/* Individual bars */
+.bar-5 {width: 100%; height: 18px; background-color: #4CAF50;}
+.bar-4 {width: 100%; height: 18px; background-color: #2196F3;}
+.bar-3 {width: 100%; height: 18px; background-color: #f3ef14;}
+.bar-2 {width: 100%; height: 18px; background-color: #ff9800;}
+.bar-1 {width: 100%; height: 18px; background-color: #f44336;}
+.bar-0 {width: 100%; height: 18px; background-color: #191970;}
+
