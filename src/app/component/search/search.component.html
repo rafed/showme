@@ -22,7 +22,7 @@
   <div id="adv-search">
     <form class="input-group">
       <!-->action="searchResult.php" method="post"-->
-      <input list="historyList" autocomplete="off" name="historyList" [(ngModel)]="searchKey" name="paper" class="form-control"
+      <input list="historyList" autocomplete="off" (keyup.enter)="search(searchKey)" name="historyList" [(ngModel)]="searchKey" name="paper" class="form-control"
         placeholder="Enter paper title" />
 
       <div class="input-group-btn">

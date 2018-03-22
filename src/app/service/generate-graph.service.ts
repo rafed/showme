@@ -38,4 +38,19 @@ export class GenerateGraphService {
     },this.httpOptions)
   }
 
+  getPDF(title,authors) {
+    //console.log("PDF "+this.paper.pdflink);
+    //return this.http.get(Server.API_ENDPOINT+"parse/"+this.paper.pdflink);
+    return this.http.post(Server.API_ENDPOINT+"pdflink", {
+      title: title,
+      authors: authors
+    },this.httpOptions)
+    .subscribe(
+      res => {
+        if(res['msg']=='success')
+          window.open(res['pdflink'], "_blank");
+        else 
+          alert("PDF not available");
+    });
+  }
 }
