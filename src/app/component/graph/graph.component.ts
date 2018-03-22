@@ -24,7 +24,7 @@ export class GraphComponent implements OnInit {
   yearValue="";
   titleValue="";
   authorValue="";
-  filteringOption="";
+  filteringOption='ShowTitle';
   nodeCollection: any;
   edgeCollection: any;
   
@@ -81,6 +81,11 @@ export class GraphComponent implements OnInit {
   }
 
   buildGraph() {  
+    let token=localStorage.getItem('token');
+    let readOnly=false;
+    if(token==null){
+      readOnly=true;
+    }
     this.cy = cytoscape({
       container: document.getElementById('cy'), // container to render in
       wheelSensitivity: 0.3,
@@ -274,6 +279,9 @@ export class GraphComponent implements OnInit {
 
         let x = 0;
         iDiv.appendChild(innerDiv);
+        if(readOnly){
+          innerDiv.innerHTML=innerDiv.innerHTML+"<br/><p style='color: #FFD119; font-size:12px; text-align: center'>Please Login to Rate</p>";
+        }
       }
       document.getElementById(edges[i].id()).innerHTML=""; 
       let length=this.snippets.length;     
@@ -287,7 +295,7 @@ export class GraphComponent implements OnInit {
           document.getElementById(edges[i].id()).innerHTML += option;
         }
       }
-
+      let inVal=0;
       //on edge click
       edges[i].qtip({
         id: edges[i].id(),
@@ -309,24 +317,14 @@ export class GraphComponent implements OnInit {
           show: function () {
             //console.log("HI");
             $('.rate').starrr({
-              rating: 0,
+              rating: 0,//inVal,//0,
               max: 5,
+              readOnly: readOnly,
               change: function (e, value) {
-                //console.log("HI");
-                if (value) {
-                  let token=localStorage.getItem('token');
-                  if(token==null){
-                    alert('Please login first');
-                    this.rating = void 0;
-                  }
-                  else{
-                    let edgeID=e.target.id;
-                    edgeID=edgeID.substring(6,edgeID.length);
-                    $("[name=edgeID]").attr("value",edgeID);
-                    $("[name=rating]").attr("value",value);
-                  }
-
-                }
+                  let edgeID=e.target.id;
+                  edgeID=edgeID.substring(6,edgeID.length);
+                  $("[name=edgeID]").attr("value",edgeID);
+                  $("[name=rating]").attr("value",value);
               }
             });
 
@@ -367,60 +365,69 @@ export class GraphComponent implements OnInit {
   }
 
   handleRating(){
-    console.log('rate');
+    //console.log('rate');
     let token=localStorage.getItem('token');
-    // if(token==null){
-    //   alert('Please login first');
-    // }
-    // else {
-      let edgeID=document.getElementById("edgeID").getAttribute("value");
-      let rating=document.getElementById("rating").getAttribute("value");
-      this.ratingService.sendRating(JSON.parse(token), edgeID ,rating);
-    // }
+    
+    let edgeID=document.getElementById("edgeID").getAttribute("value");
+    let rating=document.getElementById("rating").getAttribute("value");
+    this.ratingService.sendRating(JSON.parse(token), edgeID ,rating);
   }
 
   toggleJournal(){
     if(document.getElementById("ShowJournal").getAttribute("disabled")=="true"){
       document.getElementById("ShowJournal").removeAttribute("disabled");
       document.getElementById("RemoveJournal").setAttribute("disabled","true");
+      this.filteringOption="RemoveJournal";
     }
     else {
       document.getElementById("RemoveJournal").removeAttribute("disabled");
       document.getElementById("ShowJournal").setAttribute("disabled","true");
+      this.filteringOption="ShowJournal";
     }
+    console.log("TJ "+this.filteringOption);
   }
 
   toggleYear(){
     if(document.getElementById("ShowYear").getAttribute("disabled")=="true"){
       document.getElementById("ShowYear").removeAttribute("disabled");
       document.getElementById("RemoveYear").setAttribute("disabled","true");
+      this.filteringOption="RemoveYear";
     }
     else {
+      console.log('ELSE');
       document.getElementById("RemoveYear").removeAttribute("disabled");
       document.getElementById("ShowYear").setAttribute("disabled","true");
+      this.filteringOption="ShowYear";
     }
+    console.log("TY "+this.filteringOption);
   }
 
   toggleTitle(){
     if(document.getElementById("ShowTitle").getAttribute("disabled")=="true"){
       document.getElementById("ShowTitle").removeAttribute("disabled");
       document.getElementById("RemoveTitle").setAttribute("disabled","true");
+      this.filteringOption="RemoveTitle";
     }
     else {
       document.getElementById("RemoveTitle").removeAttribute("disabled");
       document.getElementById("ShowTitle").setAttribute("disabled","true");
+      this.filteringOption="ShowTitle";
     }
+    console.log("TT "+ this.filteringOption);
   }
 
   toggleAuthor(){
     if(document.getElementById("ShowAuthor").getAttribute("disabled")=="true"){
       document.getElementById("ShowAuthor").removeAttribute("disabled");
       document.getElementById("RemoveAuthor").setAttribute("disabled","true");
+      this.filteringOption="RemoveAuthor";
     }
     else {
       document.getElementById("RemoveAuthor").removeAttribute("disabled");
       document.getElementById("ShowAuthor").setAttribute("disabled","true");
+      this.filteringOption="ShowAuthor";
     }
+    console.log("TA "+this.filteringOption);
   }
 
   setRadio(type: string){
@@ -431,50 +438,79 @@ export class GraphComponent implements OnInit {
     this.filteringCriteria=type;
     if (type=='Journal'){
       document.getElementById("JournalValue").removeAttribute("disabled");
+      if(document.getElementById("ShowJournal").getAttribute("disabled")=="true"){
+        this.filteringOption="ShowJournal";
+      }
+      else {
+        this.filteringOption="RemoveJournal";
+      }
       document.getElementById("YearValue").setAttribute("disabled","true");
       document.getElementById("TitleValue").setAttribute("disabled","true");
       document.getElementById("AuthorValue").setAttribute("disabled","true");
     }
     else if (type=='Year'){
+      //this.filteringOption="ShowYear";
       document.getElementById("YearValue").removeAttribute("disabled");
+      if(document.getElementById("ShowYear").getAttribute("disabled")=="true"){
+        this.filteringOption="ShowYear";
+      }
+      else {
+        this.filteringOption="RemoveYear";
+      }
       document.getElementById("JournalValue").setAttribute("disabled","true");
       document.getElementById("TitleValue").setAttribute("disabled","true");
       document.getElementById("AuthorValue").setAttribute("disabled","true");
     }
     else if (type=='Title'){
+      //this.filteringOption="ShowTitle";
       document.getElementById("TitleValue").removeAttribute("disabled");
+      if(document.getElementById("ShowTitle").getAttribute("disabled")=="true"){
+        this.filteringOption="ShowTitle";
+      }
+      else {
+        this.filteringOption="RemoveTitle";
+      }
       document.getElementById("JournalValue").setAttribute("disabled","true");
       document.getElementById("YearValue").setAttribute("disabled","true");
       document.getElementById("AuthorValue").setAttribute("disabled","true");
     }
     else if (type=='Author'){
+      //this.filteringOption="ShowAuthor";
       document.getElementById("AuthorValue").removeAttribute("disabled");
+      if(document.getElementById("ShowAuthor").getAttribute("disabled")=="true"){
+        this.filteringOption="ShowAuthor";
+      }
+      else {
+        this.filteringOption="RemoveAuthor";
+      }
       document.getElementById("JournalValue").setAttribute("disabled","true");
       document.getElementById("TitleValue").setAttribute("disabled","true");
       document.getElementById("YearValue").setAttribute("disabled","true");
     }
+    console.log("RADIO"+this.filteringOption);
   }
 
   filterGraph(){
     this.undoFiltering();
-    if (this.filteringOption==""){
-      this.filteringOption = 'Show' + this.filteringCriteria;
-    }
+    // if (this.filteringOption==""){
+    //   this.filteringOption = 'Show' + this.filteringCriteria;
+    //   console.log('empty');
+    // }
 
     console.log(this.filteringCriteria+" "+this.filteringOption);
 
-    if(this.authorValue!=""){
+    if(this.authorValue!="") {
       console.log(this.authorValue);
       document.getElementById("AuthorValue").setAttribute('value',this.authorValue);
-      if(document.getElementById("ShowAuthor").getAttribute("disabled")=="true"){
+      if(this.filteringOption=="ShowAuthor") {
         this.nodeCollection = this.cy.nodes().filter(function( ele ){
-          console.log(ele.data('author').indexOf(document.getElementById("AuthorValue").getAttribute('value')));
+          //console.log(ele.data('author').indexOf(document.getElementById("AuthorValue").getAttribute('value')));
           return (ele.data('author').indexOf(document.getElementById("AuthorValue").getAttribute('value')) <= -1) ;
         });   
       }
-      else if (document.getElementById("RemoveAuthor").getAttribute("disabled")=="true"){
+      else {
         this.nodeCollection = this.cy.nodes().filter(function( ele ){
-          console.log(ele.data('author').indexOf(document.getElementById("AuthorValue").getAttribute('value')));
+          //console.log(ele.data('author').indexOf(document.getElementById("AuthorValue").getAttribute('value')));
           return (ele.data('author').indexOf(document.getElementById("AuthorValue").getAttribute('value')) > -1) ;
         });
       }
@@ -482,25 +518,17 @@ export class GraphComponent implements OnInit {
 
     else if(this.journalValue!=""){
       console.log(this.journalValue);
-      // let condition;
-      // if(this.filteringOption=='ShowJournal'){
-      //   condition="[journal!='"+this.journalValue+"']";
-      // }
-      // else{
-      //   condition="[journal='"+this.journalValue+"']";
-      // }
-      // console.log(condition);
-      // this.nodeCollection= this.cy.nodes().filter(condition); 
+     
       document.getElementById("JournalValue").setAttribute('value',this.journalValue);
-      if(document.getElementById("ShowJournal").getAttribute("disabled")=="true"){
-        this.nodeCollection = this.cy.nodes().filter(function( ele ){
+      if(this.filteringOption=="ShowJournal") {
+        this.nodeCollection = this.cy.nodes().filter(function( ele ) {
           //console.log(ele.data('title'));          
           //console.log(document.getElementById("JournalValue").getAttribute('value'));
           return (ele.data('journal').indexOf(document.getElementById("JournalValue").getAttribute('value')) <= -1) ;
         });   
       }
-      else if(document.getElementById("RemoveJournal").getAttribute("disabled")=="true"){
-        this.nodeCollection = this.cy.nodes().filter(function( ele ){
+      else {
+        this.nodeCollection = this.cy.nodes().filter(function( ele ) {
           return (ele.data('journal').indexOf(document.getElementById("JournalValue").getAttribute('value')) > -1) ;
         });
       }
@@ -509,10 +537,10 @@ export class GraphComponent implements OnInit {
     else if(this.yearValue!=""){
       console.log(this.yearValue);
       let condition;
-      if(document.getElementById("ShowYear").getAttribute("disabled")=="true"){
+      if(this.filteringOption=="ShowYear") {
         condition="[year!='"+this.yearValue+"']";   
       }
-      else if (document.getElementById("RemoveYear").getAttribute("disabled")=="true"){
+      else {
         condition="[year='"+this.yearValue+"']";
       }
       //console.log(condition);
@@ -522,14 +550,12 @@ export class GraphComponent implements OnInit {
     else {
       console.log(this.titleValue);
       document.getElementById("TitleValue").setAttribute('value',this.titleValue);
-      if(document.getElementById("ShowTitle").getAttribute("disabled")=="true"){
+      if(this.filteringOption=="ShowTitle") {
         this.nodeCollection = this.cy.nodes().filter(function( ele ){
-          //console.log(ele.data('title'));          
-          //console.log(document.getElementById("TitleValue").getAttribute('value'));
           return (ele.data('title').indexOf(document.getElementById("TitleValue").getAttribute('value')) <= -1) ;
         });   
       }
-      else if (document.getElementById("RemoveTitle").getAttribute("disabled")=="true"){
+      else {
         this.nodeCollection = this.cy.nodes().filter(function( ele ){
           return (ele.data('title').indexOf(document.getElementById("TitleValue").getAttribute('value')) > -1) ;
         });
@@ -544,7 +570,7 @@ export class GraphComponent implements OnInit {
       if(this.nodeCollection[i].data('id')==this.mainPDF.id){
         continue;
       }
-      console.log(this.nodeCollection[i]);
+     // console.log(this.nodeCollection[i]);
       this.cy.remove(this.nodeCollection[i]);
     }
 

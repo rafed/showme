@@ -30,7 +30,7 @@
           <datalist id="historyList">
             <option *ngFor="let hist of this.history" value="{{hist}}">
           </datalist>
-          <button type="button" class="btn btn-primary" (click)="search(searchKey)">
+          <button type="submit" class="btn btn-primary" (click)="search(searchKey)">
             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
           </button>
         </div>

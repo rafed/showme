@@ -31,6 +31,12 @@ export class SearchComponent implements OnInit {
     }
     
     this.displayHistoryService.getList().subscribe((history: any) => { 
+      let start = new Date().getTime();
+      for (let i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > 2000){
+          break;
+        }
+      }
       this.history = history['list'];
     });
     this.displayHistoryService.prepareList();
@@ -39,9 +45,12 @@ export class SearchComponent implements OnInit {
   }
 
   search(searchKey: string): void {
+    //console.log("SEARCH");
+    
     this.showDescription = false;
     this.searchKey=searchKey;
     this.displayHistoryService.addToList(this.searchKey);
+    //this.history=[];
     this.searchResultService.setPaper(this.searchKey);
     this.router.navigate(['/search/result']);
   }
