@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs/Subscription';
   styleUrls: ['../../../assets/bootstrap/css/bootstrap.min.css', './search-result.component.css']
 })
 export class SearchResultComponent implements OnInit {
-  papers: Paper[];
+  papers: Paper[] = [];
   subscription: Subscription;
   isDataAvailable: boolean = true;
 
@@ -19,6 +19,7 @@ export class SearchResultComponent implements OnInit {
     private generateGraphService: GenerateGraphService,
     private searchResultService: SearchResultService) { }
   ngOnInit() {
+    
     this.getAdvancedSearchData();
     this.getSearchResult();;
     this.searchResultService.getValue()
@@ -32,6 +33,11 @@ export class SearchResultComponent implements OnInit {
     //console.log("getting result for: " + this.searchResultService.searchKey);
     this.searchResultService.getPapers()
       .subscribe(papers => this.papers = papers);
+      // console.log(this.papers.length);
+      // if (this.papers.length==0){
+      //   this.isDataAvailable=false;
+      // }
+      // else this.isDataAvailable= true;
   }
 
   onSelect(selectedPaper: Paper): void {

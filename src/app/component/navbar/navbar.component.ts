@@ -27,7 +27,6 @@ export class NavbarComponent implements OnInit {
   public logout(){
     this.loggedOut();
     localStorage.removeItem('token');
-    this.Router.navigate(['/search']);
     this.isAuthenticated = false;
   }
  
