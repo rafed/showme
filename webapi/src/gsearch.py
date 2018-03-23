@@ -29,7 +29,7 @@ def advancedSearchScholar():
     words_none = data['words_none'] if 'words_none' in data else ''
     scope = data['scope'] if 'scope' in data else 'any'        # 'any' or 'title'
     authors = data['authors'] if 'authors' in data else ''
-    published_in = ['published_in'] if 'published_in' in data else ''
+    published_in = data['published_in'] if 'published_in' in data else ''
     year_low = data['year_low'] if 'year_low' in data else ''
     year_hi = data['year_hi'] if 'year_hi' in data else ''
 
@@ -47,15 +47,19 @@ def advancedSearchScholar():
     return scholarParser.parse()
 
 @gsearch.route('/bibtex', methods=['POST'])
-def getPaperInfo():
-    databaseUtil=DatabaseUtil()
+def getPaperInfoController():
     data = request.get_json()
-
     data_cid = data['data_cid']
     title = data['title']
     authors = data['authors']
+    return getPaperInfo(data_cid, title, authors)
 
+
+def getPaperInfo(data_cid, title, authors):
+    databaseUtil=DatabaseUtil()
+    
     query = "SELECT DISTINCT id FROM Node WHERE id IN (SELECT DISTINCT node_id FROM Author WHERE name IN %s) AND title LIKE %s"
+    print (title, data_cid, authors)
     args = (authors, title+'%')
     rows = databaseUtil.retrieve(query, args)
 
@@ -127,6 +131,7 @@ def getPaperInfo():
             authors.append(row['name'])
         bibjson['authors'] = authors
 
+        print("Ami eito!!  ", json.dumps(bibjson))
         return json.dumps(bibjson)
 
 @gsearch.route('/pdflink', methods=['POST'])
@@ -140,12 +145,13 @@ def getPdfLink():
     scholarParser = ScholarParser(r.text)
     searchResult = json.loads(scholarParser.parse())
 
-    firstResult = searchResult[0]
-    resultTitle = firstResult['title']
-
     reply = {'msg':'error'}
-    if Util.similar(title, resultTitle):
-        reply['msg'] = "success"
-        reply['pdflink'] = firstResult['pdflink']
+    if searchResult:
+        firstResult = searchResult[0]
+        resultTitle = firstResult['title']
+
+        if Util.similar(title, resultTitle):
+            reply['msg'] = "success"
+            reply['pdflink'] = firstResult['pdflink']
 
     return json.dumps(reply)
