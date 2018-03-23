@@ -158,7 +158,7 @@ CREATE TABLE `Rating` (
 
 LOCK TABLES `Rating` WRITE;
 /*!40000 ALTER TABLE `Rating` DISABLE KEYS */;
-INSERT INTO `Rating` VALUES ('aquib@yahoo.com',1,1),('aquib@yahoo.com',2,2),('aquib@yahoo.com',3,3),('aquib@yahoo.com',4,4),('aquib@yahoo.com',5,5),('eusha@yahoo.com',1,1),('eusha@yahoo.com',2,2),('eusha@yahoo.com',3,3),('eusha@yahoo.com',4,4),('eusha@yahoo.com',5,5),('moumita.asad@yahoo.com',1,1),('moumita.asad@yahoo.com',2,2),('moumita.asad@yahoo.com',3,3),('moumita.asad@yahoo.com',4,4),('moumita.asad@yahoo.com',5,5),('rafed@yahoo.com',1,5),('rafed@yahoo.com',2,2),('rafed@yahoo.com',3,4),('rafed@yahoo.com',4,4),('rafed@yahoo.com',5,1);
+INSERT INTO `Rating` VALUES ('aquib@yahoo.com',1,1),('aquib@yahoo.com',2,2),('aquib@yahoo.com',3,3),('aquib@yahoo.com',4,4),('aquib@yahoo.com',5,5),('eusha@yahoo.com',1,1),('eusha@yahoo.com',2,2),('eusha@yahoo.com',3,3),('eusha@yahoo.com',4,4),('eusha@yahoo.com',5,5),('moumita.asad@yahoo.com',1,1),('moumita.asad@yahoo.com',2,2),('moumita.asad@yahoo.com',3,3),('moumita.asad@yahoo.com',4,4),('moumita.asad@yahoo.com',5,5),('rafed@yahoo.com',1,1),('rafed@yahoo.com',2,2),('rafed@yahoo.com',3,3),('rafed@yahoo.com',4,4),('rafed@yahoo.com',5,5);
 /*!40000 ALTER TABLE `Rating` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -187,7 +187,7 @@ CREATE TABLE `User` (
 
 LOCK TABLES `User` WRITE;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES ('aquib@yahoo.com','ba83f79d43537a525eb5a38096b56f2fbee05fffdacb6ec9271b0c24b08dce24',NULL,NULL,NULL,NULL,'2018-03-23 13:02:47'),('eusha@yahoo.com','ba83f79d43537a525eb5a38096b56f2fbee05fffdacb6ec9271b0c24b08dce24',NULL,NULL,NULL,NULL,'2018-03-23 13:03:00'),('moumita.asad@yahoo.com','ba83f79d43537a525eb5a38096b56f2fbee05fffdacb6ec9271b0c24b08dce24',NULL,NULL,NULL,NULL,'2018-03-23 13:02:07'),('rafed123@showme.tk','a1a23d6d115b5fe7b9c3c0b58029968bcefc0c34d0afa05155029ab2e9cc8b07',NULL,NULL,NULL,NULL,'2018-03-23 13:29:34'),('rafed@yahoo.com','ba83f79d43537a525eb5a38096b56f2fbee05fffdacb6ec9271b0c24b08dce24',NULL,NULL,NULL,NULL,'2018-03-23 13:02:34');
+INSERT INTO `User` VALUES ('aquib@yahoo.com','ba83f79d43537a525eb5a38096b56f2fbee05fffdacb6ec9271b0c24b08dce24',NULL,NULL,NULL,NULL,'2018-03-23 13:02:47'),('eusha@yahoo.com','ba83f79d43537a525eb5a38096b56f2fbee05fffdacb6ec9271b0c24b08dce24',NULL,NULL,NULL,NULL,'2018-03-23 13:03:00'),('moumita.asad@yahoo.com','ba83f79d43537a525eb5a38096b56f2fbee05fffdacb6ec9271b0c24b08dce24',NULL,NULL,NULL,NULL,'2018-03-23 13:02:07'),('rafed@yahoo.com','ba83f79d43537a525eb5a38096b56f2fbee05fffdacb6ec9271b0c24b08dce24',NULL,NULL,NULL,NULL,'2018-03-23 13:02:34');
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -200,4 +200,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-23 14:21:24
+-- Dump completed on 2018-03-23 16:18:08
