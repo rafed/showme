@@ -36,10 +36,11 @@ export class SearchComponent implements OnInit {
     });
     this.displayHistoryService.prepareList();
 
-    console.log("INIT "+this.showDescription);
+    //console.log("INIT "+this.showDescription);
   }
 
   search(searchKey: string): void {
+    document.getElementsByName('paper')[0].blur(); 
     this.showDescription = false;
     this.searchKey=searchKey;
     this.displayHistoryService.addToList(this.searchKey);
@@ -47,9 +48,10 @@ export class SearchComponent implements OnInit {
     this.router.navigate(['/search/result']);
   }
 
-  onSubmit(data){
-    console.log(data);
-    this.searchResultService.advancedSearch(data);
-    //this.searchResultService.setAdvancedSearchPaper(this.advancedSearchForm.value);
+  onSubmit(data): void{
+    this.showDescription = false;
+    this.searchResultService.advancedSearch(data.words,data.phrase,data.words_some,data.words_none,data.scope,
+    data.authors,data.published_in,data.year_low,data.year_hi);
+    this.router.navigate(['/search/result']); 
   }
 }

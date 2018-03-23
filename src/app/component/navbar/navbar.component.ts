@@ -19,7 +19,6 @@ export class NavbarComponent implements OnInit {
   }
   public logout(){
     localStorage.removeItem('token');
-    localStorage.removeItem('email');
     this.Router.navigate(['/search']);
     this.isAuthenticated = false;
   }

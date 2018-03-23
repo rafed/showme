@@ -31,8 +31,7 @@ export class LoginService {
           }
           else {
             this.sendMessage(true);
-            localStorage.setItem("token", JSON.stringify(res));
-            localStorage.setItem("email", JSON.stringify(res));
+            localStorage.setItem("token", res["token"]);
             this.Router.navigate(['/search']);
           }
         },

@@ -87,6 +87,7 @@ export class GraphComponent implements OnInit {
     let readOnly=false;
     if(token==null){
       readOnly=true;
+      //console.log('token nei');
     }
     this.cy = cytoscape({
       container: document.getElementById('cy'), // container to render in
@@ -235,7 +236,9 @@ export class GraphComponent implements OnInit {
           data: {
             id: 'e'+value["edge_id"],
             source: this.mainPDF.id,
-            target: value["id"] //value["title"],
+            target: value["id"],
+            rating: value['edge_rating'],
+            user_rating : value['user_rating'] //value["title"],
           }
         }
       );
@@ -244,8 +247,6 @@ export class GraphComponent implements OnInit {
     this.cy.add(newNodes);
     this.cy.add(newEdges);
 
-    // this.elementCollection=this.cy.elements().clone();
-    // console.log("TOTAL Clone "+this.elementCollection.length);
 
     this.cy.nodes().on("click", function () {
       pDFGetterObject.getPDFLink(this.data('title'),this.data('author'));
@@ -264,29 +265,35 @@ export class GraphComponent implements OnInit {
     }
 
     for (let i = 0; i < edges.length; i++) {
+      let color = this.getEdgeColor(edges[i].data('rating'));
+      edges[i].style({'line-color': color, 'target-arrow-color': color });
+			
       this.snippets=this.reference[i]["snippets"];
       let innerDiv;
-      //console.log(edges[i].id());
-
-      //innerDiv.removeChild('div');
-      if(document.getElementById("innerDiv"+edges[i].id())==null){
-        //console.log('nei');
-        innerDiv = document.createElement('div');
-        innerDiv.id = "innerDiv"+edges[i].id();
-        innerDiv.innerHTML = "<div id=DemoCarousel"+ edges[i].id() +" class='carousel slide' data-interval='false'>" +
-          "                        <div class='carousel-inner' id=" + edges[i].id() + "></div>" +
-          "                        <button class='snippetButton carousel-control left'"+" href='#DemoCarousel"+ edges[i].id() + "' data-slide='prev'>" +
-          "                        <span class='glyphicon glyphicon-chevron-left'></span></button>" +
-          "                        <button class='snippetButton carousel-control right' "+" href='#DemoCarousel"+ edges[i].id() + "' data-slide='next'>" +
-          "                        <span class='glyphicon glyphicon-chevron-right'></span> </button>" +
-          "                        </div><br/><p style='color: #FFD119; font-size:20px; text-align: center'>Rate Relationship</p>";
-
-        let x = 0;
-        iDiv.appendChild(innerDiv);
-        if(readOnly){
-          innerDiv.innerHTML=innerDiv.innerHTML+"<br/><p style='color: #FFD119; font-size:12px; text-align: center'>Please Login to Rate</p>";
-        }
+      
+      if(document.getElementById("innerDiv"+edges[i].id())!=null){
+        document.getElementById("innerDiv"+edges[i].id()).remove();
       }
+      innerDiv = document.createElement('div');
+      innerDiv.id = "innerDiv"+edges[i].id();
+      innerDiv.innerHTML = "<div id=DemoCarousel"+ edges[i].id() +" class='carousel slide' data-interval='false'>" +
+        "                        <div class='carousel-inner' id=" + edges[i].id() + "></div>" +
+        "                        <button class='snippetButton carousel-control left'"+" href='#DemoCarousel"+ edges[i].id() + "' data-slide='prev'>" +
+        "                        <span class='glyphicon glyphicon-chevron-left'></span></button>" +
+        "                        <button class='snippetButton carousel-control right' "+" href='#DemoCarousel"+ edges[i].id() + "' data-slide='next'>" +
+        "                        <span class='glyphicon glyphicon-chevron-right'></span> </button>" +
+        "                        </div><br/><p style='color: #FFD119; font-size:20px; text-align: center'>Rate Relationship</p>";
+
+     // let x = 0;
+      iDiv.appendChild(innerDiv);
+      if(readOnly){
+        console.log('read only');
+        innerDiv.innerHTML=innerDiv.innerHTML+"<br/><p style='color: #FFD119; font-size:12px; text-align: center'>Please Login to Rate</p>";
+      }
+      else{
+        console.log('u can rate');
+      }
+      
       document.getElementById(edges[i].id()).innerHTML=""; 
       let length=this.snippets.length;     
       for (let x = 0; x < length; x++) {
@@ -299,7 +306,7 @@ export class GraphComponent implements OnInit {
           document.getElementById(edges[i].id()).innerHTML += option;
         }
       }
-      let inVal=0;
+     
       //on edge click
       edges[i].qtip({
         id: edges[i].id(),
@@ -321,7 +328,7 @@ export class GraphComponent implements OnInit {
           show: function () {
             //console.log("HI");
             $('.rate').starrr({
-              rating: 0,//inVal,//0,
+              rating: edges[i].data('user_rating'), //0,//inVal,//0,
               max: 5,
               readOnly: readOnly,
               change: function (e, value) {
@@ -346,9 +353,11 @@ export class GraphComponent implements OnInit {
       hide: {
         event: 'mouseout'
       },
-      content: function () { return "Title: " + this.data('title') + 
-      "<br> Author:"+this.data('author') + "<br> Year:"+this.data('year') +
-      "<br> Journal:"+this.data('journal')},
+      content: function () { 
+        return "Title: " + this.data('title') + 
+        "<br> Author:"+this.data('author') + "<br> Year:"+this.data('year') +
+        "<br> Journal:"+this.data('journal')
+    },
       position: {
         my: 'top center',
         at: 'bottom center'
@@ -362,10 +371,71 @@ export class GraphComponent implements OnInit {
       }
     });
 
+    // let nodes=this.cy.nodes();
+    // for (let i = 0; i < nodes.length; i++) {
+    //   let innerDiv;
+      
+    //   if(document.getElementById("innerDiv"+nodes[i].id())==null){
+    //     innerDiv = document.createElement('div');
+    //     innerDiv.id = "innerDiv"+nodes[i].id();
+    //     var button = document.createElement("button");
+    //     button.onclick = function(){ pDFGetterObject.downloadPDF(nodes[i].data('title'),nodes[i].data('author')); };
+    //     iDiv.appendChild(innerDiv);
+    //     //console.log('b'); 
+    //     innerDiv.appendChild(button);
+    //     //console.log('b'); 
+    //   }
+
+    //   nodes[i].qtip({
+    //       overwrite: false,
+    //       show: {
+    //         event: 'mouseover'
+    //       },
+    //       hide: {
+    //         event: 'mouseout'
+    //       },
+    //       content: function () { 
+    //         return document.getElementById("innerDiv"+nodes[i].id());
+    //       },
+    //       position: {
+    //         my: 'top center',
+    //         at: 'bottom center'
+    //       },
+    //       style: {
+    //         classes: 'qtip-bootstrap',
+    //         tip: {
+    //           width: 16,
+    //           height: 8
+    //         }
+    //       }
+    //     });
+    // }
+
   
     let layout = this.cy.layout({ name: 'concentric' }); //concentric, cose, circle
     layout.run();
 
+  }
+
+  getEdgeColor(rating: any){
+    if(rating==1){
+      return '#f44336';
+    }
+    else if(rating==2){
+      return '#ff9800';
+    }
+    else if(rating==3){
+      return '#f3ef14';
+    }
+    else if(rating==4){
+      return '#2196F3';
+    }
+    else if(rating==5){
+      return '#4CAF50';
+    }
+    else{
+      return '#191970';
+    }
   }
 
   handleRating(){
@@ -374,7 +444,7 @@ export class GraphComponent implements OnInit {
     
     let edgeID=document.getElementById("edgeID").getAttribute("value");
     let rating=document.getElementById("rating").getAttribute("value");
-    this.ratingService.sendRating(JSON.parse(token), edgeID ,rating);
+    this.ratingService.sendRating(token, edgeID ,rating);
   }
 
   toggleJournal(){

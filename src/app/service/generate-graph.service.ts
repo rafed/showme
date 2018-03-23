@@ -29,28 +29,24 @@ export class GenerateGraphService {
   }
 
    getReferenceData() {
-    console.log("PDF "+this.paper.pdflink);
+    //console.log("PDF "+this.paper.pdflink);
     //return this.http.get(Server.API_ENDPOINT+"parse/"+this.paper.pdflink);
+    let token=localStorage.getItem('token');
+    console.log("TOKEN "+token);
     return this.http.post(Server.API_ENDPOINT+"parse", {
+      token: token,
       pdflink: this.paper.pdflink,
       title: this.paper.title,
       authors: this.paper.authors
     },this.httpOptions)
   }
 
-  getPDF(title,authors) {
+  getPDFLink(title,authors) {
     //console.log("PDF "+this.paper.pdflink);
     //return this.http.get(Server.API_ENDPOINT+"parse/"+this.paper.pdflink);
     return this.http.post(Server.API_ENDPOINT+"pdflink", {
       title: title,
       authors: authors
     },this.httpOptions)
-    .subscribe(
-      res => {
-        if(res['msg']=='success')
-          window.open(res['pdflink'], "_blank");
-        else 
-          alert("PDF not available");
-    });
   }
 }

@@ -9,7 +9,7 @@ import { GraphComponent } from './component/graph/graph.component';
 import { PageNotFoundComponent } from './component/page-not-found/page-not-found.component';
 
 const routes: Routes = [
- // { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/search', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'sign-up', component: SignUpComponent },
   { path: 'search', component: SearchComponent,

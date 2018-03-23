@@ -14,8 +14,16 @@ export class SearchResultService {
   };
   searchKey:string;
   private subject = new Subject<any>();
-  
+  private advancedSearchSubject = new Subject<any>();
   constructor(private http: HttpClient) { }
+
+  sendAdvancedSearchData(data: any) {
+    this.advancedSearchSubject.next(data);
+  }
+
+  getAdvancedSearchData(): Observable<any> {
+    return this.advancedSearchSubject.asObservable();
+  }
 
   getValue(): Observable<any> {
     return this.subject.asObservable();
@@ -48,33 +56,24 @@ export class SearchResultService {
       //return of([]);
   }
 
-  // setAdvancedSearchPaper(data:any){
-  //   this.data=data;
-  //   this.subject.next({ value: true });
-  // }
-
-  // getAdvancedSearchPaper():Observable<Paper[]>{
-  //   debugger;
-  //   return this.http.get<Paper[]>(Server.API_ENDPOINT+'search/'+this.data)
-  //   .pipe(
-  //     tap(response => localStorage.setItem('advancedSearchResult', JSON.stringify(response)))
-  //   );
-  // }
-  advancedSearch(data: any) {
+  advancedSearch(words: any,phrase: any,words_some: any,words_none: any,scope: any,
+    authors: any,published_in: any,year_low: any,year_hi: any) {
     this.http.post(Server.API_ENDPOINT + "search", {
-      words: data.words,
-      phrase: data.phrase,
-      words_some: data.words_some,
-      words_none: data.words_none,
-      scope: data.scope,
-      authors: data.authors,
-      published_in: data.published_in,
-      year_low: data.year_low,
-      year_hi: data.year_hi
+      words: words,
+      phrase: phrase,
+      words_some: words_some,
+      words_none: words_none,
+      scope: scope,
+      authors: authors,
+      published_in: published_in,
+      year_low: year_low,
+      year_hi: year_hi
     }, this.httpOptions)
       .subscribe(
         res => {
           console.log(res);
+          localStorage.setItem("searchResult", JSON.stringify(res));
+          this.sendAdvancedSearchData(res);
         },
         err => {
           console.log("Error occured");

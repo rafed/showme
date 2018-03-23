@@ -30,7 +30,6 @@ export class SignupService {
         }
         else {
           this.sendMessage(true);
-          localStorage.setItem("token", JSON.stringify(res));
         }
       },
       err => {

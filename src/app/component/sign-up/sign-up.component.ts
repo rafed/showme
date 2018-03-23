@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { SignupService } from '../../service/signup.service';
-import { Md5 } from 'ts-md5/dist/md5';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -63,7 +62,7 @@ export class SignUpComponent implements OnInit {
       this.validEmail = false;
     }
     else {
-      this.signupService.signup(data.email, Md5.hashStr(data.password1));
+      this.signupService.signup(data.email, data.password1);
     }  
   }
   

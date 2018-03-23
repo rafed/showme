@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../../utils/User';
 import { LoginService } from '../../service/login.service';
-import { Md5 } from 'ts-md5/dist/md5';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -38,7 +37,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit(data) {
     this.message = true;
-    this.loginService.login(data.email,Md5.hashStr(data.password));
+    this.loginService.login(data.email,data.password);
     this.subscription = this.loginService.getMessage().subscribe(message => { 
       this.message = message;
     });
