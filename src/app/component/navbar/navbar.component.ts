@@ -17,7 +17,15 @@ export class NavbarComponent implements OnInit {
     }
     else this.isAuthenticated = false;  
   }
+  loggedOut() {
+    let x = document.getElementById("loggedOut");
+    x.className = "show";
+    setTimeout(function () { 
+      x.className = x.className.replace("show", "");
+    }, 3000);
+  }
   public logout(){
+    this.loggedOut();
     localStorage.removeItem('token');
     this.Router.navigate(['/search']);
     this.isAuthenticated = false;

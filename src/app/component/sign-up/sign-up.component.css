@@ -8,7 +8,10 @@
     min-height: 100%; 
 }
 .centerText{
-    text-align: center;
+    text-align: center;    
+}
+.colorLink{
+    color: #E87E36
 }
 p{
     color: rgb(134, 134, 134)

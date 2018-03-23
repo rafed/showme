@@ -55,7 +55,7 @@ export class SignUpComponent implements OnInit {
     if (data.password1 != data.password2) {
       this.passwordMatched = false;
     }
-    else if (data.password1.length < 4) {
+    else if (data.password1.length < 8) {
       this.validPassword = false;
     }
     else if (!this.ValidateEmail(data.email)) {

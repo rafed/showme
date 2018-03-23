@@ -2,8 +2,8 @@
     <div *ngIf="message" class="alert alert-success">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <p class="centerText">You have registered successfully.</p>
-        <a href="/login">
-            <p class="centerText">Sign in now!</p>
+        <a routerLink="/login">
+            <p class="centerText colorLink">Sign in now!</p>
         </a>
     </div>
     <div *ngIf="!isDuplicateEmail" class="alert alert-danger alert-dismissable">
@@ -16,7 +16,7 @@
     </div>
     <div *ngIf="!validPassword" class="alert alert-danger alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <p class="centerText">Password must be at least 4 characters</p>
+        <p class="centerText">Password must be at least 8 characters</p>
     </div>
     <div *ngIf="!validEmail" class="alert alert-danger alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -28,7 +28,7 @@
                 <div class="col-sm-6 col-sm-offset-3 form-box">
                     <div class="form-top">
                         <div class="form-top-left">
-                            <h3>Sign up in ShowMe</h3>
+                            <h3>Sign up in <a routerLink="/search">ShowMe</a></h3>
                             <p>Enter your Email address and Password to Register:</p>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="sr-only" for="form-password">Password</label>
-                                <input type="password" name="password1" placeholder="Password (Minimum 4 characters)" class="form-password form-control"
+                                <input type="password" name="password1" placeholder="Password (Minimum 8 characters)" class="form-password form-control"
                                     id="form-password1" ngModel>
                             </div>
                             <div class="form-group">

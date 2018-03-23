@@ -44,7 +44,8 @@ import { RatingService } from './service/rating.service';
     DisplayHistoryService, 
     LoginService, 
     SignupService, 
-    RatingService],
+    RatingService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
