@@ -7,7 +7,7 @@ services:
   - mysql
 
 before_install:
-  - mysql -u root --password="" < database/testdb.sql
+  - mysql -u root --password="rafed" < database/testdb.sql
 
 install:
   - pip install -r webapi/requirements.txt
