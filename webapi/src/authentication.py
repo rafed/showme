@@ -10,40 +10,42 @@ import src.settings as settings
 from flask import Blueprint, request
 authentication = Blueprint('authentication', __name__)
 
-databaseUtil = DatabaseUtil()
-
 ### Response messages
 error = '{"msg":"error"}'
 success =  '{"msg":"success"}'
 
 @authentication.route('/register', methods=['POST'])
-def registration():
+def registrationController():
     data = request.get_json()
-    
     email = data['email']
     password = data['password']
-    password = hashlib.sha256(password.encode()).hexdigest()
+    return register(email, password)
     
+def register(email, password):
+    databaseUtil = DatabaseUtil()
+    password = hashlib.sha256(password.encode()).hexdigest()
     queryFind = "SELECT email FROM User WHERE email=%s"
     queryCreate = "INSERT INTO User (email, password, created) VALUES (%s, %s, NOW())"
     
     rows = databaseUtil.retrieve(queryFind, (email,))
 
     if not rows:
-        if email != 'admin':
-            databaseUtil.executeCUDSQL(queryCreate, (email, password))
-            return success
+        databaseUtil.executeCUDSQL(queryCreate, (email, password))
+        return success
 
     return error
 
-@authentication.route('/login', methods=['POST'])
-def login():
-    data = request.get_json()
 
+@authentication.route('/login', methods=['POST'])
+def loginController():
+    data = request.get_json()
     email = data['email']
     password = data['password']
-    password = hashlib.sha256(password.encode()).hexdigest()
+    return login(email, password)
 
+def login(email, password):
+    databaseUtil = DatabaseUtil()
+    password = hashlib.sha256(password.encode()).hexdigest()
     query = "SELECT email FROM User WHERE email=%s AND password=%s"
     rows = databaseUtil.retrieve(query, (email, password))
 
@@ -51,10 +53,10 @@ def login():
         return error
 
     token = jwt.encode({'email': email, 'msg':'success'}, settings.JWT_SECRET, algorithm=settings.JWT_ALGO).decode("utf-8")
-    print("THE jwt token:", token)
-    return json.dumps(token)
+    tokenJson = {'token':token, 'msg':'success'}
+    return json.dumps(tokenJson)
+
 
 def getEmail(token):
-    print (token)
     decoded = jwt.decode(token, settings.JWT_SECRET, settings.JWT_ALGO)
     return decoded['email']

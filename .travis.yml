@@ -3,10 +3,19 @@ language: python
 python:
   - "3.6"
 
+services:
+  - mysql
+
+before_install:
+  - mysql -u root --password="" < database/testdb.sql
+
 install:
   - pip install -r webapi/requirements.txt
   - cd webapi && pip install -e .
-  
+
+before_script:
+  - echo "USE mysql;\nUPDATE user SET password=PASSWORD('rafed') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
+
 script:
   - python3 -m pytest --cov=./
 
