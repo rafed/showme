@@ -6,10 +6,8 @@ from src import authentication
 
 class AuthenticationTest(unittest.TestCase):
 
-    
-    
     def testRegistration(self):
-        email = "rafed123@showme.tk"
+        email = "moumita123@showme.tk"
         password = "showme"
         self.assertEqual(authentication.register(email, password), authentication.success)
 
