@@ -11,3 +11,4 @@ codecov==2.0.15
 pytest==3.4.2
 pytest-cov==2.5.1
 setuptools==39.0.0
+pyjwt==1.6.1
