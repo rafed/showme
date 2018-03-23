@@ -172,6 +172,16 @@ export class GraphComponent implements OnInit {
       year = "not available";
     }
 
+    let pages = this.mainPDF["page"];
+    if (pages == null) {
+      pages = "not available";
+    }
+
+    let volume = this.mainPDF["volume"];
+    if (volume == null) {
+      volume = "not available";
+    }
+    
     newNodes.push(
       {
         group: "nodes",
@@ -181,7 +191,9 @@ export class GraphComponent implements OnInit {
           title: this.mainPDF.title,
           journal: journal,
           author: author,//author
-          year: year
+          year: year,
+          pages: pages,
+          volume: volume
         }
       }
     );
@@ -217,6 +229,7 @@ export class GraphComponent implements OnInit {
       }
 
       author = value["authors"];
+      
       if (author == null) {
         author = "not available";
       }
@@ -225,6 +238,22 @@ export class GraphComponent implements OnInit {
       if (journal == null) {
         journal = "not available";
       }
+
+      year = value["year"];
+      if (year == null) {
+        year = "not available";
+      }
+
+      pages = value["page"];
+      if (pages == null) {
+        pages = "not available";
+      }
+
+      volume = value["volume"];
+      if (volume == null) {
+        volume = "not available";
+      }
+     // console.log(journal);
 
       newNodes.push(
         {
@@ -235,6 +264,8 @@ export class GraphComponent implements OnInit {
             journal: journal,
             title: value["title"],
             author: author,
+            pages: pages,
+            volume: volume,
             year: year
           }
         }
@@ -362,9 +393,10 @@ export class GraphComponent implements OnInit {
         event: 'mouseout'
       },
       content: function () {
-        return "Title: " + this.data('title') +
-          "<br> Author:" + this.data('author') + "<br> Year:" + this.data('year') +
-          "<br> Journal:" + this.data('journal')
+        return "Title : " + this.data('title') +
+          "<br> Author : " + this.data('author') + "<br> Year : " + this.data('year') +
+          "<br> Journal : " + this.data('journal') + "<br> Pages : " + this.data('pages') +
+          "<br> Volume : " + this.data('volume')
       },
       position: {
         my: 'top center',
@@ -373,54 +405,14 @@ export class GraphComponent implements OnInit {
       style: {
         classes: 'qtip-bootstrap',
         tip: {
-          width: 16,
-          height: 8
+          width: 80,
+          height: 50
         }
       }
     });
 
-    // let nodes=this.cy.nodes();
-    // for (let i = 0; i < nodes.length; i++) {
-    //   let innerDiv;
 
-    //   if(document.getElementById("innerDiv"+nodes[i].id())==null){
-    //     innerDiv = document.createElement('div');
-    //     innerDiv.id = "innerDiv"+nodes[i].id();
-    //     var button = document.createElement("button");
-    //     button.onclick = function(){ pDFGetterObject.downloadPDF(nodes[i].data('title'),nodes[i].data('author')); };
-    //     iDiv.appendChild(innerDiv);
-    //     //console.log('b'); 
-    //     innerDiv.appendChild(button);
-    //     //console.log('b'); 
-    //   }
-
-    //   nodes[i].qtip({
-    //       overwrite: false,
-    //       show: {
-    //         event: 'mouseover'
-    //       },
-    //       hide: {
-    //         event: 'mouseout'
-    //       },
-    //       content: function () { 
-    //         return document.getElementById("innerDiv"+nodes[i].id());
-    //       },
-    //       position: {
-    //         my: 'top center',
-    //         at: 'bottom center'
-    //       },
-    //       style: {
-    //         classes: 'qtip-bootstrap',
-    //         tip: {
-    //           width: 16,
-    //           height: 8
-    //         }
-    //       }
-    //     });
-    // }
-
-
-    let layout = this.cy.layout({ name: 'concentric' }); //concentric, cose, circle
+    let layout = this.cy.layout({ name: 'concentric' }); 
     layout.run();
 
   }
@@ -574,10 +566,6 @@ export class GraphComponent implements OnInit {
 
   filterGraph() {
     this.undoFiltering();
-    // if (this.filteringOption==""){
-    //   this.filteringOption = 'Show' + this.filteringCriteria;
-    //   console.log('empty');
-    // }
 
     console.log(this.filteringCriteria + " " + this.filteringOption);
 
@@ -587,13 +575,13 @@ export class GraphComponent implements OnInit {
       if (this.filteringOption == "ShowAuthor") {
         this.nodeCollection = this.cy.nodes().filter(function (ele) {
           //console.log(ele.data('author').indexOf(document.getElementById("AuthorValue").getAttribute('value')));
-          return (ele.data('author').indexOf(document.getElementById("AuthorValue").getAttribute('value')) <= -1);
+          return (String(ele.data('author')).toLowerCase().indexOf(document.getElementById("AuthorValue").getAttribute('value').toLowerCase()) <= -1);
         });
       }
       else {
         this.nodeCollection = this.cy.nodes().filter(function (ele) {
           //console.log(ele.data('author').indexOf(document.getElementById("AuthorValue").getAttribute('value')));
-          return (ele.data('author').indexOf(document.getElementById("AuthorValue").getAttribute('value')) > -1);
+          return (String(ele.data('author')).toLowerCase().indexOf(document.getElementById("AuthorValue").getAttribute('value').toLowerCase()) > -1);
         });
       }
     }
@@ -604,14 +592,13 @@ export class GraphComponent implements OnInit {
       document.getElementById("JournalValue").setAttribute('value', this.journalValue);
       if (this.filteringOption == "ShowJournal") {
         this.nodeCollection = this.cy.nodes().filter(function (ele) {
-          //console.log(ele.data('title'));          
-          //console.log(document.getElementById("JournalValue").getAttribute('value'));
-          return (ele.data('journal').indexOf(document.getElementById("JournalValue").getAttribute('value')) <= -1);
+          
+          return (String(ele.data('journal')).toLowerCase().indexOf(document.getElementById("JournalValue").getAttribute('value').toLowerCase()) <= -1);
         });
       }
       else {
         this.nodeCollection = this.cy.nodes().filter(function (ele) {
-          return (ele.data('journal').indexOf(document.getElementById("JournalValue").getAttribute('value')) > -1);
+          return (String(ele.data('journal')).toLowerCase().indexOf(document.getElementById("JournalValue").getAttribute('value').toLowerCase()) > -1);
         });
       }
     }
@@ -634,12 +621,12 @@ export class GraphComponent implements OnInit {
       document.getElementById("TitleValue").setAttribute('value', this.titleValue);
       if (this.filteringOption == "ShowTitle") {
         this.nodeCollection = this.cy.nodes().filter(function (ele) {
-          return (ele.data('title').indexOf(document.getElementById("TitleValue").getAttribute('value')) <= -1);
+          return (String(ele.data('title')).toLowerCase().indexOf(document.getElementById("TitleValue").getAttribute('value').toLowerCase()) <= -1);
         });
       }
       else {
         this.nodeCollection = this.cy.nodes().filter(function (ele) {
-          return (ele.data('title').indexOf(document.getElementById("TitleValue").getAttribute('value')) > -1);
+          return (String(ele.data('title')).toLowerCase().indexOf(document.getElementById("TitleValue").getAttribute('value').toLowerCase()) > -1);
         });
       }
     }

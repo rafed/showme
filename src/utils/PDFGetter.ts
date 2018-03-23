@@ -6,30 +6,15 @@ export class PDFGetter {
         this.generateGraphService.getPDFLink(title,author)
         .subscribe(
         res => {
-            if(res['msg']=='success')
+            if(res['msg']=='success'){
                 window.open(res['pdflink'], "_blank");
-            else 
-                alert("PDF not available");
+            }
+            else {
+                if(res['sitelink'])
+                    window.open(res['sitelink'], "_blank");
+                else
+                    alert("Site Link or PDF Not Found")
+            }
         });
     }
-
-    public downloadPDF(title,author) {
-        console.log("Call");
-        var link = document.createElement('a');
-        link.style.display='none';
-        document.getElementsByTagName('body')[0].appendChild(link);
-       // console.log('prob');
-        this.generateGraphService.getPDFLink(title,author)
-        .subscribe(
-        res => {
-            if(res['msg']=='success'){
-                link.href = res['pdflink'];
-                link.download = title +'.pdf';
-                link.click();     
-                console.log('click korechi')        
-            }
-            else 
-                alert("PDF not available");
-         });
-     }
 }
