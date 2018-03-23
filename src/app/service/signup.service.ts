@@ -10,7 +10,7 @@ export class SignupService {
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json'})
   };
-  private subject = new Subject<any>();;
+  private subject = new Subject<any>();
   sendMessage(message: boolean) {
     this.subject.next(message);
   }
@@ -30,7 +30,7 @@ export class SignupService {
         }
         else {
           this.sendMessage(true);
-          localStorage.setItem("token", JSON.stringify(res));
+          //localStorage.setItem("token", JSON.stringify(res));
         }
       },
       err => {
