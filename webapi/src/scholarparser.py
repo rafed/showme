@@ -66,7 +66,7 @@ class ScholarParser:
                 return a['href']
         return None
 
-    def parse(self):
+    def parse(self, pdfIncluded=False):
         result = []
 
         for div in self.soup.findAll('div', {'class':['gs_r', 'gs_or', 'gs_scl']}):
@@ -74,7 +74,8 @@ class ScholarParser:
                 paper = {}
 
                 paper['pdflink'] = self._getPdfLink(div)
-                if paper['pdflink'] is None:
+                
+                if not pdfIncluded and paper['pdflink'] is None:
                     continue
 
                 paper['data_cid'] = div['data-cid']
@@ -84,7 +85,7 @@ class ScholarParser:
                 paper['year'] = self._getYear(div)
                 paper['authors'] = self._getAuthors(div)
                 result.append(paper)
-
+        print(json.dumps(result))
         return json.dumps(result)
 
     def getBibUrl(self):
