@@ -57,5 +57,8 @@ def login(email, password):
     return json.dumps(tokenJson)
 
 def getEmail(token):
+    if token is None:
+        return None;
+        
     decoded = jwt.decode(token, settings.JWT_SECRET, settings.JWT_ALGO)
     return decoded['email']

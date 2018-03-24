@@ -14,6 +14,7 @@ def rateRelation():
 
     email = authentication.getEmail(data['token'])
     edge_id = data['edge_id']
+    print("THis inserting", edge_id)
     value = data['rating']
     
     databaseUtil=DatabaseUtil()
@@ -31,6 +32,9 @@ def edgeRating(edge_id):
     return round(rows[0]['avg_rating'])
 
 def usersEdgeRating(email, edge_id):
+    if email is None:
+        return 0
+
     databaseUtil=DatabaseUtil()
     query = "SELECT value FROM Rating WHERE email_id=%s AND edge_id=%s"
     rows = databaseUtil.retrieve(query, (email, edge_id))
@@ -38,5 +42,5 @@ def usersEdgeRating(email, edge_id):
     if rows:
         return rows[0]['value']
     else:
-        return 0;
+        return 0
     
