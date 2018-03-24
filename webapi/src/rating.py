@@ -26,6 +26,17 @@ def rateRelation():
 
 def edgeRating(edge_id):
     databaseUtil=DatabaseUtil()
-    query = "SELECT IFNULL(AVG(VALUE), 0) as avg_rating FROM Rating WHERE edge_id=%s"
+    query = "SELECT IFNULL(AVG(VALUE), 0) AS avg_rating FROM Rating WHERE edge_id=%s"
     rows = databaseUtil.retrieve(query, (edge_id,))
     return round(rows[0]['avg_rating'])
+
+def usersEdgeRating(email, edge_id):
+    databaseUtil=DatabaseUtil()
+    query = "SELECT value FROM Rating WHERE email_id=%s AND edge_id=%s"
+    rows = databaseUtil.retrieve(query, (email, edge_id))
+
+    if rows:
+        return rows[0]['value']
+    else:
+        return 0;
+    

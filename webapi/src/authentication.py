@@ -56,7 +56,6 @@ def login(email, password):
     tokenJson = {'token':token, 'msg':'success'}
     return json.dumps(tokenJson)
 
-
 def getEmail(token):
     decoded = jwt.decode(token, settings.JWT_SECRET, settings.JWT_ALGO)
     return decoded['email']
