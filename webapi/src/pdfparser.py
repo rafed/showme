@@ -7,8 +7,9 @@ import datetime
 import re
 
 from src.databaseUtil import DatabaseUtil
-from src.rating import edgeRating
+from src import rating
 from src.util import Util
+from src import authentication
 
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
@@ -147,14 +148,23 @@ def extractReferences(extracted_text, paras):
     return cites
 
 @pdfparser.route('/parse', methods=['POST'])
-def parsePdf():
-    databaseUtil=DatabaseUtil()
+def parsePdfController():
     data = request.get_json()
 
-    pdflink = data['pdflink']
     title = data['title']
     authors = data['authors']
+    pdflink = data['pdflink']
+    token = data['token']
 
+    if not isinstance(authors, (list,)):
+        authors = (authors,)
+
+    return parsePdf(title, authors, pdflink, token)
+
+
+def parsePdf(title, authors, pdflink, token):
+    databaseUtil=DatabaseUtil()
+    
     # Find the id of the node associated with the paper (it will be our parent_id)
     query = "SELECT DISTINCT id FROM Node WHERE id IN (SELECT DISTINCT node_id FROM Author WHERE name IN %s) AND title LIKE %s"
     args = (authors, title)
@@ -172,17 +182,13 @@ def parsePdf():
         pdf = requests.get(pdflink)
 
         filename = "./pdfs/" + str(datetime.datetime.now().date()) + '_' + str(datetime.datetime.now().time()).replace(':', '.') + ".pdf"
-
         print("[*] Opening file...")
-
         with open(filename, 'wb') as f:
             f.write(pdf.content)
         
         print("[*] Extracting text...")
-
         extracted_text, paras = extractTextFromPDF(filename)
         references = extractReferences(extracted_text, paras)
-
         print("[*] Extraction done.")
 
         queryCheck = "SELECT DISTINCT id FROM Node WHERE id IN (SELECT DISTINCT node_id FROM Author WHERE name IN %s) AND title LIKE %s"
@@ -204,7 +210,7 @@ def parsePdf():
             rows = databaseUtil.retrieve(queryCheck, args)
             
             if not rows:
-                print("[*] Inserting node with year", year)
+                print("[*] Inserting node with title", title)
                 args = (title, journal, volume, pages, year)
                 id = databaseUtil.executeCUDSQL(queryData, args)
 
@@ -219,14 +225,15 @@ def parsePdf():
             args = (parent_id, id)
             edge_id = databaseUtil.executeCUDSQL(queryEdge, args)
             ref['edge_id'] = edge_id
-            ref['edge_rating'] = 0
+            ref['edge_rating'] = 0      # Because no one could've possibly rated it yet
+            ref['user_rating'] = 0      # Because no one could've possibly rated it yet
             
             snippets = ref['snippets']
             for snip in snippets:
                 args = (edge_id, snip)
                 print ("[*] Inserting a snippet...")
                 databaseUtil.executeCUDSQL(querySnippet, args)
-            
+        
         return json.dumps(references)
     else:   # Retrieve from database and return
         print ("[*] Returning references from database")
@@ -235,7 +242,8 @@ def parsePdf():
         queryAuthor = "SELECT name FROM Author WHERE node_id=%s"
         queryEdge = "SELECT targetnode_id FROM Edge WHERE sourcenode_id=%s"
         querySnippets = "SELECT text FROM Citation_snippet WHERE edge_id=%s"
-        
+        email = authentication.getEmail(token) ## This is required for the rating user gave for each edge
+
         refJson = []
         
         for row in rows:
@@ -263,7 +271,8 @@ def parsePdf():
                 ref['pages'] = data['pages']
                 ref['year'] = str(data['year'])
                 ref['edge_id'] = edge_id
-                ref['edge_rating'] = edgeRating(edge_id)
+                ref['edge_rating'] = rating.edgeRating(edge_id)
+                ref['user_rating'] = rating.usersEdgeRating(email, edge_id) #############################
                 ref['snippets'] = snippets
                 break # because only one row should be here
 
