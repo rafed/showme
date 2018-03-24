@@ -204,8 +204,11 @@ def parsePdf(title, authors, pdflink, token):
             authors = ref['authors'] #if 'authors' in ref else None
             volume = ref['volume'] #if 'volume' in ref else None
             pages = ref['pages'] #if 'pages' in ref else None
-            year = str(ref['year']) #if 'year' in ref else None
+            year = str(ref['year']) if ref['year'] is not None else None
 
+            if not authors:
+                authors = (None,)
+                
             args = (authors, title+'%')
             rows = databaseUtil.retrieve(queryCheck, args)
             
