@@ -52,12 +52,15 @@ def getPaperInfoController():
     data_cid = data['data_cid']
     title = data['title']
     authors = data['authors']
+
+    if not isinstance(authors, (list,)):
+        authors = (authors,)
+
     return getPaperInfo(data_cid, title, authors)
 
 
 def getPaperInfo(data_cid, title, authors):
     databaseUtil=DatabaseUtil()
-    
     query = "SELECT DISTINCT id FROM Node WHERE id IN (SELECT DISTINCT node_id FROM Author WHERE name IN %s) AND title LIKE %s"
     print (title, data_cid, authors)
     args = (authors, title+'%')
@@ -142,8 +145,8 @@ def getPdfLink():
     authors = " ".join(x for x in authors)
 
     r = Requester.scholarQuerier(title, authors=authors)
-    scholarParser = ScholarParser(r.text)
-    searchResult = json.loads(scholarParser.parse())
+    scholarParser = ScholarParser(r.text,)
+    searchResult = json.loads(scholarParser.parse(pdfIncluded=True))
 
     reply = {'msg':'error'}
     if searchResult:
@@ -151,7 +154,11 @@ def getPdfLink():
         resultTitle = firstResult['title']
 
         if Util.similar(title, resultTitle):
-            reply['msg'] = "success"
+            reply['msg'] = "pdf"
             reply['pdflink'] = firstResult['pdflink']
+
+            if reply['pdflink'] is None:
+                reply['msg'] = "site"
+                reply['sitelink'] = firstResult['sitelink']
 
     return json.dumps(reply)
