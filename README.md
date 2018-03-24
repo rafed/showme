@@ -12,7 +12,7 @@ ShowMe is a an application that will help the research community to find related
 ### Contributors
 - [Kishan Kumar Ganguly](https://github.com/KKGanguly)
 - [Moumita Asad](https://github.com/mou23)
-- Aquib Azmain
+- [Aquib Azmain](https://github.com/AquibAzmain)
 - Eusha Kadir
 - [Rafed Muhammad Yasir](https://github.com/rafed123)
 
