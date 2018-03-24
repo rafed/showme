@@ -11,10 +11,6 @@ drop table User;
 create table if not exists User(
 	email varchar(150),
 	password varchar (65) not null,
-	oauth_provider varchar(20),
-	oauth_uid varchar (20),
-	fname varchar (30),
-	lname varchar (30),
 	created datetime not null,
 
 	primary key(email)
@@ -43,8 +39,8 @@ create table if not exists Author(
 
 create table if not exists Edge(
 	id bigint AUTO_INCREMENT,
-	sourcenode_id bigint (30),
-	targetnode_id bigint (30),
+	sourcenode_id bigint (20),
+	targetnode_id bigint (20),
 
 	primary key (id),
 	foreign key (sourcenode_id) references Node(id),
