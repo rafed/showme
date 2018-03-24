@@ -28,6 +28,7 @@ export class NavbarComponent implements OnInit {
     this.loggedOut();
     localStorage.removeItem('token');
     this.isAuthenticated = false;
+    this.Router.navigate(['/search']);
   }
  
 }

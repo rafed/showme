@@ -13,31 +13,38 @@ import { Subscription } from 'rxjs/Subscription';
 export class SearchResultComponent implements OnInit {
   papers: Paper[] = [];
   subscription: Subscription;
-  isDataAvailable: boolean = true;
+  isDataAvailable: boolean = false;
+  isShowData: boolean = false;
 
   constructor(private router: Router,
     private generateGraphService: GenerateGraphService,
     private searchResultService: SearchResultService) { }
   ngOnInit() {
-    
+
+    this.getSearchResult();
     this.getAdvancedSearchData();
-    this.getSearchResult();;
-    this.searchResultService.getValue()
-      .subscribe((updated: any) => {
-        console.log("got " + updated['value']);
-        this.getSearchResult();
-      });
+    // this.searchResultService.getValue()
+    //   .subscribe((updated: any) => {
+    //     this.isShowData = false;
+    //     console.log("got " + updated['value']);
+    //     this.getSearchResult();
+    //     //this.getAdvancedSearchData();
+    //   });
   }
 
   getSearchResult() {
     //console.log("getting result for: " + this.searchResultService.searchKey);
     this.searchResultService.getPapers()
-      .subscribe(papers => this.papers = papers);
-      // console.log(this.papers.length);
-      // if (this.papers.length==0){
-      //   this.isDataAvailable=false;
-      // }
-      // else this.isDataAvailable= true;
+      .subscribe(papers => {
+        this.isShowData = true;
+        this.papers = papers;
+      });
+    // console.log(this.papers.length);
+    // if (this.papers.length==0){
+    //   this.isDataAvailable=false;
+    // }
+    // else this.isDataAvailable= true;
+
   }
 
   onSelect(selectedPaper: Paper): void {
@@ -47,6 +54,9 @@ export class SearchResultComponent implements OnInit {
 
   getAdvancedSearchData() {
     this.subscription = this.searchResultService.getAdvancedSearchData()
-      .subscribe(data => this.papers = data);
+      .subscribe(data => {
+        this.papers = data;
+        this.isShowData = true;
+      });
   }
 }

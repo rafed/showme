@@ -158,7 +158,7 @@ export class GraphComponent implements OnInit {
     }
 
     let author = this.mainPDF["authors"];
-    if (author == null) {
+    if (author.length == 0) {
       author = "not available";
     }
 
@@ -230,7 +230,7 @@ export class GraphComponent implements OnInit {
 
       author = value["authors"];
       
-      if (author == null) {
+      if (author.length==0) {
         author = "not available";
       }
 
@@ -365,16 +365,18 @@ export class GraphComponent implements OnInit {
         },
         events: {
           show: function () {
-            //console.log("HI");
+           
             $('.rate').starrr({
               rating: edges[i].data('user_rating'), //0,//inVal,//0,
               max: 5,
               readOnly: readOnly,
               change: function (e, value) {
+               
                 let edgeID = e.target.id;
                 edgeID = edgeID.substring(6, edgeID.length);
                 $("[name=edgeID]").attr("value", edgeID);
                 $("[name=rating]").attr("value", value);
+                console.log(edgeID+ ' '+value);
               }
             });
 
@@ -439,7 +441,7 @@ export class GraphComponent implements OnInit {
   }
 
   handleRating() {
-    //console.log('rate');
+    console.log('rate');
     let token = localStorage.getItem('token');
 
     let edgeID = document.getElementById("edgeID").getAttribute("value");
