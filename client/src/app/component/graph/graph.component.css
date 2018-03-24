@@ -1,0 +1,186 @@
+.container {
+  padding: 40px;
+  text-align: left
+}
+#cy {
+    width: 800px;
+    height: 694px;
+    margin-left: -220px;
+    float:left
+}
+.inputField{
+  width:100px
+}
+button:disabled,
+button[disabled]{
+  background-color: #5FBA7D;
+  color: white;
+}
+.rightDiv{
+  float:left;
+  margin-left:10px;
+}
+.rightBelowDiv{
+  float:left;
+  margin-left:10px;
+  margin-top:-10px;
+  width:432px 
+}
+
+.tooltip {
+position: relative;
+display: inline-block;
+}
+
+.tooltip .tooltiptext {
+visibility: hidden;
+width: 120px;
+background-color: black;
+color: #fff;
+text-align: center;
+border-radius: 6px;
+padding: 5px 0;
+
+/* Position the tooltip */
+position: absolute;
+z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+visibility: visible;
+}
+
+.item {
+  background: #fefff9;
+  text-align: center;
+  padding: 30px;
+}
+
+h2 {
+  color: #6a6a6a;
+  font-size: 15px;
+}
+
+.rate {
+  text-align: center;
+  background-color: #5b5b5b;
+}
+
+.rate a {
+  font-size: 36px;
+  cursor: pointer;
+  color: #FFD119;
+}
+
+.snippetButton {
+  border: none;
+}
+
+.loader {
+  margin: auto;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  margin-top: 10px
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.heading {
+  font-size: 15px;
+  margin-right: 25px;
+}
+
+
+
+/* Three column layout */
+.side {
+  float: left;
+  width: 15%;
+  margin-top:10px;
+}
+
+.middle {
+  margin-top:10px;
+  float: left;
+  width: 70%;
+}
+
+/* Place text to the right */
+.right {
+  text-align: right;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* The bar container */
+.bar-container {
+  width: 100%;
+  background-color: #f1f1f1;
+  text-align: center;
+  color: white;
+}
+
+/* Individual bars */
+.bar-5 {width: 100%; height: 18px; background-color: #4CAF50;}
+.bar-4 {width: 100%; height: 18px; background-color: #2196F3;}
+.bar-3 {width: 100%; height: 18px; background-color: #f3ef14;}
+.bar-2 {width: 100%; height: 18px; background-color: #ff9800;}
+.bar-1 {width: 100%; height: 18px; background-color: #f44336;}
+.bar-0 {width: 100%; height: 18px; background-color: #191970;}
+
+
+#snackbarNotSupported {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  bottom: 30px;
+  font-size: 17px;
+}
+
+#snackbarNotSupported.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;} 
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;} 
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
