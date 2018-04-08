@@ -41,4 +41,6 @@ class Util:
 
     @staticmethod
     def similar(a, b):
+        if a is None or b is None:
+            return False
         return SequenceMatcher(None, a, b).ratio() > 0.85
