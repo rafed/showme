@@ -1,0 +1,140 @@
+<app-navbar></app-navbar>
+<div id="band" class="container">
+  <div class="text-center" [style.display]="this.showDescription ? 'block': 'none'">
+    <h3 class="text-center">Welcome</h3>
+    <p>
+      <em>Show me related work</em>
+    </p>
+    <p>ShowMe is a web application that will help the research community to find related work and understand relationship among
+      them. Finding related work and understanding the relation among papers is a non-trivial task. Many services offer help,
+      e.g., GoogleScholar, but they lack many (dynamic) features. Ideally, we are be able to visualize relations among papers
+      as graphs; each node is a paper and there is a directed edge between two nodes if one paper cites another. A click
+      on a node in the graph will show the pdf (if available), and a click on an edge in the graph should show the way one
+      paper cites another. Furthermore, the graph can be enhanced by users; the users can mark an edge as strong (i.e., paper
+      is closely related) or weak.</p>
+    <hr>
+  </div>
+
+  <h4 class="text-center">Search paper here</h4>
+
+  <!--search bar-->
+
+  <div id="adv-search">
+    <form class="input-group">
+      <input list="historyList" autocomplete="off" (keyup.enter)="search(searchKey)" name="historyList" [(ngModel)]="searchKey" name="paper" class="form-control"
+        placeholder="Enter paper title" />
+
+      <div class="input-group-btn">
+        <div class="btn-group" role="group">
+          <datalist id="historyList">
+            <option *ngFor="let hist of this.history" value="{{hist}}">
+          </datalist>
+          <button type="button" class="btn btn-primary" (click)="search(searchKey)">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </form>
+    <br/>
+    <button data-toggle="collapse" data-target="#advanced" class="btn btn-block btn-primary">Advanced Search</button>
+    <div id="advanced" class="collapse">
+      <div style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);margin: auto; padding:5px">
+        <form class="form-horizontal" role="form" #advancedSearchForm="ngForm">
+          <div class="form-group">
+            <label class="control-label col-sm-4">with <b>all</b> of the words</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" name="words" placeholder="Enter words" ngModel>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-4">with the <b>exact phrase</b></label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control"  name="phrase" placeholder="Enter phrase" ngModel>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-4">with <b>at least one</b> of the words</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" name="words_some" placeholder="Enter words" ngModel>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-4"><b>without</b> the words</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" name="words_none" placeholder="Enter words" ngModel>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-4">where my words occur</label>
+            <div class="col-sm-8">
+              <div class="radio">
+                <label><input type="radio" value="any" name="scope" ngModel>anywhere in the article</label>
+                <br/>
+                <label><input type="radio" value="title" name="scope" ngModel>in the title of the article</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-4">Return articles <b>authored</b> by</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" name="authors" placeholder="Enter author's name" ngModel>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-4">Return articles <b>published</b> in</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" name = "published_in" placeholder="Enter jounal" ngModel>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-4">Return articles <b>dated</b> between</label>
+            <div class="col-sm-8">
+              <input type="text" name="year_low" placeholder=" From (year)" ngModel><b> - </b>
+              <input type="text" name="year_hi" placeholder=" To (year)" ngModel>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="text-center">
+              <button name="ad" type="submit" class="btn btn-primary" (click)="onSubmit(advancedSearchForm.value)">Search</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <br>
+  <br>
+  <br>
+  <div [style.display]="this.showDescription ? 'none': 'block'">
+    <ul class="nav nav-tabs">
+      <li>
+        <a routerLinkActive = "tabLink" routerLink="result">Search Result</a>
+      </li>
+      <li>
+        <a routerLinkActive = "tabLink" routerLink="graph">Graph</a>
+      </li>
+    </ul>
+    <router-outlet></router-outlet>
+  </div>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+</div>
+
+<footer class="text-center">
+  <p>Developed by Students of Institute of Information Technology, University of Dhaka</p>
+</footer>

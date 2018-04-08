@@ -1,0 +1,15 @@
+.loginContent{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    background-image: url(../../../assets/img/backgrounds/1.jpg);
+    background-position: center center;
+    background-repeat:  no-repeat;
+    background-attachment: fixed;
+    background-size:  cover;
+    min-height: 100%; 
+}
+p{
+    color: rgb(134, 134, 134)
+}
+.centerText{
+    text-align: center;
+}

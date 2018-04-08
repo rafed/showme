@@ -1,0 +1,64 @@
+<div class="signupContent">
+    <div *ngIf="message" class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <p class="centerText">You have registered successfully.</p>
+        <a routerLink="/login">
+            <p class="centerText colorLink">Sign in now!</p>
+        </a>
+    </div>
+    <div *ngIf="!isDuplicateEmail" class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <p class="centerText">Email is not valid. Try with another email id.</p>
+    </div>
+    <div *ngIf="!passwordMatched" class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <p class="centerText">Password fields must match</p>
+    </div>
+    <div *ngIf="!validPassword" class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <p class="centerText">Password must be at least 8 characters</p>
+    </div>
+    <div *ngIf="!validEmail" class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <p class="centerText">Must provide a valid email address</p>
+    </div>
+    <div class="top-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3 form-box">
+                    <div class="form-top">
+                        <div class="form-top-left">
+                            <h3>Sign up in <a routerLink="/search">ShowMe</a></h3>
+                            <p>Enter your Email address and Password to Register:</p>
+                        </div>
+                    </div>
+                    <div class="form-bottom">
+                        <form role="form" #registration="ngForm" name="register" class="login-form">
+                            <div class="form-group">
+                                <label class="sr-only" for="form-username">Email Adress</label>
+                                <input type="text" name="email" placeholder="Email" class="form-username form-control" id="form-username" ngModel>
+                            </div>
+                            <div class="form-group">
+                                <label class="sr-only" for="form-password">Password</label>
+                                <input type="password" name="password1" placeholder="Password (Minimum 8 characters)" class="form-password form-control"
+                                    id="form-password1" ngModel>
+                            </div>
+                            <div class="form-group">
+                                <label class="sr-only" for="form-password">Confirm Password</label>
+                                <input type="password" name="password2" placeholder="Confirm Password" class="form-password form-control" id="form-password2"
+                                    ngModel>
+                            </div>
+                            <button type="submit" name="register" class="btn" (click)=onSubmit(registration.value)>Sign up!</button>
+                        </form>
+                        <br>
+                        <div class="form-bottom-left">
+                            <p>Already registered?
+                                <a routerLink="/login">Sign in Now!</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
