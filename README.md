@@ -17,3 +17,5 @@ ShowMe is a an application that will help the research community to find related
 - [Rafed Muhammad Yasir](https://github.com/rafed123)
 
 Contributors are student of Institute of Information Technology (IIT), University of Dhaka
+
+_*This project made it to the final 6._
